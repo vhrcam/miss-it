@@ -17,13 +17,14 @@ describe("MCP server", () => {
     expect(body.result.instructions).toContain("spoiler-free");
   });
 
-  it("lists its tools", async () => {
+  it("lists the four tools", async () => {
     const { app } = setup();
     const { body } = await mcp(app, "tools/list");
 
     expect(body.result.tools.map((tool: { name: string }) => tool.name)).toEqual([
       "recap_recent",
       "who_is_on_screen",
+      "ask_about_show",
       "whats_playing",
     ]);
     for (const tool of body.result.tools) {
@@ -130,5 +131,17 @@ describe("who_is_on_screen", () => {
 
     const result = await callTool(app, "who_is_on_screen");
     expect(result.content[0]!.text).toContain("can't tell");
+  });
+});
+
+describe("ask_about_show", () => {
+  it("answers from what has been shown so far", async () => {
+    const { app, memory } = setup();
+    await memory.record(update({ positionSec: 90, cues: [cue(20, "You never listen"), cue(400, "Spoiler")] }));
+
+    const result = await callTool(app, "ask_about_show", { question: "Why is she mad at him?" });
+    expect(result.structuredContent.context).toBe("[0:20] You never listen");
+    expect(result.content[0]!.text).toContain("Why is she mad at him?");
+    expect(result.content[0]!.text).not.toContain("Spoiler");
   });
 });

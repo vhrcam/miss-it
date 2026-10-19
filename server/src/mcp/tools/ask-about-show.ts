@@ -1,0 +1,41 @@
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import { formatTimestamp, toTranscript } from "spoiler-safe-context";
+import { currentViewing, NOTHING_PLAYING, READ_ONLY, staleNote, textResult, type ToolContext } from "../context.js";
+
+const MAX_CONTEXT_CHARS = 6000;
+
+export function registerAskAboutShow(server: McpServer, ctx: ToolContext): void {
+  server.registerTool(
+    "ask_about_show",
+    {
+      title: "Ask about the show",
+      description:
+        "Answer a follow-up question about the show or movie playing on the user's TV, using only what has " +
+        "been shown so far, so the answer is spoiler-free. Use for questions like \"why is she mad at him?\", " +
+        "\"where are they?\" or \"what's the robot thing about?\".",
+      inputSchema: {
+        question: z.string().min(1).max(500).describe("The user's question, in their own words."),
+      },
+      outputSchema: {
+        title: z.string().optional(),
+        upTo: z.string().optional(),
+        context: z.string().optional(),
+      },
+      annotations: { title: "Ask about the show", ...READ_ONLY },
+    },
+    async ({ question }) => {
+      const viewing = await currentViewing(ctx);
+      if (!viewing) return textResult(NOTHING_PLAYING, {});
+
+      const upTo = formatTimestamp(viewing.log.positionSec);
+      const context = toTranscript(viewing.log.seen(), { maxChars: MAX_CONTEXT_CHARS });
+      const text = context
+        ? `To answer "${question}", use only these lines from ${viewing.title}. They are everything shown up to ${upTo}; ` +
+          `don't guess what happens next.\n${context}`
+        : `Nothing has been said in ${viewing.title} yet, so there's nothing to go on.`;
+
+      return textResult(text + staleNote(viewing, ctx), { title: viewing.title, upTo, context });
+    },
+  );
+}

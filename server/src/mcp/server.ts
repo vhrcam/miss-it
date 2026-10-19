@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { ToolContext } from "./context.js";
+import { registerAskAboutShow } from "./tools/ask-about-show.js";
 import { registerRecapRecent } from "./tools/recap-recent.js";
 import { registerWhatsPlaying } from "./tools/whats-playing.js";
 import { registerWhoIsOnScreen } from "./tools/who-is-on-screen.js";
@@ -14,6 +15,7 @@ export function createMcpServer(ctx: ToolContext): McpServer {
   const server = new McpServer({ name: "rewind", title: "Rewind", version: "0.1.0" }, { instructions: INSTRUCTIONS });
   registerRecapRecent(server, ctx);
   registerWhoIsOnScreen(server, ctx);
+  registerAskAboutShow(server, ctx);
   registerWhatsPlaying(server, ctx);
   return server;
 }
