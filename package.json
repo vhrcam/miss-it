@@ -1,0 +1,20 @@
+{
+  "name": "rewind",
+  "private": true,
+  "description": "Ask Alexa what you missed on TV and get a spoiler-free recap",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "server"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "dev": "npm run dev -w server"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
