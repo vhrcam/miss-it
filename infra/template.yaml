@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Rewind, spoiler-free recaps of what's on your TV for Alexa+
+
+Parameters:
+  DeviceKey:
+    Type: String
+    NoEcho: true
+    MinLength: 16
+    Description: Shared key the Fire TV app sends with every playback update
+  ModelId:
+    Type: String
+    Default: us.amazon.nova-2-lite-v1:0
+    Description: Amazon Bedrock model or inference profile that writes recaps and answers
+
+Resources:
+  MemoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+
+  RewindFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../server/dist/lambda
+      Handler: index.handler
+      Runtime: nodejs22.x
+      Architectures: [arm64]
+      MemorySize: 1024
+      Timeout: 20
+      Environment:
+        Variables:
+          REWIND_TABLE: !Ref MemoryTable
+          REWIND_DEVICE_KEY: !Ref DeviceKey
+          REWIND_MODEL_ID: !Ref ModelId
+          NODE_OPTIONS: --enable-source-maps
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MemoryTable
+        - Statement:
+            - Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource:
+                - arn:aws:bedrock:*::foundation-model/amazon.nova-*
+                - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
+      FunctionUrlConfig:
+        AuthType: NONE
+
+Outputs:
+  RewindUrl:
+    Description: Base URL for the Fire TV app; the MCP endpoint is this URL plus /mcp
+    Value: !GetAtt RewindFunctionUrl.FunctionUrl
+  MemoryTableName:
+    Description: DynamoDB table that holds each household's watch log
+    Value: !Ref MemoryTable

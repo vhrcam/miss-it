@@ -20,3 +20,6 @@ dist/
 
 # Test coverage
 coverage/
+
+# Packaged CloudFormation template
+infra/packaged.yaml
