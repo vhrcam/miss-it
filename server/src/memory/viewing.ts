@@ -15,6 +15,16 @@ export interface Viewing {
   log: WatchLog;
 }
 
+// A recap written ahead of time, covering fromSec..toSec of one title.
+export interface StoredRecap {
+  contentId: string;
+  windowSec: number;
+  fromSec: number;
+  toSec: number;
+  text: string;
+  generatedAt: number;
+}
+
 const MAX_DRIFT_SEC = 10;
 const STALE_AFTER_MS = 2 * 60 * 1000;
 

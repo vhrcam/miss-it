@@ -41,7 +41,7 @@ describe("Memory", () => {
     await memory.record(update({ positionSec: 30, sentAt: 2000 }));
     const result = await memory.record(update({ positionSec: 25, sentAt: 1000 }));
 
-    expect(result).toBe("stale");
+    expect(result.status).toBe("stale");
     expect((await memory.get("demo"))?.positionSec).toBe(30);
   });
 
