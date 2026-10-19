@@ -1,0 +1,21 @@
+# Media credits
+
+Rewind's demo plays **Tears of Steel**, a short film by the Blender Foundation.
+
+> (CC) Blender Foundation | mango.blender.org
+
+The film and its subtitles are licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/). The film's standalone soundtrack files are licensed separately ([CC BY-ND 3.0](https://creativecommons.org/licenses/by-nd/3.0/), (C) Joram Letwory, www.tearsofsteel.org). Rewind doesn't use them.
+
+## How Rewind uses it
+
+- The Fire TV app streams the original 720p film from Blender's mirrors, unchanged.
+- `tears-of-steel.en.vtt` is Blender's English subtitle file (`TOS-en.srt`) converted from SRT to WebVTT. The text and timings are unchanged.
+- `fetch.sh` downloads a local copy for the Rewind server: the 720p film with its audio re-encoded from MP3 to AAC in an MP4 container (`tears-of-steel.mp4`, about 370 MB, not committed). Nothing is cut or edited.
+
+## Get the files
+
+```sh
+./media/fetch.sh
+```
+
+Needs `curl` and `ffmpeg`.
