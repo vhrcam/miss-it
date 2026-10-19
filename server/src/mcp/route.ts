@@ -3,11 +3,9 @@ import type { Context } from "hono";
 import type { ToolContext } from "./context.js";
 import { createMcpServer } from "./server.js";
 
-export type Logger = (line: string) => void;
-
 // Stateless Streamable HTTP: every POST gets a fresh server and a plain JSON
 // reply, which keeps answers fast and lets the server scale to zero.
-export function mcpHandler(ctx: ToolContext, log: Logger) {
+export function mcpHandler(ctx: ToolContext) {
   return async (c: Context): Promise<Response> => {
     const started = performance.now();
     const label = await describe(c.req.raw.clone());
@@ -22,7 +20,7 @@ export function mcpHandler(ctx: ToolContext, log: Logger) {
       return await transport.handleRequest(c.req.raw);
     } finally {
       await server.close();
-      log(`mcp ${label} ${Math.round(performance.now() - started)}ms`);
+      ctx.log(`mcp ${label} ${Math.round(performance.now() - started)}ms`);
     }
   };
 }

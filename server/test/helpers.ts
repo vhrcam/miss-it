@@ -1,3 +1,4 @@
+import type { Narrator } from "../src/ai/narrator.js";
 import { createApp } from "../src/app.js";
 import { CastGuide, type CastData } from "../src/cast/guide.js";
 import type { Config } from "../src/config.js";
@@ -6,14 +7,20 @@ import { InMemoryStore } from "../src/memory/store.js";
 
 export { update } from "./fixtures.js";
 
-export const config: Config = { port: 0, deviceKey: "test-key", householdId: "demo" };
+export const config: Config = {
+  port: 0,
+  deviceKey: "test-key",
+  householdId: "demo",
+  ai: { enabled: false, modelId: "test-model", region: "us-east-1" },
+};
 
-export function setup(options: { cast?: CastData; now?: () => number } = {}) {
+export function setup(options: { cast?: CastData; narrator?: Narrator; now?: () => number } = {}) {
   const memory = new Memory(new InMemoryStore());
   const app = createApp({
     config,
     memory,
     cast: new CastGuide(options.cast),
+    narrator: options.narrator,
     now: options.now ?? Date.now,
     log: () => {},
   });

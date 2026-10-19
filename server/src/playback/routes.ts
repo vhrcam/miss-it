@@ -1,11 +1,19 @@
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { formatTimestamp, toTranscript } from "spoiler-safe-context";
+import type { Recaps } from "../ai/recaps.js";
 import type { Memory } from "../memory/memory.js";
 import { isStale, livePosition } from "../memory/viewing.js";
 import { playbackUpdateSchema } from "./schema.js";
 
-export function playbackRoutes(memory: Memory, deviceKey: string): Hono {
+export interface PlaybackDeps {
+  memory: Memory;
+  deviceKey: string;
+  recaps?: Recaps;
+  log: (line: string) => void;
+}
+
+export function playbackRoutes({ memory, deviceKey, recaps, log }: PlaybackDeps): Hono {
   const app = new Hono();
   app.use("*", bearerAuth({ token: deviceKey }));
 
@@ -19,7 +27,12 @@ export function playbackRoutes(memory: Memory, deviceKey: string): Hono {
       }));
       return c.json({ error: "invalid_playback_update", issues }, 400);
     }
-    await memory.record(parsed.data);
+    const result = await memory.record(parsed.data);
+    if (result.status === "stored" && recaps) {
+      // Keeps the "what did I miss?" answer ready. A failure here only means
+      // the next question gets answered live, so it never fails the update.
+      await recaps.refresh(result.viewing).catch((error: Error) => log(`recap refresh failed: ${error.message}`));
+    }
     return c.body(null, 204);
   });
 
@@ -35,6 +48,7 @@ export function playbackRoutes(memory: Memory, deviceKey: string): Hono {
       stale: isStale(viewing),
       cuesSeen: viewing.log.seen().length,
       lastMinute: toTranscript(viewing.log.recent(60)),
+      recap: (await memory.recap(viewing.householdId))?.text ?? null,
     });
   });
 

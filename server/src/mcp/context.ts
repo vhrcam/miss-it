@@ -1,4 +1,6 @@
 import { formatTimestamp } from "spoiler-safe-context";
+import type { Narrator } from "../ai/narrator.js";
+import type { Recaps } from "../ai/recaps.js";
 import type { CastGuide } from "../cast/guide.js";
 import type { Memory } from "../memory/memory.js";
 import { isStale, livePosition, type Viewing } from "../memory/viewing.js";
@@ -8,6 +10,9 @@ export interface ToolContext {
   cast: CastGuide;
   householdId: string;
   now: () => number;
+  log: (line: string) => void;
+  narrator?: Narrator;
+  recaps?: Recaps;
 }
 
 export const NOTHING_PLAYING = "Nothing is playing on the TV right now.";

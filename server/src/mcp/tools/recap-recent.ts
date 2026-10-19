@@ -26,6 +26,7 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
         title: z.string().optional(),
         from: z.string().optional(),
         to: z.string().optional(),
+        recap: z.string().optional(),
         lines: z.array(z.string()).optional(),
       },
       annotations: { title: "Recap what I missed", ...READ_ONLY },
@@ -39,17 +40,29 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
       const range = { from: formatTimestamp(from), to: formatTimestamp(to) };
       const cues = viewing.log.recent(seconds);
       const transcript = toTranscript(cues);
+      const lines = transcript ? transcript.split("\n") : [];
+      const playing = viewing.state === "playing";
+
+      if (ctx.recaps && cues.length) {
+        try {
+          const recap = await ctx.recaps.get(viewing, seconds);
+          return textResult(recap.text + staleNote(viewing, ctx), {
+            playing,
+            title: viewing.title,
+            ...range,
+            recap: recap.text,
+            lines,
+          });
+        } catch (error) {
+          ctx.log(`recap_recent fell back to the transcript: ${(error as Error).message}`);
+        }
+      }
 
       const text = cues.length
         ? `Everything said in ${viewing.title} from ${range.from} to ${range.to}. Nothing after ${range.to} has been shown yet.\n${transcript}`
         : `No one spoke in ${viewing.title} from ${range.from} to ${range.to}.`;
 
-      return textResult(text + staleNote(viewing, ctx), {
-        playing: viewing.state === "playing",
-        title: viewing.title,
-        ...range,
-        lines: transcript ? transcript.split("\n") : [],
-      });
+      return textResult(text + staleNote(viewing, ctx), { playing, title: viewing.title, ...range, lines });
     },
   );
 }
