@@ -1,0 +1,27 @@
+{
+  "name": "@rewind/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rewind's memory service and MCP server",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --conditions=source src/index.ts",
+    "start": "tsx --conditions=source src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "hono": "^4.13.13",
+    "spoiler-safe-context": "0.1.0",
+    "zod": "^4.6.7"
+  }
+}
