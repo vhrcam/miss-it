@@ -11,7 +11,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "simulate": "tsx --conditions=source scripts/simulate-tv.ts",
-    "build": "tsx scripts/build-lambda.ts"
+    "build": "tsx scripts/build-lambda.ts",
+    "faces:index": "tsx scripts/faces/index-frames.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
@@ -23,6 +24,7 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1153.0",
     "@aws-sdk/client-dynamodb": "^3.1153.0",
+    "@aws-sdk/client-rekognition": "^3.1153.0",
     "@aws-sdk/lib-dynamodb": "^3.1153.0",
     "@hono/node-server": "^2.1.5",
     "@modelcontextprotocol/sdk": "^1.32.1",

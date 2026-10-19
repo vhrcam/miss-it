@@ -23,3 +23,6 @@ coverage/
 
 # Packaged CloudFormation template
 infra/packaged.yaml
+
+# Local caches (face index, frames)
+.cache/
