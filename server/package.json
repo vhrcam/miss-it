@@ -10,10 +10,12 @@
     "start": "tsx --conditions=source src/index.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "simulate": "tsx --conditions=source scripts/simulate-tv.ts"
+    "simulate": "tsx --conditions=source scripts/simulate-tv.ts",
+    "build": "tsx scripts/build-lambda.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
