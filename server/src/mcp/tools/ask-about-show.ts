@@ -3,7 +3,8 @@ import { z } from "zod";
 import { formatTimestamp, toTranscript } from "spoiler-safe-context";
 import { currentViewing, NOTHING_PLAYING, READ_ONLY, staleNote, textResult, type ToolContext } from "../context.js";
 
-const MAX_CONTEXT_CHARS = 6000;
+const MAX_CONTEXT_CHARS = 24_000;
+const ANSWER_TIMEOUT_MS = 8000;
 
 export function registerAskAboutShow(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
@@ -20,6 +21,7 @@ export function registerAskAboutShow(server: McpServer, ctx: ToolContext): void 
       outputSchema: {
         title: z.string().optional(),
         upTo: z.string().optional(),
+        answer: z.string().optional(),
         context: z.string().optional(),
       },
       annotations: { title: "Ask about the show", ...READ_ONLY },
@@ -30,6 +32,19 @@ export function registerAskAboutShow(server: McpServer, ctx: ToolContext): void 
 
       const upTo = formatTimestamp(viewing.log.positionSec);
       const context = toTranscript(viewing.log.seen(), { maxChars: MAX_CONTEXT_CHARS });
+
+      if (ctx.narrator && context) {
+        try {
+          const answer = await ctx.narrator.answer(
+            { title: viewing.title, upToSec: viewing.log.positionSec, transcript: context, question },
+            AbortSignal.timeout(ANSWER_TIMEOUT_MS),
+          );
+          return textResult(answer + staleNote(viewing, ctx), { title: viewing.title, upTo, answer, context });
+        } catch (error) {
+          ctx.log(`ask_about_show fell back to the transcript: ${(error as Error).message}`);
+        }
+      }
+
       const text = context
         ? `To answer "${question}", use only these lines from ${viewing.title}. They are everything shown up to ${upTo}; ` +
           `don't guess what happens next.\n${context}`

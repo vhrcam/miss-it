@@ -77,3 +77,25 @@ describe("ready recaps", () => {
     expect(result.content[0]!.text).toContain("You're a jerk, Thom.");
   });
 });
+
+describe("answers", () => {
+  it("come from what has been shown so far", async () => {
+    const { app, narrator, play } = rewind();
+    await play({ positionSec: 60, cues: [cue(23, "You're a jerk, Thom."), cue(400, "Spoiler")] });
+
+    const result = await callTool(app, "ask_about_show", { question: "Why is she mad at him?" });
+    expect(result.content[0]!.text).toBe("Answer to: Why is she mad at him?");
+    expect(narrator.answers[0]!.transcript).toBe("[0:23] You're a jerk, Thom.");
+    expect(narrator.answers[0]!.upToSec).toBe(60);
+  });
+
+  it("fall back to the transcript when the model is down", async () => {
+    const narrator = new FakeNarrator();
+    narrator.failing = true;
+    const { app, play } = rewind(narrator);
+    await play({ positionSec: 60, cues: [cue(23, "You're a jerk, Thom.")] });
+
+    const result = await callTool(app, "ask_about_show", { question: "Why is she mad?" });
+    expect(result.content[0]!.text).toContain("use only these lines");
+  });
+});
