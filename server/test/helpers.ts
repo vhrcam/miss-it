@@ -1,4 +1,5 @@
 import { createApp } from "../src/app.js";
+import { CastGuide, type CastData } from "../src/cast/guide.js";
 import type { Config } from "../src/config.js";
 import { Memory } from "../src/memory/memory.js";
 import { InMemoryStore } from "../src/memory/store.js";
@@ -7,11 +8,12 @@ export { update } from "./fixtures.js";
 
 export const config: Config = { port: 0, deviceKey: "test-key", householdId: "demo" };
 
-export function setup(options: { now?: () => number } = {}) {
+export function setup(options: { cast?: CastData; now?: () => number } = {}) {
   const memory = new Memory(new InMemoryStore());
   const app = createApp({
     config,
     memory,
+    cast: new CastGuide(options.cast),
     now: options.now ?? Date.now,
     log: () => {},
   });

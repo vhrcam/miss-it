@@ -1,9 +1,11 @@
 import { formatTimestamp } from "spoiler-safe-context";
+import type { CastGuide } from "../cast/guide.js";
 import type { Memory } from "../memory/memory.js";
 import { isStale, livePosition, type Viewing } from "../memory/viewing.js";
 
 export interface ToolContext {
   memory: Memory;
+  cast: CastGuide;
   householdId: string;
   now: () => number;
 }

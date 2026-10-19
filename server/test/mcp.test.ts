@@ -23,6 +23,7 @@ describe("MCP server", () => {
 
     expect(body.result.tools.map((tool: { name: string }) => tool.name)).toEqual([
       "recap_recent",
+      "who_is_on_screen",
       "whats_playing",
     ]);
     for (const tool of body.result.tools) {
@@ -96,5 +97,38 @@ describe("whats_playing", () => {
     const result = await callTool(app, "whats_playing");
     expect(result.content[0]!.text).toContain("paused at 1:00");
     expect(result.content[0]!.text).toContain("hasn't checked in");
+  });
+});
+
+describe("who_is_on_screen", () => {
+  const cast = {
+    "tears-of-steel": [
+      {
+        character: "Celia",
+        actor: "Denise Rebergen",
+        bios: [
+          { fromSec: 0, text: "She's breaking up with Thom." },
+          { fromSec: 500, text: "A later reveal." },
+        ],
+        scenes: [[40, 120]] as [number, number][],
+      },
+    ],
+  };
+
+  it("names who is on screen with what's known so far", async () => {
+    const { app, memory } = setup({ cast });
+    await memory.record(update({ positionSec: 60, state: "paused" }));
+
+    const result = await callTool(app, "who_is_on_screen");
+    expect(result.content[0]!.text).toBe("Celia, played by Denise Rebergen. She's breaking up with Thom.");
+    expect(result.content[0]!.text).not.toContain("later reveal");
+  });
+
+  it("admits when it can't tell", async () => {
+    const { app, memory } = setup({ cast });
+    await memory.record(update({ positionSec: 300, state: "paused" }));
+
+    const result = await callTool(app, "who_is_on_screen");
+    expect(result.content[0]!.text).toContain("can't tell");
   });
 });

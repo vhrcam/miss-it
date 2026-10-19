@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import type { CastGuide } from "./cast/guide.js";
 import type { Config } from "./config.js";
 import type { Memory } from "./memory/memory.js";
 import { mcpHandler, type Logger } from "./mcp/route.js";
@@ -7,13 +8,14 @@ import { playbackRoutes } from "./playback/routes.js";
 export interface AppDeps {
   config: Config;
   memory: Memory;
+  cast: CastGuide;
   now?: () => number;
   log?: Logger;
 }
 
-export function createApp({ config, memory, now = Date.now, log = console.log }: AppDeps): Hono {
+export function createApp({ config, memory, cast, now = Date.now, log = console.log }: AppDeps): Hono {
   const app = new Hono();
-  const mcp = mcpHandler({ memory, householdId: config.householdId, now }, log);
+  const mcp = mcpHandler({ memory, cast, householdId: config.householdId, now }, log);
 
   app.get("/", (c) =>
     c.json({
