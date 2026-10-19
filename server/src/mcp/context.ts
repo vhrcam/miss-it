@@ -34,7 +34,7 @@ export function positionLabel(viewing: Viewing, ctx: ToolContext): string {
 
 export function staleNote(viewing: Viewing, ctx: ToolContext): string {
   return isStale(viewing, ctx.now())
-    ? " The TV hasn't checked in for a few minutes, so this may be out of date."
+    ? "\n\nNote: the TV hasn't checked in for a few minutes, so this may be out of date."
     : "";
 }
 
