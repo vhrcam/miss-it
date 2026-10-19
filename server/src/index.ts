@@ -9,5 +9,6 @@ const app = createApp({ config, memory: new Memory(new InMemoryStore()) });
 
 serve({ fetch: app.fetch, port: config.port }, ({ port }) => {
   console.log(`Rewind is listening on http://localhost:${port}`);
+  console.log(`  MCP endpoint   http://localhost:${port}/mcp`);
   console.log(`  TV updates     http://localhost:${port}/v1/playback`);
 });
