@@ -13,6 +13,8 @@ import {film, rewind} from '../config';
 const POLL_MS = 500;
 const TICK_MS = 5000;
 const SEEK_TIMEOUT_MS = 3000;
+const MAX_ATTEMPTS = film.sources.length * 2;
+const RETRY_DELAY_MS = 2500;
 
 const CUES = parseWebVTT(film.captions);
 
@@ -108,26 +110,35 @@ export function usePlayback() {
         trackerRef.current.seek(player.currentTime);
         report('seek');
       },
-      playing: () => setBuffering(false),
+      playing: () => {
+        attempts = 1;
+        setBuffering(false);
+      },
       canplay: () => setBuffering(false),
       waiting: () => setBuffering(true),
       loadedmetadata: () => setDurationSec(player.duration || 0),
       durationchange: () => setDurationSec(player.duration || 0),
       error: () => {
-        if (source < film.sources.length - 1) {
-          const resumeSec = player.currentTime;
-          source += 1;
-          player.src = film.sources[source];
+        if (attempts >= MAX_ATTEMPTS) {
+          setFailure(`Media error ${player.error?.code ?? ''}`.trim());
+          return;
+        }
+        // Try the next mirror after a pause. Right after the device boots,
+        // its network can take a few seconds to come up.
+        const resumeSec = player.currentTime;
+        const next = film.sources[attempts % film.sources.length];
+        attempts += 1;
+        retryTimer = setTimeout(() => {
+          player.src = next;
           if (resumeSec > 0) {
             player.currentTime = resumeSec;
           }
           player.play();
-        } else {
-          setFailure(`Media error ${player.error?.code ?? ''}`.trim());
-        }
+        }, RETRY_DELAY_MS);
       },
     };
-    let source = 0;
+    let attempts = 1;
+    let retryTimer = 0;
 
     const ready = player
       .initialize()
@@ -139,7 +150,7 @@ export function usePlayback() {
           player.addEventListener(name, listener);
         }
         player.autoplay = false;
-        player.src = film.sources[source];
+        player.src = film.sources[0];
         showCaptions(player, CUES);
         if (captionViewRef.current) {
           player.setCaptionViewHandle(captionViewRef.current);
@@ -151,6 +162,7 @@ export function usePlayback() {
 
     return () => {
       active = false;
+      clearTimeout(retryTimer);
       ready
         .then(() => {
           for (const [name, listener] of Object.entries(listeners)) {
