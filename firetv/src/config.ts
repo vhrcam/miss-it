@@ -1,9 +1,9 @@
 import tearsOfSteelCaptions from './captions/tearsOfSteel';
+import {env} from './env';
 
-// The Vega Virtual Device reaches the Mac it runs on at 10.0.2.2.
+// Written by scripts/write-env.js before each build. See firetv/README.md.
 export const rewind = {
-  apiUrl: 'http://10.0.2.2:8787',
-  deviceKey: 'dev-device-key',
+  ...env,
   householdId: 'demo',
 };
 
