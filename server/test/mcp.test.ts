@@ -23,6 +23,7 @@ describe("MCP server", () => {
 
     expect(body.result.tools.map((tool: { name: string }) => tool.name)).toEqual([
       "recap_recent",
+      "whats_playing",
     ]);
     for (const tool of body.result.tools) {
       expect(tool.annotations.readOnlyHint).toBe(true);
@@ -71,5 +72,29 @@ describe("recap_recent", () => {
     const result = await callTool(app, "recap_recent");
     expect(result.content[0]!.text).toContain("Nothing is playing");
     expect(result.structuredContent).toEqual({ playing: false });
+  });
+});
+
+describe("whats_playing", () => {
+  it("gives the title, position and time left", async () => {
+    let now = 1_000_000;
+    const { app, memory } = setup({ now: () => now });
+    await memory.record(update({ positionSec: 312 }), now);
+    now += 2000;
+
+    const result = await callTool(app, "whats_playing");
+    expect(result.content[0]!.text).toBe("Tears of Steel is playing, 5:14 in, about 7 minutes left.");
+    expect(result.structuredContent).toMatchObject({ position: "5:14", duration: "12:14", remaining: "7:00" });
+  });
+
+  it("mentions when the TV has gone quiet", async () => {
+    let now = 1_000_000;
+    const { app, memory } = setup({ now: () => now });
+    await memory.record(update({ positionSec: 60, state: "paused" }), now);
+    now += 5 * 60 * 1000;
+
+    const result = await callTool(app, "whats_playing");
+    expect(result.content[0]!.text).toContain("paused at 1:00");
+    expect(result.content[0]!.text).toContain("hasn't checked in");
   });
 });
