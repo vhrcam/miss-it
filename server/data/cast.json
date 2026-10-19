@@ -1,0 +1,340 @@
+{
+  "tears-of-steel": [
+    {
+      "character": "Thom",
+      "actor": "Vanja Rukavina",
+      "bios": [
+        {
+          "fromSec": 0,
+          "text": "Celia's boyfriend. They're fighting on the bridge because he'd rather chase his dream of going to space."
+        }
+      ],
+      "scenes": [
+        [
+          24,
+          40
+        ],
+        [
+          262,
+          283
+        ],
+        [
+          300,
+          303
+        ],
+        [
+          310,
+          320
+        ],
+        [
+          323,
+          328
+        ],
+        [
+          347,
+          362
+        ],
+        [
+          369,
+          372
+        ],
+        [
+          384,
+          399
+        ],
+        [
+          403,
+          409
+        ],
+        [
+          414,
+          419
+        ],
+        [
+          509,
+          521
+        ]
+      ]
+    },
+    {
+      "character": "Celia",
+      "actor": "Denise Rebergen",
+      "bios": [
+        {
+          "fromSec": 0,
+          "text": "Thom's girlfriend, who has a robot hand. She's breaking up with him on the bridge."
+        }
+      ],
+      "scenes": [
+        [
+          24,
+          40
+        ],
+        [
+          309,
+          311
+        ],
+        [
+          319,
+          322
+        ],
+        [
+          345,
+          350
+        ],
+        [
+          361,
+          365
+        ],
+        [
+          382,
+          393
+        ],
+        [
+          411,
+          416
+        ]
+      ]
+    },
+    {
+      "character": "Old Thom",
+      "actor": "Derek de Lint",
+      "bios": [
+        {
+          "fromSec": 0,
+          "text": "An older man working with the crew in the church."
+        },
+        {
+          "fromSec": 226,
+          "text": "Thom, forty years after the breakup on the bridge. The crew is counting on him."
+        }
+      ],
+      "scenes": [
+        [
+          99,
+          102
+        ],
+        [
+          119,
+          145
+        ],
+        [
+          161,
+          163
+        ],
+        [
+          173,
+          182
+        ],
+        [
+          187,
+          207
+        ],
+        [
+          213,
+          216
+        ],
+        [
+          224,
+          235
+        ],
+        [
+          238,
+          253
+        ],
+        [
+          530,
+          538
+        ],
+        [
+          542,
+          557
+        ],
+        [
+          574,
+          579
+        ]
+      ]
+    },
+    {
+      "character": "Barley",
+      "actor": "Sergio Hasselbaink",
+      "bios": [
+        {
+          "fromSec": 0,
+          "text": "One of the crew in the church."
+        },
+        {
+          "fromSec": 197,
+          "text": "One of the crew in the church. He's keeping track of how much time they have."
+        }
+      ],
+      "scenes": [
+        [
+          82,
+          85
+        ],
+        [
+          116,
+          120
+        ],
+        [
+          140,
+          147
+        ],
+        [
+          150,
+          153
+        ],
+        [
+          198,
+          201
+        ],
+        [
+          338,
+          341
+        ],
+        [
+          436,
+          439
+        ],
+        [
+          481,
+          486
+        ],
+        [
+          491,
+          493
+        ],
+        [
+          501,
+          504
+        ],
+        [
+          715,
+          730
+        ]
+      ]
+    },
+    {
+      "character": "Captain",
+      "actor": "Rogier Schippers",
+      "bios": [
+        {
+          "fromSec": 0,
+          "text": "One of the crew in the church, with a mechanical eye."
+        },
+        {
+          "fromSec": 203,
+          "text": "He's in charge of the crew in the church and calling the shots."
+        }
+      ],
+      "scenes": [
+        [
+          59,
+          64
+        ],
+        [
+          192,
+          207
+        ],
+        [
+          213,
+          216
+        ],
+        [
+          224,
+          235
+        ],
+        [
+          238,
+          253
+        ],
+        [
+          289,
+          294
+        ],
+        [
+          340,
+          346
+        ],
+        [
+          366,
+          368
+        ],
+        [
+          371,
+          374
+        ],
+        [
+          399,
+          404
+        ],
+        [
+          408,
+          412
+        ],
+        [
+          427,
+          431
+        ],
+        [
+          505,
+          510
+        ],
+        [
+          556,
+          571
+        ]
+      ]
+    },
+    {
+      "character": "Tech head",
+      "actor": "Chris Haley",
+      "bios": [
+        {
+          "fromSec": 0,
+          "text": "The crew's tech. He's at the screens, syncing the robot's memory."
+        }
+      ],
+      "scenes": [
+        [
+          50,
+          54
+        ],
+        [
+          296,
+          298
+        ],
+        [
+          302,
+          308
+        ],
+        [
+          349,
+          353
+        ],
+        [
+          373,
+          383
+        ],
+        [
+          398,
+          400
+        ],
+        [
+          418,
+          425
+        ],
+        [
+          503,
+          506
+        ],
+        [
+          538,
+          543
+        ]
+      ]
+    }
+  ]
+}

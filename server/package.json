@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "simulate": "tsx --conditions=source scripts/simulate-tv.ts",
     "build": "tsx scripts/build-lambda.ts",
-    "faces:index": "tsx scripts/faces/index-frames.ts"
+    "faces:index": "tsx scripts/faces/index-frames.ts",
+    "faces:match": "tsx scripts/faces/match-cast.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

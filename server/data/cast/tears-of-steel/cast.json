@@ -1,0 +1,58 @@
+{
+  "contentId": "tears-of-steel",
+  "title": "Tears of Steel",
+  "credit": "Tears of Steel (CC BY 3.0) Blender Foundation, mango.blender.org",
+  "characters": [
+    {
+      "character": "Thom",
+      "actor": "Vanja Rukavina",
+      "photos": ["thom.jpg"],
+      "bios": [
+        { "fromSec": 0, "text": "Celia's boyfriend. They're fighting on the bridge because he'd rather chase his dream of going to space." }
+      ]
+    },
+    {
+      "character": "Celia",
+      "actor": "Denise Rebergen",
+      "photos": ["celia.jpg"],
+      "bios": [
+        { "fromSec": 0, "text": "Thom's girlfriend, who has a robot hand. She's breaking up with him on the bridge." }
+      ]
+    },
+    {
+      "character": "Old Thom",
+      "actor": "Derek de Lint",
+      "photos": ["old-thom.jpg"],
+      "bios": [
+        { "fromSec": 0, "text": "An older man working with the crew in the church." },
+        { "fromSec": 226, "text": "Thom, forty years after the breakup on the bridge. The crew is counting on him." }
+      ]
+    },
+    {
+      "character": "Barley",
+      "actor": "Sergio Hasselbaink",
+      "photos": ["barley.jpg"],
+      "bios": [
+        { "fromSec": 0, "text": "One of the crew in the church." },
+        { "fromSec": 197, "text": "One of the crew in the church. He's keeping track of how much time they have." }
+      ]
+    },
+    {
+      "character": "Captain",
+      "actor": "Rogier Schippers",
+      "photos": ["captain.jpg"],
+      "bios": [
+        { "fromSec": 0, "text": "One of the crew in the church, with a mechanical eye." },
+        { "fromSec": 203, "text": "He's in charge of the crew in the church and calling the shots." }
+      ]
+    },
+    {
+      "character": "Tech head",
+      "actor": "Chris Haley",
+      "photos": ["tech-head.jpg"],
+      "bios": [
+        { "fromSec": 0, "text": "The crew's tech. He's at the screens, syncing the robot's memory." }
+      ]
+    }
+  ]
+}
