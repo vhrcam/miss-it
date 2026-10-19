@@ -1,0 +1,43 @@
+{
+  "name": "spoiler-safe-context",
+  "version": "0.1.0",
+  "description": "Turn captions into AI context that never runs ahead of the viewer",
+  "license": "MIT",
+  "author": "Camdyn Newman",
+  "type": "module",
+  "keywords": [
+    "captions",
+    "subtitles",
+    "webvtt",
+    "srt",
+    "spoilers",
+    "llm",
+    "context",
+    "mcp"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
