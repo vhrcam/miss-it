@@ -9,7 +9,8 @@
     "dev": "tsx watch --conditions=source src/index.ts",
     "start": "tsx --conditions=source src/index.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "simulate": "tsx --conditions=source scripts/simulate-tv.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
