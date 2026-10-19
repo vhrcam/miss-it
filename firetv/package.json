@@ -8,6 +8,7 @@
   "scripts": {
     "clean": "rm -rf node_modules buildinfo.json dist build",
     "start": "react-native start",
+    "captions": "node scripts/bundle-captions.js",
     "test": "jest --colors ",
     "test:snapshot": "jest --colors --updateSnapshot",
     "lint": "eslint src test --ext .ts,.tsx",
