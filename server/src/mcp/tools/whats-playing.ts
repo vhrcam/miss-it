@@ -2,7 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { formatTimestamp } from "spoiler-safe-context";
 import { livePosition } from "../../memory/viewing.js";
-import { currentViewing, NOTHING_PLAYING, READ_ONLY, staleNote, textResult, type ToolContext } from "../context.js";
+import { currentViewing, NOTHING_PLAYING, READ_ONLY, showOnTv, staleNote, textResult, type ToolContext } from "../context.js";
 
 export function registerWhatsPlaying(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
@@ -37,6 +37,7 @@ export function registerWhatsPlaying(server: McpServer, ctx: ToolContext): void 
             ? `${viewing.title} is paused at ${position}.`
             : `${viewing.title} is playing, ${position} in${remainingSec === undefined ? "" : `, ${timeLeft(remainingSec)}`}.`;
 
+      await showOnTv(ctx, { tool: "whats_playing", text: sentence });
       return textResult(sentence + staleNote(viewing, ctx), {
         playing: viewing.state === "playing",
         title: viewing.title,

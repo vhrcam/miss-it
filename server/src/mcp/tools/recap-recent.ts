@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { formatTimestamp, toTranscript } from "spoiler-safe-context";
-import { currentViewing, NOTHING_PLAYING, READ_ONLY, staleNote, textResult, type ToolContext } from "../context.js";
+import { currentViewing, NOTHING_PLAYING, READ_ONLY, showOnTv, staleNote, textResult, type ToolContext } from "../context.js";
 
 export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
@@ -46,6 +46,7 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
       if (ctx.recaps && cues.length) {
         try {
           const recap = await ctx.recaps.get(viewing, seconds);
+          await showOnTv(ctx, { tool: "recap_recent", text: recap.text });
           return textResult(recap.text + staleNote(viewing, ctx), {
             playing,
             title: viewing.title,
@@ -57,6 +58,9 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
           ctx.log(`recap_recent fell back to the transcript: ${(error as Error).message}`);
         }
       }
+
+      // Without the model, the card shows the last couple of lines.
+      if (cues.length) await showOnTv(ctx, { tool: "recap_recent", text: toTranscript(cues.slice(-2), { timestamps: false }) });
 
       const text = cues.length
         ? `Everything from ${range.from} to ${range.to} in ${viewing.title}. Nothing after ${range.to} has been shown yet.\n${transcript}`

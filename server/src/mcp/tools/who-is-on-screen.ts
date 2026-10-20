@@ -1,7 +1,16 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { livePosition } from "../../memory/viewing.js";
-import { currentViewing, NOTHING_PLAYING, positionLabel, READ_ONLY, staleNote, textResult, type ToolContext } from "../context.js";
+import {
+  currentViewing,
+  NOTHING_PLAYING,
+  positionLabel,
+  READ_ONLY,
+  showOnTv,
+  staleNote,
+  textResult,
+  type ToolContext,
+} from "../context.js";
 
 export function registerWhoIsOnScreen(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
@@ -30,6 +39,7 @@ export function registerWhoIsOnScreen(server: McpServer, ctx: ToolContext): void
             .join("\n")
         : `I can't tell who's on screen in ${viewing.title} at ${at}.`;
 
+      if (people.length) await showOnTv(ctx, { tool: "who_is_on_screen", text });
       return textResult(text + staleNote(viewing, ctx), { title: viewing.title, at, people });
     },
   );

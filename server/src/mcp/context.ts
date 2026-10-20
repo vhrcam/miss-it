@@ -1,9 +1,10 @@
+import { randomUUID } from "node:crypto";
 import { formatTimestamp } from "spoiler-safe-context";
 import type { Narrator } from "../ai/narrator.js";
 import type { Recaps } from "../ai/recaps.js";
 import type { CastGuide } from "../cast/guide.js";
 import type { Memory } from "../memory/memory.js";
-import { isStale, livePosition, type Viewing } from "../memory/viewing.js";
+import { isStale, livePosition, type StoredAnswer, type Viewing } from "../memory/viewing.js";
 
 export interface ToolContext {
   memory: Memory;
@@ -36,6 +37,16 @@ export function staleNote(viewing: Viewing, ctx: ToolContext): string {
   return isStale(viewing, ctx.now())
     ? "\n\nNote: the TV hasn't checked in for a few minutes, so this may be out of date."
     : "";
+}
+
+// Keeps what Rewind told Alexa so the TV can show it as a card. The card is an
+// extra, so a failed write never costs the user their answer.
+export async function showOnTv(ctx: ToolContext, card: Pick<StoredAnswer, "tool" | "text" | "question">): Promise<void> {
+  try {
+    await ctx.memory.saveAnswer(ctx.householdId, { id: randomUUID(), ...card, answeredAt: ctx.now() });
+  } catch (error) {
+    ctx.log(`answer card failed: ${(error as Error).message}`);
+  }
 }
 
 export function textResult<T extends Record<string, unknown>>(text: string, structuredContent: T) {
