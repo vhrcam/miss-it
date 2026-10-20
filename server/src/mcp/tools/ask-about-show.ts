@@ -6,6 +6,11 @@ import { currentViewing, NOTHING_PLAYING, READ_ONLY, showOnTv, staleNote, textRe
 const MAX_CONTEXT_CHARS = 24_000;
 const ANSWER_TIMEOUT_MS = 8000;
 
+// Questions about what comes next get a straight "no spoilers", with or
+// without the model, so there's nothing to leak.
+const ASKS_AHEAD =
+  /\b(what happens (next|later|at the end|in the end)|how does (it|this|the (movie|show|film|episode)) end|who (wins|dies)|will|going to|gonna|spoil\w*|does .{1,40}\b(die|survive|win|come back|make it))\b/i;
+
 export function registerAskAboutShow(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
     "ask_about_show",
@@ -31,6 +36,12 @@ export function registerAskAboutShow(server: McpServer, ctx: ToolContext): void 
       if (!viewing) return textResult(NOTHING_PLAYING, {});
 
       const upTo = formatTimestamp(viewing.log.positionSec);
+      if (ASKS_AHEAD.test(question)) {
+        const answer = `No spoilers from me. I only know what's been shown so far, up to ${upTo}.`;
+        await showOnTv(ctx, { tool: "ask_about_show", question, text: answer });
+        return textResult(answer + staleNote(viewing, ctx), { title: viewing.title, upTo, answer });
+      }
+
       const context = toTranscript(viewing.log.seen(), { maxChars: MAX_CONTEXT_CHARS });
 
       if (ctx.narrator && context) {

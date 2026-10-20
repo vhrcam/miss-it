@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FakeNarrator } from "./fake-narrator.js";
 import { callTool, mcp, setup, update } from "./helpers.js";
 
 const cue = (startSec: number, text: string) => ({ startSec, endSec: startSec + 3, text });
@@ -193,5 +194,28 @@ describe("ask_about_show", () => {
     expect(result.structuredContent.context).toBe("[0:20] You never listen");
     expect(result.content[0]!.text).toContain("Why is she mad at him?");
     expect(result.content[0]!.text).not.toContain("Spoiler");
+  });
+
+  it("won't say what happens next, even with a model", async () => {
+    const narrator = new FakeNarrator();
+    const { app, memory } = setup({ narrator });
+    await memory.record(update({ positionSec: 312, cues: [cue(20, "You never listen")] }));
+
+    for (const question of ["What happens next?", "How does it end?", "Does Celia die?", "Will Thom go to space?"]) {
+      const result = await callTool(app, "ask_about_show", { question });
+      expect(result.structuredContent.answer).toBe("No spoilers from me. I only know what's been shown so far, up to 5:12.");
+    }
+    expect(narrator.answers).toHaveLength(0);
+  });
+
+  it("still answers questions about what already happened", async () => {
+    const narrator = new FakeNarrator();
+    const { app, memory } = setup({ narrator });
+    await memory.record(update({ positionSec: 90, cues: [cue(20, "You never listen")] }));
+
+    for (const question of ["Why is she mad at him?", "Where are they?", "What's the robot thing about?"]) {
+      const result = await callTool(app, "ask_about_show", { question });
+      expect(result.structuredContent.answer).toBe(`Answer to: ${question}`);
+    }
   });
 });
