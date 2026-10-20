@@ -11,6 +11,7 @@ import {
   KeplerCaptionsView,
   KeplerVideoSurfaceView,
 } from '@amazon-devices/react-native-w3cmedia';
+import {RewindBadge} from '../components/RewindBadge';
 import {usePlayback} from '../player/usePlayback';
 import {film} from '../config';
 
@@ -108,17 +109,8 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
         onCaptionViewDestroyed={playback.onCaptionViewDestroyed}
       />
 
-      <View style={styles.badge}>
-        <View
-          style={[styles.dot, playback.link === 'listening' && styles.dotLive]}
-        />
-        <Text style={styles.badgeText}>
-          {playback.link === 'listening'
-            ? 'Rewind is listening'
-            : playback.link === 'offline'
-            ? 'Rewind is offline'
-            : 'Connecting to Rewind'}
-        </Text>
+      <View style={styles.corner}>
+        <RewindBadge status={playback.link} />
       </View>
 
       {playback.buffering && !playback.failure && (
@@ -183,31 +175,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 2,
   },
-  badge: {
+  corner: {
     position: 'absolute',
-    top: 48,
-    right: 64,
+    top: 64,
+    right: 96,
     zIndex: 3,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 32,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  },
-  dot: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    marginRight: 14,
-    backgroundColor: '#8A8F98',
-  },
-  dotLive: {
-    backgroundColor: '#3DD6F5',
-  },
-  badgeText: {
-    color: '#FFFFFF',
-    fontSize: 28,
+    alignItems: 'flex-end',
   },
   spinner: {
     position: 'absolute',
