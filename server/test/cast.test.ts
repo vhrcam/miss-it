@@ -9,6 +9,13 @@ describe("Tears of Steel cast guide", () => {
     expect(onScreen(30)).toEqual(["Celia", "Thom"]);
   });
 
+  it("remembers who just left the screen while their voices carry over", () => {
+    const lastSeen = (sec: number) => guide.lastSeen("tears-of-steel", sec).map((member) => member.character).sort();
+    expect(onScreen(41)).toEqual([]);
+    expect(lastSeen(41)).toEqual(["Celia", "Thom"]);
+    expect(lastSeen(52)).not.toContain("Celia");
+  });
+
   it("finds the Tech head when the memory overwrite completes", () => {
     expect(onScreen(540)).toContain("Tech head");
   });

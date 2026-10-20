@@ -43,6 +43,14 @@ export class CastGuide {
       .filter((entry) => entry.scenes.some(([start, end]) => start <= positionSec && positionSec <= end))
       .map((entry) => toMember(entry, positionSec));
   }
+
+  // Who left the screen in the last few seconds. Voices often carry over a
+  // cut, and looking back can never spoil anything.
+  lastSeen(contentId: string, positionSec: number, withinSec = 10): CastMember[] {
+    return (this.#titles.get(contentId) ?? [])
+      .filter((entry) => entry.scenes.some(([, end]) => end < positionSec && positionSec - end <= withinSec))
+      .map((entry) => toMember(entry, positionSec));
+  }
 }
 
 function toMember(entry: CastEntry, positionSec: number): CastMember {

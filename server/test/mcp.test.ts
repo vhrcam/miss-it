@@ -125,6 +125,17 @@ describe("who_is_on_screen", () => {
     expect(result.content[0]!.text).not.toContain("later reveal");
   });
 
+  it("names who was on screen a moment ago", async () => {
+    const { app, memory } = setup({ cast });
+    await memory.record(update({ positionSec: 125, state: "paused" }));
+
+    const result = await callTool(app, "who_is_on_screen");
+    expect(result.content[0]!.text).toBe(
+      "No one is on screen right now. Just before this:\nCelia, played by Denise Rebergen. She's breaking up with Thom.",
+    );
+    expect(result.structuredContent.recent).toHaveLength(1);
+  });
+
   it("admits when it can't tell", async () => {
     const { app, memory } = setup({ cast });
     await memory.record(update({ positionSec: 300, state: "paused" }));
