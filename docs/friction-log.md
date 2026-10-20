@@ -61,3 +61,15 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Severity** | Low. |
 | **Workaround** | Downloaded the doc pages and converted them to text. |
 | **Suggestion** | Serve `llms.txt` as `text/plain`, plus Markdown versions of each page. |
+
+## 6. Bedrock says "Operation not allowed" on a new account
+
+| | |
+|---|---|
+| **Task** | Call Amazon Nova 2 Lite on a brand-new AWS account to write Rewind's recaps. |
+| **Steps** | Created the account, signed in with `aws login`, called `converse` with `us.amazon.nova-2-lite-v1:0`. For the first hour the error was "Your account is currently being verified". After that, every Nova model returned `ValidationException: Operation not allowed`, in the CLI and in the console playground. Lambda, DynamoDB and Rekognition all worked from the start. |
+| **Expected** | Bedrock works once verification ends, or the error says what's missing. |
+| **Actual** | Service Quotas showed every Nova inference quota at 0, including "Model invocation max tokens per day for Amazon Nova 2 Lite", which can't be adjusted. `get-foundation-model-availability` said `NOT_AUTHORIZED`. Nothing in the error or the console pointed at quotas. |
+| **Severity** | High. It blocked every AI feature on day one of a four-day hackathon. |
+| **Workaround** | Built and tested against a fake model, shipped a fallback that reads out the real dialogue, and opened a support case to raise the quotas. |
+| **Suggestion** | Make the error say "your account's quota for this model is 0", link to how to raise it, and warn hackathon builders on new accounts on the Resources page. |
