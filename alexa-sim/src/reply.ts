@@ -34,7 +34,8 @@ export function replyFor(tool: ToolName, result: ToolResult): Reply {
     .map((part) => part.text ?? '')
     .join('\n')
     .trim();
-  const [text = '', note] = full.split(NOTE);
+  const [text = '', rawNote] = full.split(NOTE);
+  const note = rawNote && rawNote[0]?.toUpperCase() + rawNote.slice(1);
   const data = result.structuredContent ?? {};
   const reply = (headline: string, lines: string[] = [], readLines = false) => ({
     speech: readLines ? [headline, ...lines].join(' ') : headline,

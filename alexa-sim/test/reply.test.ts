@@ -97,7 +97,7 @@ describe('replyFor who_is_on_screen and whats_playing', () => {
     );
     expect(reply.speech).toBe('Tears of Steel is paused at 0:31.');
     expect(reply.note).toBe(
-      'the TV hasn’t checked in for a few minutes, so this may be out of date.',
+      'The TV hasn’t checked in for a few minutes, so this may be out of date.',
     );
   });
 
