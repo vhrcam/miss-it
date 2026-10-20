@@ -4,6 +4,7 @@ schema-version = 1
 title = "Rewind"
 version = "0.1.0"
 id = "com.vhrcam.rewind"
+icon = "@image/rewind-icon.png"
 
 [os.version]
 min = "1.2"

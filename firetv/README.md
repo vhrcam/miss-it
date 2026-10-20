@@ -172,7 +172,7 @@ The tests cover the WebVTT parser (including the bundled Tears of Steel captions
 npm run captions
 ```
 
-The images in `src/assets/` are the Home backdrop, a still from the film with the shading baked in, and the fades behind the player controls. To make them again, download the film with `media/fetch.sh` and run:
+The images in `src/assets/` are the Home backdrop, a still from the film with the shading baked in, and the fades behind the player controls. The app icon, Rewind's mark as the 512 × 512 PNG the manifest asks for, is `assets/image/rewind-icon.png`. To make them all again, download the film with `media/fetch.sh` and run:
 
 ```sh
 npm run images
