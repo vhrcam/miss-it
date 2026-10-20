@@ -10,10 +10,11 @@ export interface PlaybackDeps {
   memory: Memory;
   deviceKey: string;
   recaps?: Recaps;
+  now?: () => number;
   log: (line: string) => void;
 }
 
-export function playbackRoutes({ memory, deviceKey, recaps, log }: PlaybackDeps): Hono {
+export function playbackRoutes({ memory, deviceKey, recaps, now = Date.now, log }: PlaybackDeps): Hono {
   const app = new Hono();
   app.use("*", bearerAuth({ token: deviceKey }));
 
@@ -50,6 +51,15 @@ export function playbackRoutes({ memory, deviceKey, recaps, log }: PlaybackDeps)
       lastMinute: toTranscript(viewing.log.recent(60)),
       recap: (await memory.recap(viewing.householdId))?.text ?? null,
     });
+  });
+
+  // The last answer Alexa got, for the TV's answer card. The age is measured
+  // here, so it doesn't matter if the TV's clock is off.
+  app.get("/:householdId/answer", async (c) => {
+    const answer = await memory.answer(c.req.param("householdId"));
+    if (!answer) return c.json({ answer: null });
+    const { answeredAt, ...card } = answer;
+    return c.json({ answer: { ...card, ageMs: Math.max(0, now() - answeredAt) } });
   });
 
   return app;

@@ -30,7 +30,7 @@ export function createApp({ config, memory, cast, narrator, now = Date.now, log 
     }),
   );
   app.get("/health", (c) => c.json({ ok: true }));
-  app.route("/v1/playback", playbackRoutes({ memory, deviceKey: config.deviceKey, recaps, log }));
+  app.route("/v1/playback", playbackRoutes({ memory, deviceKey: config.deviceKey, recaps, now, log }));
 
   app.post("/mcp", mcp);
   app.on(["GET", "DELETE"], "/mcp", (c) =>
