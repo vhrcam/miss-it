@@ -13,9 +13,9 @@ STACK="${REWIND_STACK:-rewind}"
 REGION="${AWS_REGION:-us-east-1}"
 : "${REWIND_DEVICE_KEY:?Set REWIND_DEVICE_KEY to the key the Fire TV app sends}"
 
-ACCOUNT="$(aws sts get-caller-identity --query Account --output text)"
+ACCOUNT="$(aws sts get-caller-identity --query Account --output text --region "$REGION")"
 BUCKET="rewind-artifacts-$ACCOUNT-$REGION"
-if ! aws s3api head-bucket --bucket "$BUCKET" 2>/dev/null; then
+if ! aws s3api head-bucket --bucket "$BUCKET" --region "$REGION" 2>/dev/null; then
   aws s3 mb "s3://$BUCKET" --region "$REGION"
 fi
 
