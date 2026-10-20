@@ -73,3 +73,15 @@ What got in the way while building the Vega app, in the order we hit it. Severit
 | **Severity** | Low. |
 | **Workaround** | Followed the guide. |
 | **Suggestion** | Update the README to match the guide. |
+
+## 7. The caption view keeps the frame it started with
+
+| | |
+|---|---|
+| **Task** | Move the captions above the player controls while the controls are on screen. |
+| **Steps** | Changed the `KeplerCaptionsView` style from full screen to `bottom: 220` while the controls showed, then back. |
+| **Expected** | The captions move with the view. |
+| **Actual** | The captions stayed at the bottom of the screen, under the controls. A new caption view with the same style put them in the right place, so the view seems to read its frame only once, when it's created. |
+| **Severity** | Low. |
+| **Workaround** | Gave the caption view a React `key` that changes with the controls, so it's created again with the new frame. Its new handle goes to `setCaptionViewHandle`. |
+| **Suggestion** | Apply layout changes to the caption view, or add a prop for where captions sit (like a bottom inset for player controls). |
