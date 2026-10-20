@@ -173,3 +173,15 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 | **Severity** | Low. |
 | **Workaround** | Gave the caption view a React `key` that changes with the controls, so it's created again with the new frame. Its new handle goes to `setCaptionViewHandle`. |
 | **Suggestion** | Apply layout changes to the caption view, or add a prop for where captions sit (like a bottom inset for player controls). |
+
+### 15. The square app icon is cropped in "Your apps"
+
+| | |
+|---|---|
+| **Task** | Give the app an icon. |
+| **Steps** | Added a 512 × 512 PNG as `[package] icon` in `manifest.toml`, as the manifest docs ask, then opened "Your apps" on the virtual device. |
+| **Expected** | The docs say where the icon appears and how it's fitted. They name only Settings › Applications, and the virtual device's Settings has no Applications screen to check. |
+| **Actual** | "Your apps" shows the icon too, in a wide tile about 1.55:1. The square image is scaled to the tile's width, so its top and bottom are cut off, and our round logo lost its top and bottom edges. |
+| **Severity** | Low. It took two extra builds to find a size that fits. |
+| **Workaround** | Kept the logo inside the middle half of the 512 × 512 canvas. |
+| **Suggestion** | Document every place the icon appears, with the safe area that "Your apps" keeps, or accept a separate wide image for the tile. |
