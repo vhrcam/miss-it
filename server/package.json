@@ -13,7 +13,8 @@
     "simulate": "tsx --conditions=source scripts/simulate-tv.ts",
     "build": "tsx scripts/build-lambda.ts",
     "faces:index": "tsx scripts/faces/index-frames.ts",
-    "faces:match": "tsx scripts/faces/match-cast.ts"
+    "faces:match": "tsx scripts/faces/match-cast.ts",
+    "scenes:describe": "tsx scripts/scenes/describe.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
