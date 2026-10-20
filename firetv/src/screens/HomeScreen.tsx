@@ -95,7 +95,7 @@ function HomeButton({kind, label, onPress}: ButtonProps) {
   return (
     <View style={[styles.ring, focused && styles.ringFocused]}>
       <TouchableOpacity
-        activeOpacity={0.85}
+        activeOpacity={1}
         hasTVPreferredFocus={play}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
