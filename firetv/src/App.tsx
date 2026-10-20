@@ -1,30 +1,13 @@
 import {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {HomeScreen} from './screens/HomeScreen';
 import {PlayerScreen} from './screens/PlayerScreen';
 
 export const App = () => {
-  const [watching, setWatching] = useState(true);
+  const [watching, setWatching] = useState(false);
 
   if (watching) {
     return <PlayerScreen onExit={() => setWatching(false)} />;
   }
 
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.text}>Rewind</Text>
-    </View>
-  );
+  return <HomeScreen onPlay={() => setWatching(true)} />;
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#0B0D12',
-  },
-  text: {
-    color: '#FFFFFF',
-    fontSize: 64,
-  },
-});
