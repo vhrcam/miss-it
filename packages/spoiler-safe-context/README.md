@@ -1,5 +1,7 @@
 # spoiler-safe-context
 
+[![CI](https://github.com/vhrcam/spoiler-safe-context/actions/workflows/ci.yml/badge.svg)](https://github.com/vhrcam/spoiler-safe-context/actions/workflows/ci.yml)
+
 **Turn captions into AI context that never runs ahead of the viewer.**
 
 An assistant that answers questions about what someone is watching needs context. Hand a model the whole script and it spoils the ending. The captions that have *already been on screen* are the right context, as long as something keeps track of where the viewer is. That's this library: it parses WebVTT and SRT, remembers which cues the viewer has seen, and only ever hands back what came before their current position.
@@ -91,6 +93,30 @@ log.add(cues.filter((cue) => cue.startSec <= player.currentTime));
 ## The guarantee
 
 `seen()` and `recent()` never return a cue whose `startSec` is after the viewer's position. The model can't spoil what it never sees, so put the spoiler line in your prompt too ("Never guess what happens next, even if you recognize the show"). That covers what the model might already know about a famous title.
+
+## Example
+
+[`examples/what-did-i-miss.mjs`](examples/what-did-i-miss.mjs) plays a short mystery scene. The viewer watches 45 seconds and asks what they missed, then the whole caption file gets loaded anyway, then they rewind. The confession at 1:30 never shows up.
+
+```sh
+npm install
+npm run build
+node examples/what-did-i-miss.mjs
+```
+
+```
+What did I miss? (the last 30 seconds)
+[0:21] Ben: Nobody came in. I was at the door the whole time.
+[0:37] Ada: Then it never left this room.
+
+Everything so far, with the whole file loaded:
+[0:05] Ada: The painting was on this wall an hour ago.
+[0:21] Ben: Nobody came in. I was at the door the whole time.
+[0:37] Ada: Then it never left this room.
+
+After rewinding to 0:20:
+[0:05] Ada: The painting was on this wall an hour ago.
+```
 
 ## Development
 
