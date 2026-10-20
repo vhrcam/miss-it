@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulated Alexa+ · Rewind</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%233DD6F5'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body data-state="ready">
+    <div class="page">
+      <header class="header">
+        <div class="brand">
+          <div class="title-row">
+            <h1>Simulated Alexa+</h1>
+            <span class="tag">DEMO</span>
+          </div>
+          <p class="subtitle">Asks Rewind’s MCP tools the way Alexa+ would.</p>
+        </div>
+        <div class="server" id="server" data-status="connecting">
+          <span class="dot"></span>
+          <span id="server-label">Connecting to Rewind</span>
+        </div>
+      </header>
+
+      <main class="stage" aria-live="polite">
+        <div class="intro" id="intro">
+          <h2>Ask about what’s on the TV</h2>
+          <p>Press the mic and ask the way you’d ask Alexa. Or type your question below.</p>
+        </div>
+        <div class="listening" id="listening" hidden>
+          <div class="listening-label">LISTENING</div>
+          <div class="transcript"><span id="transcript"></span><span class="caret"></span></div>
+        </div>
+        <div class="exchange" id="exchange" hidden>
+          <div class="asked" id="asked"></div>
+          <div class="reply">
+            <p class="headline" id="headline"></p>
+            <ul class="lines" id="lines" hidden></ul>
+            <p class="note" id="note" hidden></p>
+            <div class="meta" id="meta" hidden>
+              <span class="tool" id="tool"></span>
+              <span id="timing"></span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <section class="controls">
+        <div class="mic-group">
+          <button class="mic" id="mic" type="button" aria-label="Press to talk">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="9" y="3" width="6" height="11" rx="3" />
+              <path d="M5 11a7 7 0 0 0 14 0" />
+              <path d="M12 18v3" />
+            </svg>
+          </button>
+          <span class="mic-label" id="mic-label">Press to talk</span>
+        </div>
+        <div class="chips">
+          <button type="button" class="chip featured" data-question="Alexa, what did I miss?">
+            What did I miss?
+          </button>
+          <button type="button" class="chip" data-question="Alexa, who’s that?">Who’s that?</button>
+          <button type="button" class="chip" data-question="Alexa, why is she mad at him?">
+            Why is she mad at him?
+          </button>
+        </div>
+        <form class="ask" id="ask">
+          <label for="question" class="visually-hidden">Your question</label>
+          <input id="question" name="question" type="text" placeholder="Or type a question" autocomplete="off" />
+          <button type="submit">Ask</button>
+        </form>
+      </section>
+    </div>
+    <div class="light-bar" aria-hidden="true"></div>
+  </body>
+</html>
