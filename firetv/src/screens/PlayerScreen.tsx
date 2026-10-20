@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   BackHandler,
+  Image,
   StyleSheet,
   Text,
   View,
@@ -11,7 +12,6 @@ import {
   KeplerCaptionsView,
   KeplerVideoSurfaceView,
 } from '@amazon-devices/react-native-w3cmedia';
-import {Fade} from '../components/Fade';
 import {RewindBadge} from '../components/RewindBadge';
 import {Triangle} from '../components/Triangle';
 import {usePlayback} from '../player/usePlayback';
@@ -108,8 +108,14 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
       />
       {controlsVisible && (
         <>
-          <Fade edge="top" height={280} edgeAlpha={0.8} midAlpha={0.4} />
-          <Fade edge="bottom" height={480} edgeAlpha={0.94} midAlpha={0.62} />
+          <Image
+            source={require('../assets/fade-top.png')}
+            style={styles.fadeTop}
+          />
+          <Image
+            source={require('../assets/fade-bottom.png')}
+            style={styles.fadeBottom}
+          />
         </>
       )}
       {/* The caption view only takes its frame when it's created, so it's
@@ -241,6 +247,22 @@ const styles = StyleSheet.create({
   },
   captionsRaised: {
     bottom: 220,
+  },
+  fadeTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 280,
+    zIndex: 2,
+  },
+  fadeBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 480,
+    zIndex: 2,
   },
   heading: {
     position: 'absolute',
