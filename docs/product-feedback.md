@@ -32,7 +32,7 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 - The Client Lifecycle page shows Alexa+ sending protocol version 2025-03-26, while the hackathon requires servers on 2025-11-25 or later (#4).
 - `llms.txt` is served as an HTML page instead of plain text (#5).
 
-**Getting started.** Writing the MCP server was the easy part. The hard part was finding out how an outside developer gets it in front of Alexa+.
+**Getting started.** Writing the MCP server was the easy part. The hard part was finding out how an outside developer gets it in front of Alexa+. Without the CLI, we built a [simulated Alexa+ page](../alexa-sim) that calls the same MCP server with the official SDK client, and that's what our demo shows. We'd much rather have shown the real thing.
 
 ## Vega SDK (Fire TV)
 
