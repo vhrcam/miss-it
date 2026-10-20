@@ -1,7 +1,9 @@
 import {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Logo} from '../components/Logo';
+import {RewindBadge} from '../components/RewindBadge';
 import {Triangle} from '../components/Triangle';
+import {useRewindStatus} from '../rewind/useRewindStatus';
 import {film} from '../config';
 import {colors} from '../theme';
 
@@ -14,12 +16,15 @@ type Props = {
 };
 
 export function HomeScreen({captionsOn, onPlay, onToggleCaptions}: Props) {
+  const rewindStatus = useRewindStatus();
+
   return (
     <View style={styles.screen}>
       <Image source={require('../assets/home.jpg')} style={styles.backdrop} />
 
       <View style={styles.header}>
         <Logo />
+        <RewindBadge status={rewindStatus} />
       </View>
 
       <View style={styles.hero}>
