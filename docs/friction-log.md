@@ -73,3 +73,15 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Severity** | High. It blocked every AI feature on day one of a four-day hackathon. |
 | **Workaround** | Built and tested against a fake model, shipped a fallback that reads out the real dialogue, and opened a support case to raise the quotas. |
 | **Suggestion** | Make the error say "your account's quota for this model is 0", link to how to raise it, and warn hackathon builders on new accounts on the Resources page. |
+
+## 7. A lost Nova API key can't be replaced
+
+| | |
+|---|---|
+| **Task** | Get a key for Amazon's direct Nova API at nova.amazon.com/dev-apis, so Rewind could reach Nova while Bedrock was blocked. |
+| **Steps** | Signed in, clicked **Generate Key** and named the key. The full key is shown once, and our copy failed because the browser blocked clipboard access. After that the key list only shows it masked (`xxxxxxxx-****-****-****-xxxxxxxxxxxx`). Clicked **Generate Key** again, which said the key limit was reached and to deactivate a key first, then chose **Deactivate** from the key's menu. |
+| **Expected** | Deactivating frees the slot for a new key, or a lost key can be regenerated. |
+| **Actual** | Deactivate reported success, but the key stayed in the Active list and Generate Key still said the limit was reached. Same in Chrome and Brave. The page doesn't say what the limit is. |
+| **Severity** | High. With Bedrock blocked too, this closed the last way to reach Nova. |
+| **Workaround** | Kept the dialogue fallback running and followed up on the AWS support case. |
+| **Suggestion** | Make Deactivate free the slot right away, show the key limit on the page, and add a Regenerate action for a key whose secret was lost. |
