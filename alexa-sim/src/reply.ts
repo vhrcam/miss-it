@@ -20,6 +20,7 @@ export type Reply = {
 const NOTE = '\n\nNote: ';
 const STAMP = /^\[\d+(?::\d{2}){1,2}\]\s*/;
 const CONTEXT_LINES = 8;
+const SPOKEN_LINES = 3;
 
 const strings = (value: unknown): string[] =>
   Array.isArray(value)
@@ -43,8 +44,8 @@ export function replyFor(tool: ToolName, result: ToolResult): Reply {
   const [text = '', rawNote] = full.split(NOTE);
   const note = rawNote && rawNote[0]?.toUpperCase() + rawNote.slice(1);
   const data = result.structuredContent ?? {};
-  const reply = (headline: string, lines: string[] = [], readLines = false) => ({
-    speech: readLines ? [headline, ...lines].join(' ') : headline,
+  const reply = (headline: string, lines: string[] = []) => ({
+    speech: headline,
     headline,
     lines,
     note,
@@ -58,9 +59,16 @@ export function replyFor(tool: ToolName, result: ToolResult): Reply {
     if (typeof data.recap === 'string') {
       return reply(data.recap);
     }
+    // Without the model, Alexa reads the dialogue itself: only the last few
+    // lines out loud, so a busy minute doesn't take half a minute to say.
     const lines = strings(data.lines).map((line) => line.replace(STAMP, ''));
     if (lines.length) {
-      return reply('Here’s what was said in the last minute:', lines, true);
+      const headline = 'Here’s what was said in the last minute:';
+      const spoken =
+        lines.length > SPOKEN_LINES
+          ? ['Here’s what was said most recently:', ...lines.slice(-SPOKEN_LINES)]
+          : [headline, ...lines];
+      return {...reply(headline, lines), speech: spoken.join(' ')};
     }
     if (!data.title) {
       return reply(text);

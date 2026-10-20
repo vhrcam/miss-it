@@ -38,7 +38,22 @@ describe('replyFor recap_recent', () => {
     );
   });
 
-  it('says so when no one has spoken', () => {
+  it('says only the last 3 lines of a busy minute, but shows them all', () => {
+    const lines = ['One.', 'Two.', 'Three.', 'Four.', 'Five.'];
+    const reply = replyFor(
+      'recap_recent',
+      result('Everything from 0:00 to 0:45 in Tears of Steel.', {
+        playing: true,
+        title: 'Tears of Steel',
+        lines: lines.map((line, index) => `[0:${10 + index * 5}] ${line}`),
+      }),
+    );
+    expect(reply.speech).toBe('Here’s what was said most recently: Three. Four. Five.');
+    expect(reply.headline).toBe('Here’s what was said in the last minute:');
+    expect(reply.lines).toEqual(lines);
+  });
+
+  it('says no one has spoken', () => {
     const reply = replyFor(
       'recap_recent',
       result('No one spoke in Tears of Steel from 0:00 to 0:20.', {
