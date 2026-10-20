@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   BackHandler,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -12,6 +11,7 @@ import {
   KeplerCaptionsView,
   KeplerVideoSurfaceView,
 } from '@amazon-devices/react-native-w3cmedia';
+import {Fade} from '../components/Fade';
 import {RewindBadge} from '../components/RewindBadge';
 import {Triangle} from '../components/Triangle';
 import {usePlayback} from '../player/usePlayback';
@@ -106,6 +106,12 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
         onSurfaceViewCreated={playback.onSurfaceViewCreated}
         onSurfaceViewDestroyed={playback.onSurfaceViewDestroyed}
       />
+      {controlsVisible && (
+        <>
+          <Fade edge="top" height={280} edgeAlpha={0.8} midAlpha={0.4} />
+          <Fade edge="bottom" height={480} edgeAlpha={0.94} midAlpha={0.62} />
+        </>
+      )}
       <KeplerCaptionsView
         style={styles.captions}
         show={captionsOn}
@@ -115,16 +121,6 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
 
       {controlsVisible && (
         <>
-          <Image
-            source={require('../assets/fade-top.png')}
-            resizeMode="stretch"
-            style={styles.fadeTop}
-          />
-          <Image
-            source={require('../assets/fade-bottom.png')}
-            resizeMode="stretch"
-            style={styles.fadeBottom}
-          />
           <View style={styles.heading}>
             <Text style={styles.title}>{film.title}</Text>
             <Text style={styles.byline}>Blender Foundation · 2012</Text>
@@ -239,22 +235,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     zIndex: 2,
-  },
-  fadeTop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: 280,
-    zIndex: 1,
-  },
-  fadeBottom: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: 480,
-    zIndex: 1,
   },
   heading: {
     position: 'absolute',

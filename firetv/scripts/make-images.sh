@@ -18,11 +18,4 @@ ffmpeg -v error -y -ss 330 -i "$FILM" -f lavfi -i color=c=0x0B0D12:s=1920x1080:d
    [1:v]format=rgba,geq=r=11:g=13:b=18:a='255*(1-(1-($LEFT))*(1-($BOTTOM)))'[shade];
    [still][shade]overlay" -frames:v 1 -q:v 3 "$OUT/home.jpg"
 
-# The fades behind the player controls are stretched across the video.
-ffmpeg -v error -y -f lavfi -i color=c=black:s=8x280:d=1 \
-  -vf "format=rgba,geq=r=0:g=0:b=0:a='204*(1-Y/(H-1))'" -frames:v 1 "$OUT/fade-top.png"
-ffmpeg -v error -y -f lavfi -i color=c=black:s=8x480:d=1 \
-  -vf "format=rgba,geq=r=0:g=0:b=0:a='255*if(lt((H-1-Y)/(H-1),0.5),0.94-0.64*(H-1-Y)/(H-1),1.24-1.24*(H-1-Y)/(H-1))'" \
-  -frames:v 1 "$OUT/fade-bottom.png"
-
-echo "Wrote $OUT/home.jpg, $OUT/fade-top.png and $OUT/fade-bottom.png"
+echo "Wrote $OUT/home.jpg"
