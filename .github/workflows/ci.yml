@@ -40,3 +40,22 @@ jobs:
       - run: npx tsc --noEmit
       - run: npm run lint
       - run: npm test -- --ci
+
+  alexa-sim:
+    name: Simulated Alexa+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: alexa-sim
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: alexa-sim/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
