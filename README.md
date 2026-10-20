@@ -22,7 +22,7 @@ It's X-Ray, but you just talk to the room.
 Rewind can't spoil what it doesn't know.
 
 1. The Fire TV app only reports captions that have **actually been on screen**. Lines skipped by fast-forwarding are never sent.
-2. Every read from the watch log stops at the viewer's current position, even after a rewind. This lives in its own open-source library, [`spoiler-safe-context`](packages/spoiler-safe-context).
+2. Every read from the watch log stops at the viewer's current position, even after a rewind. This lives in its own open-source library, [`spoiler-safe-context`](https://github.com/vhrcam/spoiler-safe-context).
 3. Character bios are written per moment in the story, so "who's that?" never reveals more than you've seen.
 4. The model is told to treat the transcript as everything that exists and never to guess ahead, even when it recognizes the show.
 
@@ -60,7 +60,7 @@ Every tool is read-only and returns spoken text plus `structuredContent`, so scr
 |---|---|
 | [`server/`](server) | The memory service and MCP server (TypeScript, Hono, MCP SDK, AWS SDK) |
 | [`firetv/`](firetv) | The Fire TV app for Vega OS (React Native) |
-| [`packages/spoiler-safe-context/`](packages/spoiler-safe-context) | The open-source library behind the spoiler guarantee |
+| [`packages/spoiler-safe-context/`](packages/spoiler-safe-context) | The open-source library behind the spoiler guarantee, also published on its own at [vhrcam/spoiler-safe-context](https://github.com/vhrcam/spoiler-safe-context) |
 | [`infra/`](infra) | CloudFormation template and deploy script |
 | [`docs/`](docs) | The [playback API](docs/api.md) and the [friction log](docs/friction-log.md) |
 | [`media/`](media) | Fetch script and captions for the demo film |
