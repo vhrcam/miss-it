@@ -4,10 +4,19 @@ import {PlayerScreen} from './screens/PlayerScreen';
 
 export const App = () => {
   const [watching, setWatching] = useState(false);
+  const [captionsOn, setCaptionsOn] = useState(true);
 
   if (watching) {
-    return <PlayerScreen onExit={() => setWatching(false)} />;
+    return (
+      <PlayerScreen captionsOn={captionsOn} onExit={() => setWatching(false)} />
+    );
   }
 
-  return <HomeScreen onPlay={() => setWatching(true)} />;
+  return (
+    <HomeScreen
+      captionsOn={captionsOn}
+      onPlay={() => setWatching(true)}
+      onToggleCaptions={() => setCaptionsOn((on) => !on)}
+    />
+  );
 };

@@ -7,10 +7,13 @@ import {colors} from '../theme';
 
 const ASKS = ['what did I miss?', 'who’s that?', 'why is she mad at him?'];
 
-export function HomeScreen({onPlay}: {onPlay: () => void}) {
-  const [playFocused, setPlayFocused] = useState(false);
-  const playColor = playFocused ? colors.night : colors.white;
+type Props = {
+  captionsOn: boolean;
+  onPlay: () => void;
+  onToggleCaptions: () => void;
+};
 
+export function HomeScreen({captionsOn, onPlay, onToggleCaptions}: Props) {
   return (
     <View style={styles.screen}>
       <Image source={require('../assets/home.jpg')} style={styles.backdrop} />
@@ -39,29 +42,12 @@ export function HomeScreen({onPlay}: {onPlay: () => void}) {
           robots.
         </Text>
         <View style={styles.actions}>
-          <View style={[styles.ring, playFocused && styles.ringFocused]}>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              hasTVPreferredFocus
-              onFocus={() => setPlayFocused(true)}
-              onBlur={() => setPlayFocused(false)}
-              onPress={onPlay}
-              style={[
-                styles.button,
-                styles.playButton,
-                playFocused && styles.buttonFocused,
-              ]}>
-              <View style={styles.playIcon}>
-                <Triangle
-                  direction="right"
-                  width={16}
-                  height={19}
-                  color={playColor}
-                />
-              </View>
-              <Text style={[styles.buttonText, {color: playColor}]}>Play</Text>
-            </TouchableOpacity>
-          </View>
+          <HomeButton kind="play" label="Play" onPress={onPlay} />
+          <HomeButton
+            kind="captions"
+            label={captionsOn ? 'Captions on' : 'Captions off'}
+            onPress={onToggleCaptions}
+          />
         </View>
       </View>
 
@@ -89,6 +75,49 @@ export function HomeScreen({onPlay}: {onPlay: () => void}) {
           {'\n'}(CC) Blender Foundation | mango.blender.org
         </Text>
       </View>
+    </View>
+  );
+}
+
+type ButtonProps = {
+  kind: 'play' | 'captions';
+  label: string;
+  onPress: () => void;
+};
+
+// A pill that turns white with a soft ring when the remote focuses it. Play
+// takes focus first.
+function HomeButton({kind, label, onPress}: ButtonProps) {
+  const [focused, setFocused] = useState(false);
+  const color = focused ? colors.night : colors.white;
+  const play = kind === 'play';
+
+  return (
+    <View style={[styles.ring, focused && styles.ringFocused]}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        hasTVPreferredFocus={play}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onPress={onPress}
+        style={[
+          styles.button,
+          play && styles.playButton,
+          focused && styles.buttonFocused,
+        ]}>
+        {play ? (
+          <View style={styles.playIcon}>
+            <Triangle direction="right" width={16} height={19} color={color} />
+          </View>
+        ) : (
+          <View style={[styles.buttonCc, {borderColor: color}]}>
+            <Text style={[styles.buttonCcText, {color}]}>CC</Text>
+          </View>
+        )}
+        <Text style={[styles.buttonText, play && styles.playText, {color}]}>
+          {label}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -183,6 +212,8 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 80,
+    paddingLeft: 32,
+    paddingRight: 40,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 2,
@@ -190,21 +221,36 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     backgroundColor: 'rgba(245, 247, 250, 0.1)',
   },
-  buttonFocused: {
-    borderColor: colors.white,
-    backgroundColor: colors.white,
-  },
   playButton: {
     paddingLeft: 38,
     paddingRight: 48,
   },
-  playIcon: {
-    marginRight: 14,
-    marginLeft: 3,
+  buttonFocused: {
+    borderColor: colors.white,
+    backgroundColor: colors.white,
   },
   buttonText: {
     fontSize: 30,
+    fontWeight: '600',
+  },
+  playText: {
     fontWeight: '700',
+  },
+  playIcon: {
+    marginLeft: 3,
+    marginRight: 14,
+  },
+  buttonCc: {
+    marginRight: 14,
+    paddingHorizontal: 8,
+    paddingVertical: 1,
+    borderWidth: 2,
+    borderRadius: 6,
+  },
+  buttonCcText: {
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   footer: {
     position: 'absolute',

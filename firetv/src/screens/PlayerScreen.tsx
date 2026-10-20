@@ -24,7 +24,12 @@ function formatTime(sec: number) {
   return `${minutes}:${seconds}`;
 }
 
-export function PlayerScreen({onExit}: {onExit: () => void}) {
+type Props = {
+  captionsOn: boolean;
+  onExit: () => void;
+};
+
+export function PlayerScreen({captionsOn, onExit}: Props) {
   const playback = usePlayback();
   const [controlsVisible, setControlsVisible] = useState(true);
   const [lastInputAt, setLastInputAt] = useState(Date.now());
@@ -98,7 +103,7 @@ export function PlayerScreen({onExit}: {onExit: () => void}) {
       />
       <KeplerCaptionsView
         style={styles.captions}
-        show
+        show={captionsOn}
         onCaptionViewCreated={playback.onCaptionViewCreated}
         onCaptionViewDestroyed={playback.onCaptionViewDestroyed}
       />
