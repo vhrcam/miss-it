@@ -112,8 +112,11 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
           <Fade edge="bottom" height={480} edgeAlpha={0.94} midAlpha={0.62} />
         </>
       )}
+      {/* The caption view only takes its frame when it's created, so it's
+          made again to move the captions above the controls and back. */}
       <KeplerCaptionsView
-        style={styles.captions}
+        key={controlsVisible ? 'raised' : 'low'}
+        style={[styles.captions, controlsVisible && styles.captionsRaised]}
         show={captionsOn}
         onCaptionViewCreated={playback.onCaptionViewCreated}
         onCaptionViewDestroyed={playback.onCaptionViewDestroyed}
@@ -229,12 +232,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
+    right: 0,
+    bottom: 0,
     backgroundColor: 'transparent',
     flexDirection: 'column',
     alignItems: 'center',
     zIndex: 2,
+  },
+  captionsRaised: {
+    bottom: 220,
   },
   heading: {
     position: 'absolute',
