@@ -66,6 +66,36 @@ Responses
 - After a backward seek, cues may be sent again as they replay. Rewind dedupes on `startSec` + `text`.
 - Rewind never uses a cue that starts after `positionSec`, so answers can't run ahead of the viewer.
 
+## `GET /v1/playback/{householdId}/answer`
+
+The last answer Rewind gave Alexa, so the TV can show it as a card. It takes the same `Authorization` header as `POST /v1/playback`.
+
+Response `200`
+
+```json
+{
+  "answer": {
+    "id": "7c5a74a3-7582-4572-b3b1-5e157ae9f776",
+    "tool": "ask_about_show",
+    "question": "Why is she mad at him?",
+    "text": "Thom is leaving to chase his dream of going to space, and she thinks he's freaked out by her robot hand.",
+    "ageMs": 4200
+  }
+}
+```
+
+Before anyone asks Alexa anything, the response is `{"answer": null}`.
+
+| Field | Notes |
+|---|---|
+| `id` | New for every answer. Show a card only for an id you haven't shown yet. |
+| `tool` | The MCP tool Alexa called: `recap_recent`, `who_is_on_screen`, `ask_about_show` or `whats_playing`. |
+| `question` | The user's question. Only on `ask_about_show`. |
+| `text` | Short text for display. Without the model, `recap_recent` gives the last two caption lines, and `ask_about_show` posts nothing because Alexa writes that answer itself. |
+| `ageMs` | How old the answer is, measured on the server, so the TV's clock doesn't matter. |
+
+Poll it every 2 seconds while the player is open, and only show answers younger than 30 seconds.
+
 ## Local development
 
 The server listens on `http://localhost:8787`. Try it with:
