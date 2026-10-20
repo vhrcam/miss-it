@@ -4,6 +4,14 @@ The Fire TV half of [Rewind](../README.md). It plays the show and tells the Rewi
 
 It's a Vega OS app built with React Native 0.72 and Amazon's W3C media player (`@amazon-devices/react-native-w3cmedia`).
 
+![The Home screen, with Play, the captions switch and what to ask Alexa](screenshots/home.jpg)
+
+| The player, with the captions above the controls | An answer card after “Alexa, what did I miss?” |
+|---|---|
+| ![The player with its controls showing](screenshots/player.jpg) | ![An answer card over the film](screenshots/answer-card.jpg) |
+
+Screenshots from the Vega Virtual Device. The card shows the recap Rewind falls back to when the model is unavailable: the last lines of dialogue.
+
 ## What it does
 
 - Opens on a Home screen with the film, a Play button, a captions switch, and the questions you can ask Alexa.
