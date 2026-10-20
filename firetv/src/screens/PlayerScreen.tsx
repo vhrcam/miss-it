@@ -129,12 +129,11 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
             <Text style={styles.title}>{film.title}</Text>
             <Text style={styles.byline}>Blender Foundation · 2012</Text>
           </View>
+          <View style={styles.corner}>
+            <RewindBadge status={playback.link} />
+          </View>
         </>
       )}
-
-      <View style={styles.corner}>
-        <RewindBadge status={playback.link} />
-      </View>
 
       {playback.buffering && !playback.failure && (
         <ActivityIndicator
