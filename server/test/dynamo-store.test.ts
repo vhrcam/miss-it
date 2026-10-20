@@ -65,9 +65,22 @@ describe("DynamoStore", () => {
     expect(table.items.get("demo/recap")?.expiresAt).toBeGreaterThan(Date.now() / 1000);
   });
 
+  it("keeps the last answer in its own item", async () => {
+    const table = new FakeTable();
+    const store = new DynamoStore("rewind", table);
+    const answer = { id: "a1", tool: "who_is_on_screen" as const, text: "Celia, played by Denise Rebergen.", answeredAt: 5 };
+
+    await store.put(viewing(new WatchLog()));
+    await store.putAnswer("demo", answer);
+
+    expect(await store.getAnswer("demo")).toEqual(answer);
+    expect([...table.items.keys()].sort()).toEqual(["demo/answer", "demo/viewing"]);
+  });
+
   it("returns nothing for an unknown household", async () => {
     const store = new DynamoStore("rewind", new FakeTable());
     expect(await store.get("nobody")).toBeUndefined();
     expect(await store.getRecap("nobody")).toBeUndefined();
+    expect(await store.getAnswer("nobody")).toBeUndefined();
   });
 });

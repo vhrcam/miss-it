@@ -25,6 +25,17 @@ export interface StoredRecap {
   generatedAt: number;
 }
 
+export type AnswerTool = "recap_recent" | "who_is_on_screen" | "ask_about_show" | "whats_playing";
+
+// The last thing Rewind told Alexa, kept so the TV can show it as a card.
+export interface StoredAnswer {
+  id: string;
+  tool: AnswerTool;
+  question?: string;
+  text: string;
+  answeredAt: number;
+}
+
 const MAX_DRIFT_SEC = 10;
 const STALE_AFTER_MS = 2 * 60 * 1000;
 

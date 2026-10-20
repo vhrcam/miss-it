@@ -2,7 +2,7 @@ import { WatchLog } from "spoiler-safe-context";
 import type { PlaybackUpdate } from "../playback/schema.js";
 import { Descriptions } from "../scenes/descriptions.js";
 import type { MemoryStore } from "./store.js";
-import type { StoredRecap, Viewing } from "./viewing.js";
+import type { StoredAnswer, StoredRecap, Viewing } from "./viewing.js";
 
 export type RecordResult =
   | { status: "stored"; viewing: Viewing; added: number }
@@ -30,6 +30,14 @@ export class Memory {
 
   saveRecap(householdId: string, recap: StoredRecap): Promise<void> {
     return this.#store.putRecap(householdId, recap);
+  }
+
+  answer(householdId: string): Promise<StoredAnswer | undefined> {
+    return this.#store.getAnswer(householdId);
+  }
+
+  saveAnswer(householdId: string, answer: StoredAnswer): Promise<void> {
+    return this.#store.putAnswer(householdId, answer);
   }
 
   async record(update: PlaybackUpdate, now = Date.now()): Promise<RecordResult> {

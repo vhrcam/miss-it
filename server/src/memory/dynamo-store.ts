@@ -2,17 +2,17 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { WatchLog, type WatchLogSnapshot } from "spoiler-safe-context";
 import type { MemoryStore } from "./store.js";
-import type { StoredRecap, Viewing } from "./viewing.js";
+import type { StoredAnswer, StoredRecap, Viewing } from "./viewing.js";
 
-type Kind = "viewing" | "recap";
+type Kind = "viewing" | "recap" | "answer";
 
 // Watch logs expire a day after the last update, so Rewind never keeps a
 // household's viewing history around.
 const TTL_SEC = 24 * 60 * 60;
 
-// One table, one partition per household: a "viewing" item and a "recap" item.
-// Keeping the recap separate means writing a recap can't overwrite captions
-// that arrived while the model was busy.
+// One table, one partition per household: a "viewing" item, a "recap" item and
+// an "answer" item. Keeping the recap separate means writing a recap can't
+// overwrite captions that arrived while the model was busy.
 export class DynamoStore implements MemoryStore {
   readonly #table: string;
   readonly #client: Pick<DynamoDBDocumentClient, "send">;
@@ -41,6 +41,14 @@ export class DynamoStore implements MemoryStore {
 
   async putRecap(householdId: string, recap: StoredRecap): Promise<void> {
     await this.#write(householdId, "recap", recap);
+  }
+
+  async getAnswer(householdId: string): Promise<StoredAnswer | undefined> {
+    return (await this.#read(householdId, "answer")) as StoredAnswer | undefined;
+  }
+
+  async putAnswer(householdId: string, answer: StoredAnswer): Promise<void> {
+    await this.#write(householdId, "answer", answer);
   }
 
   async #read(householdId: string, kind: Kind): Promise<Record<string, unknown> | undefined> {
