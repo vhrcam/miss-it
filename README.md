@@ -9,8 +9,13 @@ Rewind gives Alexa+ a memory of what's playing on your TV. Step away from the co
 It's X-Ray, but you just talk to the room.
 
 <p align="center">
-  <img src="firetv/screenshots/home.jpg" alt="Rewind's Home screen on Fire TV, with the Rewind connected badge and things to ask Alexa" width="49%">
-  <img src="firetv/screenshots/answer-card.jpg" alt="Alexa's answer shown on a card over the film" width="49%">
+  <img src="alexa-sim/screenshots/demo.jpg" alt="Asking the simulated Alexa+ page what I missed, with the answer on a card on the Fire TV app at the same time" width="100%">
+  <br>
+  <em>A live run: the Fire TV app (left) shows the answer while the simulated Alexa+ page (right) says it out loud.</em>
+</p>
+
+<p align="center">
+  <img src="firetv/screenshots/home.jpg" alt="Rewind's Home screen on Fire TV, with the Rewind connected badge and things to ask Alexa" width="60%">
 </p>
 
 ## What you can ask
