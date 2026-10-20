@@ -3,6 +3,8 @@
 # URL, a DynamoDB table, and access to Amazon Bedrock.
 #
 #   REWIND_DEVICE_KEY=<secret> infra/deploy.sh    (or put it in .env)
+#
+# Set NOVA_API_KEY too to write recaps with Amazon's direct Nova API instead.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -27,7 +29,7 @@ aws cloudformation deploy \
   --template-file infra/packaged.yaml \
   --stack-name "$STACK" \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
-  --parameter-overrides "DeviceKey=$REWIND_DEVICE_KEY" \
+  --parameter-overrides "DeviceKey=$REWIND_DEVICE_KEY" "NovaApiKey=${NOVA_API_KEY:-}" \
   --region "$REGION"
 aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
   --query "Stacks[0].Outputs" --output table
