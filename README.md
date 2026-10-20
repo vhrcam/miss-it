@@ -62,7 +62,7 @@ Every tool is read-only and returns spoken text plus `structuredContent`, so scr
 | [`firetv/`](firetv) | The Fire TV app for Vega OS (React Native) |
 | [`packages/spoiler-safe-context/`](packages/spoiler-safe-context) | The open-source library behind the spoiler guarantee, also published on its own at [vhrcam/spoiler-safe-context](https://github.com/vhrcam/spoiler-safe-context) |
 | [`infra/`](infra) | CloudFormation template and deploy script |
-| [`docs/`](docs) | The [playback API](docs/api.md) and the [friction log](docs/friction-log.md) |
+| [`docs/`](docs) | The [playback API](docs/api.md), the [friction log](docs/friction-log.md) and [product feedback](docs/product-feedback.md) |
 | [`media/`](media) | Fetch script and captions for the demo film |
 
 ## Run it locally
