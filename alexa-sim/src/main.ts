@@ -1,6 +1,7 @@
 import {chooseTool, stripWakeWord} from './chooseTool';
 import {replyFor, type Reply} from './reply';
 import {createRewind} from './rewind';
+import {speak, stopSpeaking} from './speak';
 
 type State = 'ready' | 'listening' | 'thinking' | 'speaking';
 
@@ -75,6 +76,7 @@ async function ask(said: string) {
   }
   const call = chooseTool(question);
   const id = ++latest;
+  stopSpeaking();
 
   intro.hidden = true;
   exchange.hidden = false;
@@ -86,28 +88,31 @@ async function ask(said: string) {
   setState('thinking');
 
   const started = performance.now();
+  let reply: Reply;
   try {
-    const reply = replyFor(call.name, await rewind.call(call));
+    reply = replyFor(call.name, await rewind.call(call));
     if (id !== latest) {
       return;
     }
     const seconds = (performance.now() - started) / 1000;
     timing.textContent = `Rewind answered in ${seconds.toFixed(1)} s`;
     setServer('connected');
-    show(reply);
   } catch (error) {
     if (id !== latest) {
       return;
     }
     setServer('offline');
-    show({
-      speech: '',
-      headline: 'Sorry, I can’t reach Rewind right now.',
-      lines: [],
-      note: String(error),
-    });
+    const sorry = 'Sorry, I can’t reach Rewind right now.';
+    reply = {speech: sorry, headline: sorry, lines: [], note: String(error)};
   }
-  setState('ready');
+
+  show(reply);
+  setState('speaking');
+  speak(reply.speech, () => {
+    if (id === latest) {
+      setState('ready');
+    }
+  });
 }
 
 for (const chip of document.querySelectorAll<HTMLButtonElement>('.chip')) {
