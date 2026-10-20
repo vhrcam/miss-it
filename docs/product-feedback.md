@@ -39,8 +39,10 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 **What we used it for.** A React Native app that plays the demo film with the W3C media player, shows WebVTT captions with `KeplerCaptionsView`, and reports which captions were on screen to Rewind every five seconds. We developed and tested it entirely on the Vega Virtual Device.
 
 **What worked.**
-- If you know React Native and the HTML5 media element, the app feels familiar from the first file.
-- The virtual device boots quickly once it's set up. The second boot took 14 seconds.
+- The W3C media player works like the HTML5 media element (`play()`, `currentTime`, `seeked` and `waiting` events, `addTextTrack`, `VTTCue`), so the player code reads like web video code. The Vega-specific parts are passing the video surface and caption view handles to the player.
+- TV focus worked with standard React Native props (`hasTVPreferredFocus`, `onFocus` and `onBlur` on `TouchableOpacity`) on the first build.
+- Once set up, the virtual device boots in 7 to 14 seconds, a release build takes about 11 seconds, and `vega run-app` installs and opens the app in one step.
+- `inputd-cli button_press`, run through `vega device run-cmd`, presses remote buttons from a script, which made testing on the virtual device quick.
 - Captions through `addTextTrack`, `VTTCue` and `KeplerCaptionsView` worked as the Closed Captions guide describes.
 
 **What needs work.**
@@ -50,7 +52,7 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 - The media player README and the Closed Captions guide disagree about `addTextTrack` (#6), and the caption view keeps the frame it was created with (#7).
 - There's no screenshot command for the virtual device (#5), and `virtual-device start` keeps waiting after the device window is closed (#2).
 
-**Getting started.** Most of the lost time was in media playback, where errors didn't say what was wrong.
+**Getting started.** Setup was quick. With Homebrew and Node already on the Mac, Rosetta, the Homebrew packages and Amazon's installer script took about five minutes, unattended. Generating the project, installing its packages, the first build and a running virtual device took about seven more, including one restart (#2). The virtual device reached the Mac at `10.0.2.2` and the internet with no extra setup. Most of the lost time was in media playback, where errors didn't say what was wrong.
 
 ## Amazon Bedrock (Nova 2 Lite)
 
