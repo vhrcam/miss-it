@@ -43,6 +43,15 @@ const soFar = toTranscript(log.seen(), { maxChars: 8000 });
 [0:30] Why don't you just admit that you're freaked out by my robot hand?
 ```
 
+Dialogue isn't everything: an action scene can go a full minute without a line. Add notes on what's visible as **description** cues, the same idea as a WebVTT descriptions track, and they get the same spoiler guarantee:
+
+```ts
+log.add([{ startSec: 430, endSec: 435, text: "Robots smash through the church doors.", kind: "description" }]);
+toTranscript(log.recent(60));
+// [7:10] We're out of time!
+// [7:10] (on screen) Robots smash through the church doors.
+```
+
 Already have the whole caption file? Parse it and feed the log as the viewer watches:
 
 ```ts
@@ -65,7 +74,7 @@ log.add(cues.filter((cue) => cue.startSec <= player.currentTime));
 | Member | What it does |
 |---|---|
 | `new WatchLog({ maxCues? })` | An empty log. The oldest cues are dropped past `maxCues` (default 5000). |
-| `add(cues)` | Records cues that were on screen. Repeats are skipped (same start time to 0.1 s and the same text). Returns how many were new. |
+| `add(cues)` | Records cues that were on screen. Repeats are skipped (same kind, same start time to 0.1 s, same text). Returns how many were new. |
 | `seek(positionSec)` | Moves the viewer's position, forward or back. |
 | `seen()` | Every cue that started at or before the position. |
 | `recent(windowSec)` | Cues on screen at any point in the last `windowSec` seconds. |
@@ -76,7 +85,7 @@ log.add(cues.filter((cue) => cue.startSec <= player.currentTime));
 
 | Function | What it does |
 |---|---|
-| `toTranscript(cues, { timestamps?, maxChars? })` | One line per cue, oldest first. With `maxChars`, the most recent lines that fit win, and the latest line is always kept. |
+| `toTranscript(cues, { timestamps?, maxChars? })` | One line per cue, oldest first. Cues with `kind: "description"` are marked `(on screen)`. With `maxChars`, the most recent lines that fit win, and the latest line is always kept. |
 | `formatTimestamp(seconds)` | `312.9` to `"5:12"`, `3723` to `"1:02:03"`. |
 
 ## The guarantee

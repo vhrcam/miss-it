@@ -69,6 +69,12 @@ describe("WatchLog", () => {
     expect(log.add([cue(Number.NaN, "no time"), cue(4, "   ")])).toBe(0);
   });
 
+  it("keeps a caption and a description at the same moment apart", () => {
+    const log = new WatchLog();
+    log.add([cue(5, "Hello"), { startSec: 5, endSec: 7, text: "Hello", kind: "description" }]);
+    expect(log.size).toBe(2);
+  });
+
   it("rejects an invalid position", () => {
     expect(() => new WatchLog().seek(-1)).toThrow(RangeError);
   });

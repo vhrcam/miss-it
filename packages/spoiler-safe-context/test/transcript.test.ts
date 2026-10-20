@@ -28,6 +28,11 @@ describe("toTranscript", () => {
     expect(toTranscript(cues, { maxChars: 40 })).toBe("[1:10] Second line\n[1:20] Third line");
   });
 
+  it("marks what's on screen", () => {
+    const withDescription: Cue[] = [...cues, { startSec: 85, endSec: 90, text: "The robots break in.", kind: "description" }];
+    expect(toTranscript(withDescription).split("\n").at(-1)).toBe("[1:25] (on screen) The robots break in.");
+  });
+
   it("always keeps the latest line", () => {
     expect(toTranscript(cues, { maxChars: 5 })).toBe("[1:20] Third line");
   });

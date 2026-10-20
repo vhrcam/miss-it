@@ -15,7 +15,8 @@ export function formatTimestamp(totalSec: number): string {
     : `${minutes}:${seconds}`;
 }
 
-// One line per cue, oldest first. With `maxChars`, the most recent lines win.
+// One line per cue, oldest first. Descriptions are marked "(on screen)".
+// With `maxChars`, the most recent lines win.
 export function toTranscript(cues: readonly Cue[], options: TranscriptOptions = {}): string {
   const { timestamps = true, maxChars = Infinity } = options;
   const lines: string[] = [];
@@ -24,8 +25,8 @@ export function toTranscript(cues: readonly Cue[], options: TranscriptOptions = 
   for (let i = cues.length - 1; i >= 0; i--) {
     const cue = cues[i]!;
     const stamp = timestamps ? `[${formatTimestamp(cue.startSec)}] ` : "";
-    const speaker = cue.speaker ? `${cue.speaker}: ` : "";
-    const line = `${stamp}${speaker}${cue.text.replace(/\s*\n\s*/g, " ")}`;
+    const label = cue.kind === "description" ? "(on screen) " : cue.speaker ? `${cue.speaker}: ` : "";
+    const line = `${stamp}${label}${cue.text.replace(/\s*\n\s*/g, " ")}`;
     if (lines.length && length + line.length + 1 > maxChars) break;
     lines.push(line);
     length += line.length + 1;

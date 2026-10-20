@@ -78,7 +78,7 @@ export class WatchLog {
 }
 
 function cueKey(cue: Cue): string {
-  return `${Math.round(cue.startSec * 10)}|${cue.text.replace(/\s+/g, " ").trim().toLowerCase()}`;
+  return `${cue.kind ?? "caption"}|${Math.round(cue.startSec * 10)}|${cue.text.replace(/\s+/g, " ").trim().toLowerCase()}`;
 }
 
 function insertByStart(cues: Cue[], cue: Cue): void {
