@@ -51,6 +51,7 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 - The default template targets React Native 0.83, but the media package for 0.83 is only published under an alpha tag (#8).
 - The media player README and the Closed Captions guide disagree about `addTextTrack` (#13), and the caption view keeps the frame it was created with (#14).
 - There's no screenshot command for the virtual device (#12), and `virtual-device start` keeps waiting after the device window is closed (#9).
+- The manifest docs say where the app icon appears only for Settings › Applications. "Your apps" also uses it, cropped to a wide tile (#15).
 
 **Getting started.** Setup was quick. With Homebrew and Node already on the Mac, Rosetta, the Homebrew packages and Amazon's installer script took about five minutes, unattended. Generating the project, installing its packages, the first build and a running virtual device took about seven more, including one restart (#9). The virtual device reached the Mac at `10.0.2.2` and the internet with no extra setup. Most of the lost time was in media playback, where errors didn't say what was wrong.
 
