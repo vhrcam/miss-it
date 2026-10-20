@@ -6,7 +6,8 @@ on:
   pull_request:
 
 jobs:
-  test:
+  server:
+    name: Server and library
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -18,3 +19,24 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build -w server
+
+  firetv:
+    name: Fire TV app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firetv
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: firetv/package-lock.json
+      - run: npm ci
+      # The app reads its API URL and device key from a generated file. Without
+      # a .env it falls back to the defaults, which is all the checks need.
+      - run: node scripts/write-env.js
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      - run: npm test -- --ci
