@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   BackHandler,
+  Image,
   StyleSheet,
   Text,
   View,
@@ -12,8 +13,10 @@ import {
   KeplerVideoSurfaceView,
 } from '@amazon-devices/react-native-w3cmedia';
 import {RewindBadge} from '../components/RewindBadge';
+import {Triangle} from '../components/Triangle';
 import {usePlayback} from '../player/usePlayback';
 import {film} from '../config';
+import {colors} from '../theme';
 
 const SEEK_STEP_SEC = 10;
 const CONTROLS_HIDE_MS = 4000;
@@ -93,6 +96,7 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
     playback.durationSec > 0
       ? Math.min(positionSec / playback.durationSec, 1)
       : 0;
+  const percent: `${number}%` = `${progress * 100}%`;
 
   return (
     <View style={styles.screen}>
@@ -108,6 +112,25 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
         onCaptionViewCreated={playback.onCaptionViewCreated}
         onCaptionViewDestroyed={playback.onCaptionViewDestroyed}
       />
+
+      {controlsVisible && (
+        <>
+          <Image
+            source={require('../assets/fade-top.png')}
+            resizeMode="stretch"
+            style={styles.fadeTop}
+          />
+          <Image
+            source={require('../assets/fade-bottom.png')}
+            resizeMode="stretch"
+            style={styles.fadeBottom}
+          />
+          <View style={styles.heading}>
+            <Text style={styles.title}>{film.title}</Text>
+            <Text style={styles.byline}>Blender Foundation · 2012</Text>
+          </View>
+        </>
+      )}
 
       <View style={styles.corner}>
         <RewindBadge status={playback.link} />
@@ -134,16 +157,60 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
 
       {controlsVisible && (
         <View style={styles.controls}>
-          <Text style={styles.title}>{film.title}</Text>
-          <View style={styles.track}>
-            <View style={[styles.fill, {width: `${progress * 100}%`}]} />
+          <View style={styles.toggleRing}>
+            <View style={styles.toggle}>
+              {playback.state === 'playing' ? (
+                <View style={styles.pauseIcon}>
+                  <View style={styles.pauseBar} />
+                  <View style={styles.pauseBar} />
+                </View>
+              ) : (
+                <View style={styles.playIcon}>
+                  <Triangle
+                    direction="right"
+                    width={24}
+                    height={28}
+                    color={colors.night}
+                  />
+                </View>
+              )}
+            </View>
           </View>
-          <View style={styles.times}>
-            <Text style={styles.time}>
-              {playback.state === 'playing' ? 'Playing' : 'Paused'} ·{' '}
-              {formatTime(positionSec)}
-            </Text>
-            <Text style={styles.time}>{formatTime(playback.durationSec)}</Text>
+          <View style={styles.timeline}>
+            <View style={styles.track}>
+              <View style={[styles.fill, {width: percent}]} />
+              <View style={[styles.knob, {left: percent}]} />
+            </View>
+            <View style={styles.times}>
+              <Text style={styles.time}>{formatTime(positionSec)}</Text>
+              <View style={styles.hints}>
+                <View style={styles.hint}>
+                  <Triangle
+                    direction="left"
+                    width={11}
+                    height={14}
+                    color={colors.muted}
+                  />
+                  <Text style={[styles.hintText, styles.hintAfterIcon]}>
+                    {SEEK_STEP_SEC} sec back
+                  </Text>
+                </View>
+                <View style={[styles.hint, styles.hintAhead]}>
+                  <Text style={[styles.hintText, styles.hintBeforeIcon]}>
+                    {SEEK_STEP_SEC} sec ahead
+                  </Text>
+                  <Triangle
+                    direction="right"
+                    width={11}
+                    height={14}
+                    color={colors.muted}
+                  />
+                </View>
+              </View>
+              <Text style={styles.time}>
+                {formatTime(playback.durationSec)}
+              </Text>
+            </View>
           </View>
         </View>
       )}
@@ -174,6 +241,39 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     zIndex: 2,
+  },
+  fadeTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 280,
+    zIndex: 1,
+  },
+  fadeBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 480,
+    zIndex: 1,
+  },
+  heading: {
+    position: 'absolute',
+    top: 64,
+    left: 96,
+    zIndex: 3,
+  },
+  title: {
+    color: colors.white,
+    fontSize: 40,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+  },
+  byline: {
+    marginTop: 8,
+    color: colors.label,
+    fontSize: 24,
   },
   corner: {
     position: 'absolute',
@@ -215,38 +315,93 @@ const styles = StyleSheet.create({
   },
   controls: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
+    left: 90,
+    right: 96,
+    bottom: 66,
     zIndex: 3,
-    paddingHorizontal: 96,
-    paddingTop: 48,
-    paddingBottom: 64,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  title: {
-    color: '#FFFFFF',
-    fontSize: 40,
-    fontWeight: '600',
-    marginBottom: 24,
+  toggleRing: {
+    width: 108,
+    height: 108,
+    borderRadius: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.ring,
+  },
+  toggle: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.white,
+  },
+  pauseIcon: {
+    flexDirection: 'row',
+  },
+  pauseBar: {
+    width: 6,
+    height: 22,
+    marginHorizontal: 3,
+    borderRadius: 2,
+    backgroundColor: colors.night,
+  },
+  playIcon: {
+    marginLeft: 6,
+  },
+  timeline: {
+    flex: 1,
+    marginLeft: 34,
   },
   track: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    overflow: 'hidden',
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'rgba(245, 247, 250, 0.25)',
   },
   fill: {
-    height: 8,
-    backgroundColor: '#3DD6F5',
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.accent,
+  },
+  knob: {
+    position: 'absolute',
+    top: -7,
+    width: 24,
+    height: 24,
+    marginLeft: -12,
+    borderRadius: 12,
+    backgroundColor: colors.white,
   },
   times: {
+    marginTop: 18,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 16,
   },
   time: {
-    color: '#C9CDD4',
+    color: colors.meta,
     fontSize: 26,
+  },
+  hints: {
+    flexDirection: 'row',
+  },
+  hint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  hintAhead: {
+    marginLeft: 36,
+  },
+  hintText: {
+    color: colors.muted,
+    fontSize: 22,
+  },
+  hintAfterIcon: {
+    marginLeft: 10,
+  },
+  hintBeforeIcon: {
+    marginRight: 10,
   },
 });
