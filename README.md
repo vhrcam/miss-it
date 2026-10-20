@@ -122,6 +122,18 @@ Then open `http://localhost:5173`. The page talks to Rewind on AWS. Add `?api=ht
 
 Recaps and answers use Amazon Nova on Bedrock when AWS credentials are available (`aws login`). If your account's Bedrock quotas are still 0, as they can be on a new account, get a key at [nova.amazon.com/dev-apis](https://nova.amazon.com/dev-apis) and set `NOVA_API_KEY` to run the same model through Amazon's direct Nova API. Set `REWIND_AI=off` to run with the dialogue fallback only.
 
+## Run the demo
+
+The whole demo runs on one Mac: the Fire TV app on the Vega Virtual Device and the simulated Alexa+ page in Chrome, both talking to Rewind on AWS.
+
+```sh
+scripts/demo.sh start   # boots the virtual Fire TV, opens the app, and opens the Alexa+ page in Chrome
+scripts/demo.sh play    # presses Play on the TV
+scripts/demo.sh stop    # shuts everything down
+```
+
+It needs the Vega SDK, `npm install` in `firetv/` and `alexa-sim/`, and `REWIND_DEVICE_KEY` in `.env`. If anything is missing, it says what to do. Put the TV on the left and Chrome on the right, then ask "What did I miss?", "Who's that?" or "How does it end?"
+
 ## Deploy to AWS
 
 ```sh
