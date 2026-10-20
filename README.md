@@ -128,7 +128,7 @@ echo "REWIND_DEVICE_KEY=$(openssl rand -hex 24)" > .env
 infra/deploy.sh
 ```
 
-The script builds the server, packages it, and deploys a CloudFormation stack: a Lambda function with a public HTTPS URL, a DynamoDB table with time-to-live, and permission to call Amazon Nova on Bedrock. It prints the URL to give the TV app and Alexa+. If `.env` also has `NOVA_API_KEY`, the function uses the Nova API instead of Bedrock.
+The script builds the server, packages it, and deploys a CloudFormation stack: a Lambda function with a public HTTPS URL, a DynamoDB table with time-to-live, and permission to call Amazon Nova on Bedrock. It prints the URL to give the TV app and Alexa+. If `.env` also has `NOVA_API_KEY`, the function uses the Nova API instead of Bedrock. [`.env.example`](.env.example) lists every setting.
 
 To build the "who's that?" index for a title:
 
