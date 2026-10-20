@@ -5,9 +5,13 @@
 //
 //   npm run scenes:describe -w server -- --content tears-of-steel --title "Tears of Steel" \
 //     --video ../media/tears-of-steel.mp4 --captions ../media/tears-of-steel.en.vtt
+//
+// It uses Bedrock, or Amazon's direct Nova API when NOVA_API_KEY is set. The
+// Nova API's free tier allows 20 requests a minute, so those calls are paced.
 import { BedrockRuntimeClient, ConverseCommand, type ContentBlock } from "@aws-sdk/client-bedrock-runtime";
 import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { setTimeout as sleep } from "node:timers/promises";
 import { parseArgs, promisify } from "node:util";
 import { parseCaptions, type Cue } from "spoiler-safe-context";
 import { CastGuide } from "../../src/cast/guide.js";
@@ -19,6 +23,9 @@ const SYSTEM_PROMPT = `You write the descriptions track for a film, for someone 
 - Don't explain what it means for the story, don't guess what happens next, and don't mention frames, shots or the camera.
 - For credits or a title card, just say so, like "The end credits roll."`;
 
+const novaKey = process.env.NOVA_API_KEY;
+const novaUrl = process.env.NOVA_API_URL ?? "https://api.nova.amazon.com/v1";
+
 const { values: args } = parseArgs({
   options: {
     content: { type: "string" },
@@ -26,30 +33,88 @@ const { values: args } = parseArgs({
     video: { type: "string" },
     captions: { type: "string" },
     every: { type: "string", default: "5" },
-    model: { type: "string", default: process.env.REWIND_MODEL_ID ?? "us.amazon.nova-2-lite-v1:0" },
+    to: { type: "string" },
+    model: { type: "string", default: novaKey ? "nova-2-lite-v1" : (process.env.REWIND_MODEL_ID ?? "us.amazon.nova-2-lite-v1:0") },
     region: { type: "string", default: process.env.AWS_REGION ?? "us-east-1" },
-    concurrency: { type: "string", default: "3" },
+    concurrency: { type: "string", default: novaKey ? "1" : "3" },
+    rpm: { type: "string", default: novaKey ? "18" : "0" },
   },
 });
 if (!args.content || !args.title || !args.video) {
-  throw new Error("Usage: --content <id> --title <title> --video <path> [--captions <vtt>]");
+  throw new Error("Usage: --content <id> --title <title> --video <path> [--captions <vtt>] [--to <sec>]");
 }
 
 const run = promisify(execFile);
 const every = Number(args.every);
+const gapMs = Number(args.rpm) > 0 ? 60_000 / Number(args.rpm) : 0;
 const bedrock = new BedrockRuntimeClient({ region: args.region, maxAttempts: 6 });
 const cast = await CastGuide.load(new URL("../../data/cast.json", import.meta.url));
 const captions = args.captions ? parseCaptions(await readFile(args.captions, "utf8")) : [];
 const { stdout } = await run("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", args.video]);
-const duration = Math.floor(Number(stdout));
+const duration = Math.min(Math.floor(Number(stdout)), args.to ? Number(args.to) : Infinity);
 
-async function frame(sec: number): Promise<ContentBlock> {
+async function frame(sec: number): Promise<Buffer> {
   const { stdout } = await run(
     "ffmpeg",
     ["-v", "error", "-ss", String(sec), "-i", args.video!, "-frames:v", "1", "-vf", "scale=640:-2", "-q:v", "4", "-f", "image2", "-c:v", "mjpeg", "-"],
     { encoding: "buffer", maxBuffer: 10 * 1024 * 1024 },
   );
-  return { image: { format: "jpeg", source: { bytes: stdout } } };
+  return stdout;
+}
+
+async function ask(images: Buffer[], prompt: string): Promise<string> {
+  if (novaKey) return askNovaApi(images, prompt);
+  const response = await bedrock.send(
+    new ConverseCommand({
+      modelId: args.model,
+      system: [{ text: SYSTEM_PROMPT }],
+      messages: [
+        {
+          role: "user",
+          content: [
+            ...images.map((bytes): ContentBlock => ({ image: { format: "jpeg", source: { bytes } } })),
+            { text: prompt },
+          ],
+        },
+      ],
+      inferenceConfig: { maxTokens: 60, temperature: 0.2 },
+    }),
+  );
+  return response.output?.message?.content?.map((block) => block.text ?? "").join("").trim() ?? "";
+}
+
+let lastCall = 0;
+async function askNovaApi(images: Buffer[], prompt: string): Promise<string> {
+  for (let attempt = 1; ; attempt++) {
+    await sleep(Math.max(0, lastCall + gapMs - Date.now()));
+    lastCall = Date.now();
+    const response = await fetch(`${novaUrl}/chat/completions`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${novaKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: args.model,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: [
+              ...images.map((bytes) => ({ type: "image_url", image_url: { url: `data:image/jpeg;base64,${bytes.toString("base64")}` } })),
+              { type: "text", text: prompt },
+            ],
+          },
+        ],
+        max_completion_tokens: 60,
+        temperature: 0.2,
+      }),
+    });
+    if (response.status === 429 && attempt < 6) {
+      await sleep(10_000 * attempt);
+      continue;
+    }
+    if (!response.ok) throw new Error(`Nova API returned ${response.status}: ${await response.text()}`);
+    const body = (await response.json()) as { choices?: { message?: { content?: string | null } }[] };
+    return body.choices?.[0]?.message?.content?.trim() ?? "";
+  }
 }
 
 async function describe(start: number): Promise<Cue> {
@@ -60,31 +125,15 @@ async function describe(start: number): Promise<Cue> {
   }
   const lines = captions.filter((cue) => cue.startSec >= start && cue.startSec < end).map((cue) => cue.text.replace(/\s*\n\s*/g, " "));
 
-  const response = await bedrock.send(
-    new ConverseCommand({
-      modelId: args.model,
-      system: [{ text: SYSTEM_PROMPT }],
-      messages: [
-        {
-          role: "user",
-          content: [
-            await frame(start + every * 0.2),
-            await frame(start + every * 0.8),
-            {
-              text: [
-                `${args.title}, ${start} to ${end} seconds in.`,
-                `People on screen: ${people.size ? [...people].join(", ") : "not known"}.`,
-                `Dialogue in this stretch: ${lines.length ? lines.join(" ") : "none"}.`,
-                "Describe what happens on screen.",
-              ].join("\n"),
-            },
-          ],
-        },
-      ],
-      inferenceConfig: { maxTokens: 60, temperature: 0.2 },
-    }),
+  const text = await ask(
+    [await frame(start + every * 0.2), await frame(start + every * 0.8)],
+    [
+      `${args.title}, ${start} to ${end} seconds in.`,
+      `People on screen: ${people.size ? [...people].join(", ") : "not known"}.`,
+      `Dialogue in this stretch: ${lines.length ? lines.join(" ") : "none"}.`,
+      "Describe what happens on screen.",
+    ].join("\n"),
   );
-  const text = response.output?.message?.content?.map((block) => block.text ?? "").join("").trim() ?? "";
   return { startSec: start, endSec: end, text };
 }
 
@@ -113,7 +162,7 @@ const merged = cues.reduce<Cue[]>((all, cue) => {
 const stamp = (sec: number) => new Date(sec * 1000).toISOString().slice(11, 23);
 const vtt = [
   `WEBVTT - ${args.title} scene descriptions`,
-  `NOTE Written by ${args.model} on Amazon Bedrock from frames of the film. Each cue describes what is visible on screen.`,
+  `NOTE Written by ${args.model} ${novaKey ? "through Amazon's Nova API" : "on Amazon Bedrock"} from frames of the film. Each cue describes what is visible on screen.`,
   ...merged.map((cue) => `${stamp(cue.startSec)} --> ${stamp(cue.endSec)}\n${cue.text}`),
 ].join("\n\n");
 
