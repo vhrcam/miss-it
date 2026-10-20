@@ -36,6 +36,30 @@ describe("MCP server", () => {
     const { app } = setup();
     expect((await app.request("/mcp")).status).toBe(405);
   });
+
+  it("lets web pages call the tools", async () => {
+    const { app } = setup();
+    const preflight = await app.request("/mcp", {
+      method: "OPTIONS",
+      headers: {
+        Origin: "http://localhost:5173",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "content-type,mcp-protocol-version",
+      },
+    });
+
+    expect(preflight.status).toBe(204);
+    expect(preflight.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(preflight.headers.get("Access-Control-Allow-Headers")).toContain("MCP-Protocol-Version");
+  });
+
+  it("keeps web pages out of the playback API", async () => {
+    const { app } = setup();
+    const response = await app.request("/v1/playback/demo", {
+      headers: { Origin: "http://localhost:5173", Authorization: "Bearer test-key" },
+    });
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBeNull();
+  });
 });
 
 describe("recap_recent", () => {
