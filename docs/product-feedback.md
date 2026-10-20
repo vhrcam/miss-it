@@ -1,6 +1,6 @@
 # Product feedback
 
-What we used to build Rewind, what worked, what got in the way, and whether we'd build with it again. The [friction log](friction-log.md) and the [Fire TV notes](../firetv/FRICTION.md) have step-by-step detail for each problem.
+What we used to build Rewind, what worked, what got in the way, and whether we'd build with it again. The [friction log](friction-log.md) has step-by-step detail for each problem.
 
 ## At a glance
 
@@ -46,13 +46,13 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 - Captions through `addTextTrack`, `VTTCue` and `KeplerCaptionsView` worked as the Closed Captions guide describes.
 
 **What needs work.**
-- `http://` video sources fail with `MediaError` code 4 and no request or log line, so it looks like a file format problem. We lost about 40 minutes to it (Fire TV notes #3).
-- The app's own warnings were dropped by log rate limiting at startup, and `loggingctl config --set-rate` failed (#4).
-- The default template targets React Native 0.83, but the media package for 0.83 is only published under an alpha tag (#1).
-- The media player README and the Closed Captions guide disagree about `addTextTrack` (#6), and the caption view keeps the frame it was created with (#7).
-- There's no screenshot command for the virtual device (#5), and `virtual-device start` keeps waiting after the device window is closed (#2).
+- `http://` video sources fail with `MediaError` code 4 and no request or log line, so it looks like a file format problem. We lost about 40 minutes to it (friction log #10).
+- The app's own warnings were dropped by log rate limiting at startup, and `loggingctl config --set-rate` failed (#11).
+- The default template targets React Native 0.83, but the media package for 0.83 is only published under an alpha tag (#8).
+- The media player README and the Closed Captions guide disagree about `addTextTrack` (#13), and the caption view keeps the frame it was created with (#14).
+- There's no screenshot command for the virtual device (#12), and `virtual-device start` keeps waiting after the device window is closed (#9).
 
-**Getting started.** Setup was quick. With Homebrew and Node already on the Mac, Rosetta, the Homebrew packages and Amazon's installer script took about five minutes, unattended. Generating the project, installing its packages, the first build and a running virtual device took about seven more, including one restart (#2). The virtual device reached the Mac at `10.0.2.2` and the internet with no extra setup. Most of the lost time was in media playback, where errors didn't say what was wrong.
+**Getting started.** Setup was quick. With Homebrew and Node already on the Mac, Rosetta, the Homebrew packages and Amazon's installer script took about five minutes, unattended. Generating the project, installing its packages, the first build and a running virtual device took about seven more, including one restart (#9). The virtual device reached the Mac at `10.0.2.2` and the internet with no extra setup. Most of the lost time was in media playback, where errors didn't say what was wrong.
 
 ## Amazon Bedrock (Nova 2 Lite)
 
