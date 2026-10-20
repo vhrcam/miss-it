@@ -1,5 +1,6 @@
 import type { Config } from "../config.js";
 import { BedrockNarrator } from "./bedrock.js";
+import { CooldownNarrator } from "./cooldown.js";
 import { NovaApiNarrator } from "./nova-api.js";
 
 export interface RecapRequest {
@@ -26,5 +27,5 @@ export interface Narrator {
 
 export function createNarrator(config: Config): Narrator | undefined {
   if (!config.ai.enabled) return undefined;
-  return config.novaApi ? new NovaApiNarrator(config.novaApi) : new BedrockNarrator(config.ai);
+  return new CooldownNarrator(config.novaApi ? new NovaApiNarrator(config.novaApi) : new BedrockNarrator(config.ai));
 }

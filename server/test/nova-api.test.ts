@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BedrockNarrator } from "../src/ai/bedrock.js";
+import { CooldownNarrator } from "../src/ai/cooldown.js";
 import { createNarrator } from "../src/ai/narrator.js";
 import { NovaApiNarrator } from "../src/ai/nova-api.js";
 import { SYSTEM_PROMPT } from "../src/ai/prompts.js";
@@ -50,11 +51,15 @@ describe("the Nova API narrator", () => {
 
 describe("picking a narrator", () => {
   it("uses the Nova API when NOVA_API_KEY is set", () => {
-    expect(createNarrator(loadConfig({ NOVA_API_KEY: "nova-key" }))).toBeInstanceOf(NovaApiNarrator);
+    const narrator = createNarrator(loadConfig({ NOVA_API_KEY: "nova-key" })) as CooldownNarrator;
+    expect(narrator).toBeInstanceOf(CooldownNarrator);
+    expect(narrator.model).toBeInstanceOf(NovaApiNarrator);
   });
 
   it("uses Bedrock without a key", () => {
-    expect(createNarrator(loadConfig({}))).toBeInstanceOf(BedrockNarrator);
+    const narrator = createNarrator(loadConfig({})) as CooldownNarrator;
+    expect(narrator).toBeInstanceOf(CooldownNarrator);
+    expect(narrator.model).toBeInstanceOf(BedrockNarrator);
   });
 
   it("uses neither when AI is off", () => {
