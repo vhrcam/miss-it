@@ -1,8 +1,10 @@
 # Friction log
 
-What got in the way while building Rewind, in the order we hit it. Severity: **High** blocks progress, **Medium** costs hours or changes the design, **Low** is an annoyance.
+What got in the way while building Rewind. Part one covers Alexa+ and AWS, part two the Fire TV app on Vega, each in the order we hit it. Severity: **High** blocks progress, **Medium** costs hours or changes the design, **Low** is an annoyance.
 
-## 1. Finding out whether an add-on needs OAuth
+## Alexa+ and AWS
+
+### 1. Finding out whether an add-on needs OAuth
 
 | | |
 |---|---|
@@ -14,7 +16,7 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Workaround** | Read all three pages and skipped auth. Rewind's tools don't need to know who is asking. |
 | **Suggestion** | Open the QuickStart's auth section with a one-line decision: "No per-user data? You can skip auth." |
 
-## 2. Installing the Alexa AI CLI
+### 2. Installing the Alexa AI CLI
 
 | | |
 |---|---|
@@ -26,7 +28,7 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Workaround** | We built and tested the MCP server first, since it's needed either way. |
 | **Suggestion** | Publish the CLI to npm or allowlist hackathon participants, and say on the Resources page which path builders should take. |
 
-## 3. The 500 ms latency rule
+### 3. The 500 ms latency rule
 
 | | |
 |---|---|
@@ -38,7 +40,7 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Workaround** | Rewind does its AI work while the show plays, so a tool call is a lookup. Our tools answer in single-digit milliseconds locally. |
 | **Suggestion** | Define the latency metric and percentile, and say whether it applies to `tools/call`. |
 
-## 4. Protocol version in the client lifecycle docs
+### 4. Protocol version in the client lifecycle docs
 
 | | |
 |---|---|
@@ -50,7 +52,7 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Workaround** | Rewind supports 2025-11-25 and accepts older clients. |
 | **Suggestion** | List the protocol versions the Alexa+ client supports. |
 
-## 5. `llms.txt` is an HTML page
+### 5. `llms.txt` is an HTML page
 
 | | |
 |---|---|
@@ -62,7 +64,7 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Workaround** | Downloaded the doc pages and converted them to text. |
 | **Suggestion** | Serve `llms.txt` as `text/plain`, plus Markdown versions of each page. |
 
-## 6. Bedrock says "Operation not allowed" on a new account
+### 6. Bedrock says "Operation not allowed" on a new account
 
 | | |
 |---|---|
@@ -74,7 +76,7 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Workaround** | Built and tested against a fake model, shipped a fallback that reads out the real dialogue, and opened a support case to raise the quotas. |
 | **Suggestion** | Make the error say "your account's quota for this model is 0", link to how to raise it, and warn hackathon builders on new accounts on the Resources page. |
 
-## 7. A lost Nova API key can't be replaced
+### 7. A lost Nova API key can't be replaced
 
 | | |
 |---|---|
@@ -85,3 +87,89 @@ What got in the way while building Rewind, in the order we hit it. Severity: **H
 | **Severity** | High. With Bedrock blocked too, this closed the last way to reach Nova. |
 | **Workaround** | Kept the dialogue fallback running and followed up on the AWS support case. |
 | **Suggestion** | Make Deactivate free the slot right away, show the key limit on the page, and add a Regenerate action for a key whose secret was lost. |
+
+## Fire TV (Vega SDK)
+
+### 8. The default template's media player is still an alpha
+
+| | |
+|---|---|
+| **Task** | Start a Vega app that plays video with the W3C media player. |
+| **Steps** | `vega project list-templates` shows `helloWorld` (React Native 0.83) first and `helloWorld-rn72` second. `npm view @amazon-devices/react-native-w3cmedia dist-tags` shows `latest: 2.3.2` and `rn83-alpha: 2.3.4-rn-83`. |
+| **Expected** | The default template works with the stable media package. |
+| **Actual** | The React Native 0.83 build of the media package is only published under an alpha tag. Nothing in the template list says so. |
+| **Severity** | Low. We caught it before writing code. |
+| **Workaround** | Generated the project from `helloWorld-rn72` and used `react-native-w3cmedia` 2.3.2. |
+| **Suggestion** | Note in `list-templates` (or the media player docs) which template the stable media packages support. |
+
+### 9. Closing the virtual device window leaves `start` waiting
+
+| | |
+|---|---|
+| **Task** | Boot the Vega Virtual Device. |
+| **Steps** | `vega virtual-device start --timeout 300`, then the device window was closed while it booted. |
+| **Expected** | `start` notices the emulator exited and fails right away. |
+| **Actual** | `vega virtual-device status` reported `"running": false`, but `start` kept waiting for the full timeout. |
+| **Severity** | Low. |
+| **Workaround** | Stopped the waiting command and ran `start` again. The second boot took 14 seconds. |
+| **Suggestion** | Watch the emulator process during `start` and exit with an error if it dies. |
+
+### 10. `http://` video fails with error 4 and no request
+
+| | |
+|---|---|
+| **Task** | Play an MP4 in `VideoPlayer` (URL mode) from a dev server on the Mac. |
+| **Steps** | Set `player.src` to `http://10.0.2.2:8788/tears-of-steel.mp4`, then to `http://localhost:8788/...` with `vega device start-port-forwarding -p 8788 -f false`. |
+| **Expected** | The video plays, or an error that says plain HTTP isn't allowed. |
+| **Actual** | Both fire `error` with `MediaError` code 4 (`MEDIA_ERR_SRC_NOT_SUPPORTED`). The server never gets a request, and no log line says why. The same app's `fetch()` to the same server works, and an `https://` MP4 plays. |
+| **Severity** | High. Playback was blocked for about 40 minutes, and the code 4 pointed at the file format instead of the URL scheme. |
+| **Workaround** | Stream the film over HTTPS from Blender's mirrors, and bundle the captions in the app. |
+| **Suggestion** | Say in the media player docs that sources must be HTTPS, and log the reason when a URL is rejected. Allowing `http://` on the virtual device would make local testing much easier. |
+
+### 11. App logs are suppressed at startup
+
+| | |
+|---|---|
+| **Task** | Read the app's logs to debug #10. |
+| **Steps** | `vda shell journalctl ...` answers "journalctl is not supported in developer mode shell. Please use loggingctl instead." `loggingctl log -v com.vhrcam.rewind` shows "Log suppression ended at level [info]. [52] logs were suppressed", and the media player logs `hasEnded` twice a second. `loggingctl config --set-rate com.vhrcam.rewind 100000` returns `"status": "failed"`. |
+| **Expected** | An app's own warnings are always visible in developer mode. |
+| **Actual** | Startup logs were dropped, and our own `console.warn` calls never showed up. |
+| **Severity** | Medium. It made #10 much slower to find. |
+| **Workaround** | Showed the media error code on screen, and took screenshots. |
+| **Suggestion** | Don't rate-limit warnings and errors from the app being debugged, make `--set-rate` work for developer apps, and quiet the media player's `hasEnded` logging. |
+
+### 12. No screenshot command
+
+| | |
+|---|---|
+| **Task** | Take screenshots of the app on the virtual device to check the UI and for the submission. |
+| **Steps** | Looked through `vega device --help` and `vda help`. |
+| **Expected** | Something like `vega device screenshot`. |
+| **Actual** | There isn't one. |
+| **Severity** | Low. |
+| **Workaround** | The virtual device runs on the Android emulator, so its console on port 5554 accepts `screenrecord screenshot <dir>` after `auth <token from ~/.emulator_console_auth_token>`. |
+| **Suggestion** | Add `vega device screenshot`, for the virtual device at least. |
+
+### 13. The docs disagree about captions
+
+| | |
+|---|---|
+| **Task** | Show WebVTT captions the app parsed itself. |
+| **Steps** | Read the `react-native-w3cmedia` README and the "Implement Closed Captions" guide. |
+| **Expected** | One consistent story. |
+| **Actual** | The README lists `addTextTrack` as unsupported and says captions only render after `vdcm set com.amazon.devconf/system/accessibility/ClosedCaptioningEnabled 1`. The guide uses `addTextTrack`. On the virtual device, `addTextTrack` + `VTTCue` + `KeplerCaptionsView` rendered captions without the `vdcm` setting. |
+| **Severity** | Low. |
+| **Workaround** | Followed the guide. |
+| **Suggestion** | Update the README to match the guide. |
+
+### 14. The caption view keeps the frame it started with
+
+| | |
+|---|---|
+| **Task** | Move the captions above the player controls while the controls are on screen. |
+| **Steps** | Changed the `KeplerCaptionsView` style from full screen to `bottom: 220` while the controls showed, then back. |
+| **Expected** | The captions move with the view. |
+| **Actual** | The captions stayed at the bottom of the screen, under the controls. A new caption view with the same style put them in the right place, so the view seems to read its frame only once, when it's created. |
+| **Severity** | Low. |
+| **Workaround** | Gave the caption view a React `key` that changes with the controls, so it's created again with the new frame. Its new handle goes to `setCaptionViewHandle`. |
+| **Suggestion** | Apply layout changes to the caption view, or add a prop for where captions sit (like a bottom inset for player controls). |
