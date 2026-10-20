@@ -2,6 +2,10 @@
 
 A stand-in for Alexa+ in Rewind's demo. Ask it about what's on the TV, out loud or by typing, and it calls Rewind's MCP tools the way Alexa+ would, then says the answer. The [Fire TV app](../firetv) shows the same answer on a card at the same moment.
 
+![The Fire TV app showing a "What you missed" card while the simulated Alexa+ page answers the same question](screenshots/demo.jpg)
+
+The Fire TV app in the Vega Virtual Device on the left, and this page on the right, right after "Alexa, what did I miss?". While Rewind's model is unavailable, both fall back to the dialogue.
+
 ## Why it's simulated
 
 Rewind is built as an Alexa+ add-on: Alexa+ reaches it over MCP. Deploying an add-on to the real Alexa+ takes the Alexa AI CLI, and installing it looks limited to Preview partners for now ([friction log #2](../docs/friction-log.md#2-installing-the-alexa-ai-cli)). So this page plays Alexa's part, which the hackathon's Alexa+ track allows as a simulated Alexa+ experience in a web app.
