@@ -12,9 +12,11 @@ import {
   KeplerCaptionsView,
   KeplerVideoSurfaceView,
 } from '@amazon-devices/react-native-w3cmedia';
+import {AnswerCard} from '../components/AnswerCard';
 import {RewindBadge} from '../components/RewindBadge';
 import {Triangle} from '../components/Triangle';
 import {usePlayback} from '../player/usePlayback';
+import {useAnswerCard} from '../rewind/useAnswerCard';
 import {film} from '../config';
 import {colors} from '../theme';
 
@@ -35,6 +37,7 @@ type Props = {
 
 export function PlayerScreen({captionsOn, onExit}: Props) {
   const playback = usePlayback();
+  const card = useAnswerCard();
   const [controlsVisible, setControlsVisible] = useState(true);
   const [lastInputAt, setLastInputAt] = useState(Date.now());
   const [positionSec, setPositionSec] = useState(0);
@@ -134,10 +137,14 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
             <Text style={styles.title}>{film.title}</Text>
             <Text style={styles.byline}>Blender Foundation · 2012</Text>
           </View>
-          <View style={styles.corner}>
-            <RewindBadge status={playback.link} />
-          </View>
         </>
+      )}
+
+      {(controlsVisible || card) && (
+        <View style={styles.corner}>
+          <RewindBadge status={playback.link} />
+          {card && <AnswerCard card={card} />}
+        </View>
       )}
 
       {playback.buffering && !playback.failure && (
