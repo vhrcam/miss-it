@@ -145,10 +145,9 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
 
       {playback.failure && (
         <View style={styles.message}>
-          <Text style={styles.messageTitle}>The film didn't load</Text>
+          <Text style={styles.messageTitle}>The film didn’t load</Text>
           <Text style={styles.messageBody}>
-            Check that the media server is running, then press Back and try
-            again.
+            Check the internet connection, then press Back and try again.
           </Text>
           <Text style={styles.messageDetail}>{playback.failure}</Text>
         </View>
@@ -298,17 +297,17 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   messageTitle: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 44,
     fontWeight: '600',
   },
   messageBody: {
-    color: '#C9CDD4',
+    color: colors.body,
     fontSize: 28,
     marginTop: 16,
   },
   messageDetail: {
-    color: '#8A8F98',
+    color: colors.muted,
     fontSize: 22,
     marginTop: 24,
   },
