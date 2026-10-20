@@ -20,7 +20,7 @@ Rewind is built as an Alexa+ add-on: Alexa+ reaches it over MCP. Deploying an ad
    | "What did I miss?", "catch me up", "what happened?" | `recap_recent` |
    | "Who's that?", "who plays him?" | `who_is_on_screen` |
    | "What are we watching?", "how much is left?", "how far in are we?" | `whats_playing` |
-   | Anything else | `ask_about_show`, with the question |
+   | Anything else, including "who dies?" | `ask_about_show`, with the question. It won't give away anything that hasn't been shown. |
 
 3. **Call Rewind.** The page is a real MCP client. It uses the official MCP TypeScript SDK (`Client` with `StreamableHTTPClientTransport`), the same SDK the Rewind server is built on, and calls the server's `/mcp` endpoint.
 4. **Answer.** Alexa says only what a person would hear ([`src/reply.ts`](src/reply.ts)). Some results are written for a model to read, like `ask_about_show`'s lines while Rewind's model is unavailable, so those are shown on the page but never read out. Without the model, a recap is the last minute of dialogue: the page shows all of it and reads out the last three lines. The server's note that the TV hasn't checked in shows as small print.

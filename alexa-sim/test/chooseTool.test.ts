@@ -22,6 +22,14 @@ describe('chooseTool', () => {
     expect(toolFor('How far in are we?')).toBe('whats_playing');
   });
 
+  it('sends "who" questions about the story to ask_about_show', () => {
+    expect(toolFor('Who dies?')).toBe('ask_about_show');
+    expect(toolFor('Who wins?')).toBe('ask_about_show');
+    expect(toolFor('Who survives at the end?')).toBe('ask_about_show');
+    expect(toolFor('Who’s going to win?')).toBe('ask_about_show');
+    expect(chooseTool('Who dies?').arguments).toEqual({question: 'Who dies?'});
+  });
+
   it('sends everything else to ask_about_show with the question', () => {
     expect(chooseTool('Why is she mad at him?')).toEqual({
       name: 'ask_about_show',

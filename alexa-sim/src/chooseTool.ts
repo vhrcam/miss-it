@@ -15,14 +15,20 @@ const RULES: [RegExp, ToolName][] = [
   [/what are we watching|how much is left|how far/, 'whats_playing'],
 ];
 
+// "Who dies?" is about the story, not the screen. ask_about_show answers it,
+// and it won't spoil anything that hasn't been shown.
+const ABOUT_THE_STORY = /\bwho\b.*\b(wins?|dies|die|survives?|will|going to|gonna)\b/;
+
 // Real Alexa+ picks a tool on its own, from the description the Rewind server
 // gives each one. This page has no model to do that, so keyword rules stand
 // in. Anything they don't catch goes to ask_about_show as a question.
 export function chooseTool(question: string): ToolCall {
   const text = question.toLowerCase();
-  for (const [pattern, name] of RULES) {
-    if (pattern.test(text)) {
-      return {name, arguments: {}};
+  if (!ABOUT_THE_STORY.test(text)) {
+    for (const [pattern, name] of RULES) {
+      if (pattern.test(text)) {
+        return {name, arguments: {}};
+      }
     }
   }
   return {name: 'ask_about_show', arguments: {question}};
