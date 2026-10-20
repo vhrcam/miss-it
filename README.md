@@ -40,6 +40,7 @@ flowchart LR
     Server -- "recap written ahead of time" --> Nova["Amazon Nova 2 Lite<br/>Amazon Bedrock"]
     Faces["Face index per title<br/>Amazon Rekognition"] -. "who's on screen, second by second" .-> Server
     Alexa["Alexa+"] -- "MCP tools over<br/>Streamable HTTP" --> Server
+    Server -. "Alexa's last answer,<br/>shown as a card" .-> TV
 ```
 
 1. **The TV reports.** The [Fire TV app](firetv) plays the show and sends the captions it just displayed, plus the playback position, every few seconds.
@@ -47,6 +48,7 @@ flowchart LR
 3. **Answers are ready before you ask.** Alexa+ expects a reply in under 500 ms, and a model call takes longer than that. So whenever new dialogue arrives, Rewind has Amazon Nova rewrite the "last minute" recap in the background. "What did I miss?" becomes a lookup. While something is playing, the TV's regular updates also keep the Lambda function warm.
 4. **"Who's that?" is precomputed too.** Rewind indexes each title once: it grabs a frame every second from its own copy of the video, indexes every face with Amazon Rekognition, and matches them against one reference photo per character. Asking is then a lookup by timestamp.
 5. **Alexa+ asks.** Rewind is a self-hosted MCP server (Streamable HTTP, spec 2025-11-25). Alexa+ routes the question to the right tool by itself, so there's no skill name to remember.
+6. **The TV shows the answer too.** Rewind keeps Alexa's last answer, and the TV app checks for it every two seconds while the player is open. The answer pops up on a card for ten seconds, so everyone on the couch sees it, not just the person who asked.
 
 ## MCP tools
 
@@ -127,7 +129,7 @@ npm run faces:match -w server -- --content tears-of-steel
 npm test
 ```
 
-The server tests cover the playback API, every MCP tool, the precomputed recaps (with a fake model), the DynamoDB store, and the real Tears of Steel cast timeline. The library tests cover parsing and the spoiler guarantee.
+The server tests cover the playback API, every MCP tool, the precomputed recaps (with a fake model), the DynamoDB store, and the real Tears of Steel cast timeline. The library tests cover parsing and the spoiler guarantee. The Fire TV app has its own tests (`cd firetv && npm test`), and CI runs everything on every push.
 
 ## Built with
 
