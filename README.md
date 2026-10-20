@@ -77,6 +77,7 @@ Every tool is read-only and returns spoken text plus `structuredContent`, so scr
 |---|---|
 | [`server/`](server) | The memory service and MCP server (TypeScript, Hono, MCP SDK, AWS SDK) |
 | [`firetv/`](firetv) | The Fire TV app for Vega OS (React Native) |
+| [`alexa-sim/`](alexa-sim) | A simulated Alexa+ web page that asks Rewind's MCP tools out loud, for the demo (Alexa+ add-ons are partner-only for now) |
 | [`packages/spoiler-safe-context/`](packages/spoiler-safe-context) | The open-source library behind the spoiler guarantee, also published on its own at [vhrcam/spoiler-safe-context](https://github.com/vhrcam/spoiler-safe-context) |
 | [`infra/`](infra) | CloudFormation template and deploy script |
 | [`docs/`](docs) | The [playback API](docs/api.md), the [friction log](docs/friction-log.md) and [product feedback](docs/product-feedback.md) |
@@ -103,6 +104,14 @@ And try the tools with the [MCP Inspector](https://github.com/modelcontextprotoc
 npx @modelcontextprotocol/inspector --cli http://localhost:8787/mcp --transport http \
   --method tools/call --tool-name recap_recent
 ```
+
+Or ask out loud, the way the demo does, with the [simulated Alexa+ page](alexa-sim). It needs Chrome for speech:
+
+```sh
+cd alexa-sim && npm install && npm run dev
+```
+
+Then open `http://localhost:5173`. The page talks to Rewind on AWS. Add `?api=http://localhost:8787` to use your local server instead.
 
 Recaps and answers use Amazon Nova on Bedrock when AWS credentials are available (`aws login`). If your account's Bedrock quotas are still 0, as they can be on a new account, get a key at [nova.amazon.com/dev-apis](https://nova.amazon.com/dev-apis) and set `NOVA_API_KEY` to run the same model through Amazon's direct Nova API. Set `REWIND_AI=off` to run with the dialogue fallback only.
 
