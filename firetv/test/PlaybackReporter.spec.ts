@@ -59,7 +59,7 @@ describe('PlaybackReporter', () => {
       sentAt: expect.any(Number),
       cues: [{startSec: 10, endSec: 12, text: 'Hello'}],
     });
-    expect(statuses).toEqual(['listening']);
+    expect(statuses).toEqual(['connected']);
   });
 
   it('sends one update at a time, in order', async () => {
@@ -105,7 +105,7 @@ describe('PlaybackReporter', () => {
     const [first, second] = bodies(fetchMock);
     expect(first.cues).toHaveLength(1);
     expect(second.cues).toEqual(first.cues);
-    expect(statuses).toEqual(['offline', 'listening']);
+    expect(statuses).toEqual(['offline', 'connected']);
   });
 
   it('drops cues the server rejected as invalid', async () => {

@@ -5,17 +5,17 @@ import {colors} from '../theme';
 
 const LABELS: Record<LinkStatus, string> = {
   connecting: 'Connecting to Rewind',
-  listening: 'Rewind is listening',
+  connected: 'Rewind connected',
   offline: 'Rewind can’t connect',
 };
 
 // Shows whether the TV is reaching Rewind, so the link to Alexa is visible.
-// While Rewind is listening, the halo around the dot pulses softly.
+// While Rewind is connected, the halo around the dot pulses softly.
 export function RewindBadge({status}: {status: LinkStatus}) {
   const pulse = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    if (status !== 'listening') {
+    if (status !== 'connected') {
       return;
     }
     const loop = Animated.loop(
@@ -39,7 +39,7 @@ export function RewindBadge({status}: {status: LinkStatus}) {
   return (
     <View style={styles.badge}>
       <View style={styles.dotBox}>
-        {status === 'listening' && (
+        {status === 'connected' && (
           <Animated.View style={[styles.halo, {opacity: pulse}]} />
         )}
         <View style={[styles.dot, dotStyles[status]]} />
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
 });
 
 const dotStyles = StyleSheet.create({
-  listening: {
+  connected: {
     backgroundColor: colors.accent,
   },
   connecting: {

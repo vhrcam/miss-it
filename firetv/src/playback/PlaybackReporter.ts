@@ -2,7 +2,7 @@ import type {Cue} from '../captions/webvtt';
 
 export type PlaybackState = 'playing' | 'paused' | 'ended';
 export type PlaybackEvent = 'tick' | 'play' | 'pause' | 'seek' | 'ended';
-export type LinkStatus = 'connecting' | 'listening' | 'offline';
+export type LinkStatus = 'connecting' | 'connected' | 'offline';
 
 export type Snapshot = {
   positionSec: number;
@@ -84,7 +84,7 @@ export class PlaybackReporter {
       });
       // A 4xx won't get better on retry, so only server errors keep the cues.
       this.unsent = response.status >= 500 ? cues.slice(-MAX_UNSENT_CUES) : [];
-      this.setStatus(response.ok ? 'listening' : 'offline');
+      this.setStatus(response.ok ? 'connected' : 'offline');
     } catch {
       this.unsent = cues.slice(-MAX_UNSENT_CUES);
       this.setStatus('offline');
