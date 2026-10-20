@@ -1,5 +1,5 @@
 import { handle } from "hono/aws-lambda";
-import { BedrockNarrator } from "./ai/bedrock.js";
+import { createNarrator } from "./ai/narrator.js";
 import { createApp } from "./app.js";
 import { CastGuide } from "./cast/guide.js";
 import { loadConfig } from "./config.js";
@@ -17,7 +17,7 @@ const app = createApp({
     descriptions: await Descriptions.load(new URL("./data/descriptions/", import.meta.url)),
   }),
   cast: await CastGuide.load(new URL("./data/cast.json", import.meta.url)),
-  narrator: config.ai.enabled ? new BedrockNarrator(config.ai) : undefined,
+  narrator: createNarrator(config),
 });
 
 export const handler = handle(app);

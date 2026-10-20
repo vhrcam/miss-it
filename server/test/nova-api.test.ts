@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { BedrockNarrator } from "../src/ai/bedrock.js";
+import { createNarrator } from "../src/ai/narrator.js";
 import { NovaApiNarrator } from "../src/ai/nova-api.js";
 import { SYSTEM_PROMPT } from "../src/ai/prompts.js";
+import { loadConfig } from "../src/config.js";
 
 function fakeFetch(status: number, body: unknown) {
   const calls: { url: string; init: RequestInit }[] = [];
@@ -42,5 +45,19 @@ describe("the Nova API narrator", () => {
     const narrator = new NovaApiNarrator({ apiKey: "nova-key", modelId: "nova-2-lite-v1", fetch });
 
     await expect(narrator.recap(recap)).rejects.toThrow("finish reason: length");
+  });
+});
+
+describe("picking a narrator", () => {
+  it("uses the Nova API when NOVA_API_KEY is set", () => {
+    expect(createNarrator(loadConfig({ NOVA_API_KEY: "nova-key" }))).toBeInstanceOf(NovaApiNarrator);
+  });
+
+  it("uses Bedrock without a key", () => {
+    expect(createNarrator(loadConfig({}))).toBeInstanceOf(BedrockNarrator);
+  });
+
+  it("uses neither when AI is off", () => {
+    expect(createNarrator(loadConfig({ NOVA_API_KEY: "nova-key", REWIND_AI: "off" }))).toBeUndefined();
   });
 });
