@@ -47,7 +47,27 @@ describe('replyFor recap_recent', () => {
         lines: [],
       }),
     );
-    expect(reply.speech).toBe('No one has spoken in the last minute.');
+    expect(reply.speech).toBe('No one spoke in the last minute.');
+  });
+
+  it('says who was on screen when no one spoke', () => {
+    const silent = (onScreen: string[]) =>
+      replyFor(
+        'recap_recent',
+        result('No one spoke in Tears of Steel from 7:11 to 8:11.', {
+          playing: true,
+          title: 'Tears of Steel',
+          lines: [],
+          onScreen,
+        }),
+      ).speech;
+    expect(silent(['Barley'])).toBe('No one spoke in the last minute. On screen: Barley.');
+    expect(silent(['Celia', 'Thom'])).toBe(
+      'No one spoke in the last minute. On screen: Celia and Thom.',
+    );
+    expect(silent(['Barley', 'Celia', 'Thom'])).toBe(
+      'No one spoke in the last minute. On screen: Barley, Celia and Thom.',
+    );
   });
 
   it('passes on that nothing is playing', () => {

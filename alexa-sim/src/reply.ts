@@ -26,6 +26,12 @@ const strings = (value: unknown): string[] =>
     ? value.filter((item): item is string => typeof item === 'string')
     : [];
 
+// "Celia and Thom", or "Barley, Celia and Thom", the way the server says it.
+const listNames = (names: string[]) =>
+  names.length < 3
+    ? names.join(' and ')
+    : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+
 // Turns a Rewind tool result into what a person would hear from Alexa. Some
 // results are written for a model to read, like ask_about_show's lines when
 // Rewind's own model is down, so those are shown but never read out.
@@ -56,7 +62,15 @@ export function replyFor(tool: ToolName, result: ToolResult): Reply {
     if (lines.length) {
       return reply('Here’s what was said in the last minute:', lines, true);
     }
-    return data.title ? reply('No one has spoken in the last minute.') : reply(text);
+    if (!data.title) {
+      return reply(text);
+    }
+    const onScreen = strings(data.onScreen);
+    return reply(
+      onScreen.length
+        ? `No one spoke in the last minute. On screen: ${listNames(onScreen)}.`
+        : 'No one spoke in the last minute.',
+    );
   }
 
   if (tool === 'ask_about_show') {
