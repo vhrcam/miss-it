@@ -1,4 +1,5 @@
 import {chooseTool, stripWakeWord} from './chooseTool';
+import {canListen, listen} from './listen';
 import {replyFor, type Reply} from './reply';
 import {createRewind} from './rewind';
 import {speak, stopSpeaking} from './speak';
@@ -18,6 +19,8 @@ const element = <T extends HTMLElement = HTMLElement>(id: string) =>
 const server = element('server');
 const serverLabel = element('server-label');
 const intro = element('intro');
+const listening = element('listening');
+const transcript = element('transcript');
 const exchange = element('exchange');
 const asked = element('asked');
 const headline = element('headline');
@@ -26,12 +29,13 @@ const note = element('note');
 const meta = element('meta');
 const tool = element('tool');
 const timing = element('timing');
+const mic = element<HTMLButtonElement>('mic');
 const micLabel = element('mic-label');
 const form = element<HTMLFormElement>('ask');
 const input = element<HTMLInputElement>('question');
 
 const MIC_LABELS: Record<State, string> = {
-  ready: 'Press to talk',
+  ready: canListen ? 'Press to talk' : 'Voice needs Chrome. Type below.',
   listening: 'Listening. Press to stop.',
   thinking: 'Asking Rewind…',
   speaking: 'Alexa is answering',
@@ -40,6 +44,10 @@ const MIC_LABELS: Record<State, string> = {
 function setState(state: State) {
   document.body.dataset.state = state;
   micLabel.textContent = MIC_LABELS[state];
+  mic.setAttribute(
+    'aria-label',
+    state === 'listening' ? 'Stop listening' : 'Press to talk',
+  );
 }
 
 function setServer(status: 'connected' | 'offline') {
@@ -67,6 +75,18 @@ function show(reply: Reply) {
 }
 
 let latest = 0;
+let listenSession = 0;
+let stopListening: (() => void) | undefined;
+
+// A chip or a typed question while the mic is on wins over what it hears.
+function dropListening() {
+  if (stopListening) {
+    listenSession++;
+    stopListening();
+    stopListening = undefined;
+    listening.hidden = true;
+  }
+}
 
 async function ask(said: string) {
   const question = stripWakeWord(said);
@@ -76,6 +96,7 @@ async function ask(said: string) {
   }
   const call = chooseTool(question);
   const id = ++latest;
+  dropListening();
   stopSpeaking();
 
   intro.hidden = true;
@@ -126,6 +147,46 @@ form.addEventListener('submit', (event) => {
   const said = input.value;
   input.value = '';
   void ask(said);
+});
+
+mic.disabled = !canListen;
+mic.addEventListener('click', () => {
+  if (stopListening) {
+    stopListening();
+    return;
+  }
+  latest++;
+  stopSpeaking();
+  const answered = !exchange.hidden;
+  intro.hidden = true;
+  exchange.hidden = true;
+  listening.hidden = false;
+  transcript.textContent = '';
+  setState('listening');
+
+  const session = ++listenSession;
+  stopListening = listen({
+    heard: (text) => {
+      transcript.textContent = text;
+    },
+    done: (text, error) => {
+      if (session !== listenSession) {
+        return;
+      }
+      stopListening = undefined;
+      listening.hidden = true;
+      if (text) {
+        void ask(text);
+        return;
+      }
+      intro.hidden = answered;
+      exchange.hidden = !answered;
+      setState('ready');
+      if (error === 'not-allowed' || error === 'service-not-allowed') {
+        micLabel.textContent = 'Allow the mic in Chrome to talk';
+      }
+    },
+  });
 });
 
 rewind.connect().then(
