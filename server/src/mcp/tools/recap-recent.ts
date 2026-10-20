@@ -28,6 +28,7 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
         to: z.string().optional(),
         recap: z.string().optional(),
         lines: z.array(z.string()).optional(),
+        onScreen: z.array(z.string()).optional(),
       },
       annotations: { title: "Recap what I missed", ...READ_ONLY },
     },
@@ -42,6 +43,10 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
       const transcript = toTranscript(cues);
       const lines = transcript ? transcript.split("\n") : [];
       const playing = viewing.state === "playing";
+      // Who was on screen covers the stretches where no one talks.
+      const people = ctx.cast.seenBetween(viewing.contentId, from, to).map((p) => p.character);
+      const onScreen = people.length ? { onScreen: people } : {};
+      const whoNote = people.length ? ` On screen: ${listNames(people)}.` : "";
 
       if (ctx.recaps && cues.length) {
         try {
@@ -53,6 +58,7 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
             ...range,
             recap: recap.text,
             lines,
+            ...onScreen,
           });
         } catch (error) {
           ctx.log(`recap_recent fell back to the transcript: ${(error as Error).message}`);
@@ -61,12 +67,17 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
 
       // Without the model, the card shows the last couple of lines.
       if (cues.length) await showOnTv(ctx, { tool: "recap_recent", text: toTranscript(cues.slice(-2), { timestamps: false }) });
+      else if (people.length) await showOnTv(ctx, { tool: "recap_recent", text: `No one spoke.${whoNote}` });
 
       const text = cues.length
-        ? `Everything from ${range.from} to ${range.to} in ${viewing.title}. Nothing after ${range.to} has been shown yet.\n${transcript}`
-        : `No one spoke in ${viewing.title} from ${range.from} to ${range.to}.`;
+        ? `Everything from ${range.from} to ${range.to} in ${viewing.title}. Nothing after ${range.to} has been shown yet.${whoNote}\n${transcript}`
+        : `No one spoke in ${viewing.title} from ${range.from} to ${range.to}.${whoNote}`;
 
-      return textResult(text + staleNote(viewing, ctx), { playing, title: viewing.title, ...range, lines });
+      return textResult(text + staleNote(viewing, ctx), { playing, title: viewing.title, ...range, lines, ...onScreen });
     },
   );
+}
+
+function listNames(names: string[]): string {
+  return names.length < 3 ? names.join(" and ") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }

@@ -44,6 +44,13 @@ export class CastGuide {
       .map((entry) => toMember(entry, positionSec));
   }
 
+  // Everyone who was on screen at any point between the two times.
+  seenBetween(contentId: string, fromSec: number, toSec: number): CastMember[] {
+    return (this.#titles.get(contentId) ?? [])
+      .filter((entry) => entry.scenes.some(([start, end]) => start <= toSec && end >= fromSec))
+      .map((entry) => toMember(entry, toSec));
+  }
+
   // Who left the screen in the last few seconds. Voices often carry over a
   // cut, and looking back can never spoil anything.
   lastSeen(contentId: string, positionSec: number, withinSec = 10): CastMember[] {

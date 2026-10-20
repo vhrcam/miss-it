@@ -56,6 +56,19 @@ describe("answer cards", () => {
     expect(await card(app)).toMatchObject({ tool: "recap_recent", text: "Two\nThree" });
   });
 
+  it("say who was on screen when no one spoke", async () => {
+    const cast = {
+      "tears-of-steel": [
+        { character: "Celia", actor: "Denise Rebergen", bios: [], scenes: [[40, 120]] as [number, number][] },
+      ],
+    };
+    const { app, memory } = setup({ cast });
+    await memory.record(update({ positionSec: 100, cues: [] }));
+
+    await callTool(app, "recap_recent");
+    expect(await card(app)).toMatchObject({ tool: "recap_recent", text: "No one spoke. On screen: Celia." });
+  });
+
   it("name who is on screen", async () => {
     const cast = {
       "tears-of-steel": [

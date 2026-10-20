@@ -9,6 +9,10 @@ describe("Tears of Steel cast guide", () => {
     expect(onScreen(30)).toEqual(["Celia", "Thom"]);
   });
 
+  it("lists everyone on screen in a stretch of time", () => {
+    expect(guide.seenBetween("tears-of-steel", 0, 45).map((member) => member.character).sort()).toEqual(["Celia", "Thom"]);
+  });
+
   it("remembers who just left the screen while their voices carry over", () => {
     const lastSeen = (sec: number) => guide.lastSeen("tears-of-steel", sec).map((member) => member.character).sort();
     expect(onScreen(41)).toEqual([]);

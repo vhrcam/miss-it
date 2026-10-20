@@ -93,6 +93,21 @@ describe("recap_recent", () => {
     expect(result.structuredContent.lines).toEqual(["[0:30] Too early", "[2:05] I had to"]);
   });
 
+  it("says who was on screen when no one spoke", async () => {
+    const cast = {
+      "tears-of-steel": [
+        { character: "Celia", actor: "Denise Rebergen", bios: [], scenes: [[40, 120]] as [number, number][] },
+        { character: "Thom", actor: "Vanja Rukavina", bios: [], scenes: [[90, 130]] as [number, number][] },
+      ],
+    };
+    const { app, memory } = setup({ cast });
+    await memory.record(update({ positionSec: 100, cues: [] }));
+
+    const result = await callTool(app, "recap_recent");
+    expect(result.content[0]!.text).toBe("No one spoke in Tears of Steel from 0:40 to 1:40. On screen: Celia and Thom.");
+    expect(result.structuredContent.onScreen).toEqual(["Celia", "Thom"]);
+  });
+
   it("says when nothing is playing", async () => {
     const { app } = setup();
     const result = await callTool(app, "recap_recent");
