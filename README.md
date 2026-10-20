@@ -59,6 +59,16 @@ flowchart LR
 
 Every tool is read-only and returns spoken text plus `structuredContent`, so screen devices can render it too. If Bedrock is unreachable, the recap and answer tools fall back to the actual dialogue instead of failing.
 
+## AWS services
+
+| Service | What Rewind uses it for | Code |
+|---|---|---|
+| AWS Lambda | Runs the server behind a function URL: public HTTPS for the TV app and Alexa+, with no API Gateway | [`server/src/lambda.ts`](server/src/lambda.ts) |
+| Amazon DynamoDB | One partition per household for the watch log, the ready recap and Alexa's last answer, all expiring a day after the last update | [`server/src/memory/dynamo-store.ts`](server/src/memory/dynamo-store.ts) |
+| Amazon Bedrock | Amazon Nova 2 Lite writes recaps and answers follow-ups through the Converse API, and describes silent scenes from frames of the film | [`server/src/ai/bedrock.ts`](server/src/ai/bedrock.ts), [`server/scripts/scenes/describe.ts`](server/scripts/scenes/describe.ts) |
+| Amazon Rekognition | Indexes every face in a title once and matches them to the cast, so "who's that?" is a lookup | [`server/scripts/faces/`](server/scripts/faces) |
+| AWS CloudFormation and Amazon S3 | One command packages and deploys the whole stack | [`infra/template.yaml`](infra/template.yaml), [`infra/deploy.sh`](infra/deploy.sh) |
+
 ## Repository
 
 | Path | What's in it |
