@@ -26,6 +26,7 @@ It's X-Ray, but you just talk to the room.
 | "Who's that?" | The character on screen, the actor, and one line on who they are *so far* |
 | "Why is she mad at him?" | An answer drawn only from what has already been shown |
 | "How much is left?" | What's playing, how far in you are, and the time left |
+| "How does it end?" | A friendly "no spoilers", with how far you've watched |
 
 ## Spoiler-free by design
 
@@ -35,6 +36,7 @@ Rewind can't spoil what it doesn't know.
 2. Every read from the watch log stops at the viewer's current position, even after a rewind. This lives in its own open-source library, [`spoiler-safe-context`](https://github.com/vhrcam/spoiler-safe-context).
 3. Character bios are written per moment in the story, so "who's that?" never reveals more than you've seen.
 4. The model is told to treat the transcript as everything that exists and never to guess ahead, even when it recognizes the show.
+5. Questions about what comes next ("how does it end?", "does she die?") get a straight "no spoilers" before any model sees them.
 
 ## How it works
 
