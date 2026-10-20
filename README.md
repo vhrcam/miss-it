@@ -1,5 +1,7 @@
 # Rewind
 
+[![CI](https://github.com/vhrcam/rewind/actions/workflows/ci.yml/badge.svg)](https://github.com/vhrcam/rewind/actions/workflows/ci.yml)
+
 **"Alexa, what did I miss?"**
 
 Rewind gives Alexa+ a memory of what's playing on your TV. Step away from the couch, come back, and just ask: Alexa catches you up on the scene you missed in a sentence or two, without spoilers. No remote, no pausing, no menus.
