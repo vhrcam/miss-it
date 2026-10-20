@@ -59,7 +59,7 @@ export function registerRecapRecent(server: McpServer, ctx: ToolContext): void {
       }
 
       const text = cues.length
-        ? `Everything said in ${viewing.title} from ${range.from} to ${range.to}. Nothing after ${range.to} has been shown yet.\n${transcript}`
+        ? `Everything from ${range.from} to ${range.to} in ${viewing.title}. Nothing after ${range.to} has been shown yet.\n${transcript}`
         : `No one spoke in ${viewing.title} from ${range.from} to ${range.to}.`;
 
       return textResult(text + staleNote(viewing, ctx), { playing, title: viewing.title, ...range, lines });

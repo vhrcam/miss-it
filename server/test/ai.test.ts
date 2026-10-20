@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { Descriptions } from "../src/scenes/descriptions.js";
 import { FakeNarrator } from "./fake-narrator.js";
 import { callTool, setup, update } from "./helpers.js";
 
 const cue = (startSec: number, text: string) => ({ startSec, endSec: startSec + 3, text });
 
-function rewind(narrator = new FakeNarrator()) {
-  const { app, memory } = setup({ narrator });
+function rewind(narrator = new FakeNarrator(), descriptions?: Descriptions) {
+  const { app, memory } = setup({ narrator, descriptions });
   const play = (overrides: Parameters<typeof update>[0]) =>
     app.request("/v1/playback", {
       method: "POST",
@@ -56,6 +57,17 @@ describe("ready recaps", () => {
     expect(request.recent).toBe("[1:35] Now");
     expect(request.earlier).toBe("[0:10] Early");
     expect(JSON.stringify(request)).not.toContain("Later");
+  });
+
+  it("cover action scenes with no dialogue", async () => {
+    const descriptions = new Descriptions({
+      "tears-of-steel": [{ startSec: 430, endSec: 435, text: "Robots smash through the church doors." }],
+    });
+    const { narrator, play } = rewind(new FakeNarrator(), descriptions);
+    await play({ positionSec: 428, cues: [] });
+    await play({ positionSec: 436, cues: [] });
+
+    expect(narrator.recaps.at(-1)!.recent).toBe("[7:10] (on screen) Robots smash through the church doors.");
   });
 
   it("are written live for a longer window", async () => {

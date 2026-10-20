@@ -1,5 +1,6 @@
 import { WatchLog } from "spoiler-safe-context";
 import type { PlaybackUpdate } from "../playback/schema.js";
+import { Descriptions } from "../scenes/descriptions.js";
 import type { MemoryStore } from "./store.js";
 import type { StoredRecap, Viewing } from "./viewing.js";
 
@@ -7,11 +8,16 @@ export type RecordResult =
   | { status: "stored"; viewing: Viewing; added: number }
   | { status: "stale" };
 
+// Playback can jump a little between updates; anything bigger is a skip.
+const MAX_STEP_SEC = 15;
+
 export class Memory {
   readonly #store: MemoryStore;
+  readonly #descriptions: Descriptions;
 
-  constructor(store: MemoryStore) {
+  constructor(store: MemoryStore, options: { descriptions?: Descriptions } = {}) {
     this.#store = store;
+    this.#descriptions = options.descriptions ?? new Descriptions();
   }
 
   get(householdId: string): Promise<Viewing | undefined> {
@@ -35,7 +41,15 @@ export class Memory {
     }
 
     const log = sameTitle ? current.log : new WatchLog();
-    const added = log.add(update.cues);
+    let added = log.add(update.cues);
+
+    // On-screen descriptions only count for stretches that actually played,
+    // the same way the TV only sends captions it showed.
+    const fromSec = sameTitle ? current.positionSec : update.positionSec;
+    const step = update.positionSec - fromSec;
+    if (update.event !== "seek" && step > 0 && step <= MAX_STEP_SEC) {
+      added += log.add(this.#descriptions.playedBetween(update.contentId, fromSec, update.positionSec));
+    }
     log.seek(update.positionSec);
 
     const viewing: Viewing = {

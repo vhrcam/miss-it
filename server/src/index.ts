@@ -5,11 +5,13 @@ import { CastGuide } from "./cast/guide.js";
 import { loadConfig } from "./config.js";
 import { Memory } from "./memory/memory.js";
 import { InMemoryStore } from "./memory/store.js";
+import { Descriptions } from "./scenes/descriptions.js";
 
 const config = loadConfig();
 const cast = await CastGuide.load(new URL("../data/cast.json", import.meta.url));
+const descriptions = await Descriptions.load(new URL("../data/descriptions/", import.meta.url));
 const narrator = config.ai.enabled ? new BedrockNarrator(config.ai) : undefined;
-const app = createApp({ config, memory: new Memory(new InMemoryStore()), cast, narrator });
+const app = createApp({ config, memory: new Memory(new InMemoryStore(), { descriptions }), cast, narrator });
 
 serve({ fetch: app.fetch, port: config.port }, ({ port }) => {
   console.log(`Rewind is listening on http://localhost:${port}`);

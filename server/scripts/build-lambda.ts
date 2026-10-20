@@ -1,5 +1,5 @@
 // Bundles the server into one ES module for AWS Lambda, with the cast data
-// next to it: dist/lambda/index.mjs + dist/lambda/data/cast.json.
+// next to it: dist/lambda/index.mjs, data/cast.json and data/descriptions/.
 import { build } from "esbuild";
 import { cp, mkdir, rm } from "node:fs/promises";
 
@@ -22,6 +22,10 @@ await build({
   logLevel: "info",
 });
 await mkdir(new URL("data/", out), { recursive: true });
-await cp(new URL("data/cast.json", root), new URL("data/cast.json", out)).catch((error: NodeJS.ErrnoException) => {
-  if (error.code !== "ENOENT") throw error;
-});
+for (const path of ["cast.json", "descriptions/"]) {
+  await cp(new URL(`data/${path}`, root), new URL(`data/${path}`, out), { recursive: true }).catch(
+    (error: NodeJS.ErrnoException) => {
+      if (error.code !== "ENOENT") throw error;
+    },
+  );
+}
