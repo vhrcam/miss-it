@@ -10,11 +10,13 @@ OUT=src/assets
 mkdir -p "$OUT" assets/image
 
 # The app icon: Rewind's mark from the Home screen, a ring around two rewind
-# arrows, in white and cyan on a clear background. It's drawn at 2048 px and
-# scaled to the 512 px the manifest asks for, so the edges come out smooth.
-# Clear pixels are white, so scaling doesn't darken the edges.
-U='(X/W*58-3)'
-V='(Y/H*58-3)'
+# arrows, in white and cyan on a clear background. "Your apps" shows the
+# square icon in a wide tile and crops its top and bottom, so the mark stays
+# inside the middle half. It's drawn at 2048 px and scaled to the 512 px the
+# manifest asks for, so the edges come out smooth. Clear pixels are white, so
+# scaling doesn't darken the edges.
+U='(X/W*100-24)'
+V='(Y/H*100-24)'
 RING="between(hypot($U-26,$V-26),21.5,24.5)"
 BACK="lte($U,25)*gte($U-13,12/8.5*abs($V-26))"
 FRONT="lte($U,38)*gte($U-26,12/8.5*abs($V-26))"
