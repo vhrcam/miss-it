@@ -1,8 +1,8 @@
-// The palette from the TV design mock.
+// The palette from the TV design mock, with the blue from the logo's play button.
 export const colors = {
   night: '#0B0D12',
   white: '#F5F7FA',
-  accent: '#3DD6F5',
+  accent: '#1AA3FF',
   amber: '#F5B544',
   gray: '#8A919C',
   label: '#B4BAC5',
