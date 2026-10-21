@@ -15,7 +15,7 @@ export function recapPrompt(request: RecapRequest): string {
     `Show: ${request.title}`,
     request.earlier && `Earlier, for names and who's who only. Don't recap this part:\n${request.earlier}`,
     `What they missed, from ${formatTimestamp(request.fromSec)} to ${formatTimestamp(request.toSec)}:\n${request.recent}`,
-    "In at most two short sentences, tell them what they missed.",
+    "In at most two short sentences, say what happened, starting with the story itself, not with who saw it. Stick to what people said and did, and leave out scenery, titles and credits unless nothing else happened.",
   ]
     .filter(Boolean)
     .join("\n\n");
