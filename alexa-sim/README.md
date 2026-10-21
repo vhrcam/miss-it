@@ -4,7 +4,7 @@ A stand-in for Alexa+ in the Miss It? demo. Ask it about what's on the TV, out l
 
 ![The Fire TV app showing a "What you missed" card while the simulated Alexa+ page answers the same question](screenshots/demo.jpg)
 
-The Fire TV app in the Vega Virtual Device on the left, and this page on the right, right after "Alexa, what did I miss?". While the Miss It? model is unavailable, both fall back to the dialogue.
+The Fire TV app in the Vega Virtual Device on the left, and this page on the right, right after "Alexa, what did I miss?". Both show the recap Amazon Nova wrote while the film played.
 
 ## Why it's simulated
 
