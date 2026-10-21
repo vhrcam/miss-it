@@ -1,12 +1,12 @@
 # Product feedback
 
-What we used to build Rewind, what worked, what got in the way, and whether we'd build with it again. The [friction log](friction-log.md) has step-by-step detail for each problem.
+What we used to build Miss It?, what worked, what got in the way, and whether we'd build with it again. The [friction log](friction-log.md) has step-by-step detail for each problem.
 
 ## At a glance
 
-| Product | What Rewind uses it for | Build with it again? |
+| Product | What Miss It? uses it for | Build with it again? |
 |---|---|---|
-| Alexa+ (MCP) | The way Alexa reaches Rewind: four read-only tools over Streamable HTTP | Yes, once the tools are open to everyone |
+| Alexa+ (MCP) | The way Alexa reaches Miss It?: four read-only tools over Streamable HTTP | Yes, once the tools are open to everyone |
 | Vega SDK | The Fire TV app: playback, captions, reporting what's on screen | Yes |
 | Amazon Bedrock (Nova 2 Lite) | Writing recaps and answering follow-up questions | Yes, but new accounts need a clearer path |
 | Amazon Nova API | A backup way to reach Nova while Bedrock was blocked | Maybe, if key management gets fixed |
@@ -18,12 +18,12 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 
 ## Alexa+ (MCP)
 
-**What we used it for.** Rewind is a self-hosted MCP server (spec 2025-11-25, Streamable HTTP) with four tools: `recap_recent`, `who_is_on_screen`, `ask_about_show` and `whats_playing`. Alexa+ picks the tool from what the user says, so there's no skill name to remember.
+**What we used it for.** Miss It? is a self-hosted MCP server (spec 2025-11-25, Streamable HTTP) with four tools: `recap_recent`, `who_is_on_screen`, `ask_about_show` and `whats_playing`. Alexa+ picks the tool from what the user says, so there's no skill name to remember.
 
 **What worked.**
 - Building on MCP meant we didn't need any Amazon tooling to build and test. The official MCP Inspector and the TypeScript SDK covered everything up to the Alexa+ connection itself.
-- Account linking is optional. Rewind's tools give every user the same answers, so we skipped OAuth entirely once we found that out.
-- The latency guidance shaped the design for the better. Because Alexa+ wants a fast reply, Rewind writes the "what did I miss?" recap while the show plays, and a question becomes a lookup.
+- Account linking is optional. Our tools give every user the same answers, so we skipped OAuth entirely once we found that out.
+- The latency guidance shaped the design for the better. Because Alexa+ wants a fast reply, Miss It? writes the "what did I miss?" recap while the show plays, and a question becomes a lookup.
 
 **What needs work.**
 - The QuickStart presents OAuth as a "Required" checklist, and only the Account Linking page says it's optional (friction log #1).
@@ -36,7 +36,7 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 
 ## Vega SDK (Fire TV)
 
-**What we used it for.** A React Native app that plays the demo film with the W3C media player, shows WebVTT captions with `KeplerCaptionsView`, and reports which captions were on screen to Rewind every five seconds. We developed and tested it entirely on the Vega Virtual Device.
+**What we used it for.** A React Native app that plays the demo film with the W3C media player, shows WebVTT captions with `KeplerCaptionsView`, and reports which captions were on screen to our server every five seconds. We developed and tested it entirely on the Vega Virtual Device.
 
 **What worked.**
 - The W3C media player works like the HTML5 media element (`play()`, `currentTime`, `seeked` and `waiting` events, `addTextTrack`, `VTTCue`), so the player code reads like web video code. The Vega-specific parts are passing the video surface and caption view handles to the player.
@@ -67,7 +67,7 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 
 ## Amazon Nova API
 
-**What we used it for.** A backup path to the same model through `api.nova.amazon.com`. Rewind switches to it whenever `NOVA_API_KEY` is set.
+**What we used it for.** A backup path to the same model through `api.nova.amazon.com`. Miss It? switches to it whenever `NOVA_API_KEY` is set.
 
 **What worked.** The API mirrors the familiar chat-completions shape, so the client took a few minutes to write.
 
@@ -75,7 +75,7 @@ What we used to build Rewind, what worked, what got in the way, and whether we'd
 
 ## Amazon Rekognition
 
-**What we used it for.** "Who's that?" Rewind grabs a frame every second from its own copy of the film, indexes every face into a collection, and matches them against one reference photo per character. Asking Alexa is then a lookup by timestamp, with no image work at question time.
+**What we used it for.** "Who's that?" Miss It? grabs a frame every second from its own copy of the film, indexes every face into a collection, and matches them against one reference photo per character. Asking Alexa is then a lookup by timestamp, with no image work at question time.
 
 **What worked.** Indexing and search were fast and accurate. It matched all six characters we could confirm from the film's credits, and it worked on a new account from the first call.
 

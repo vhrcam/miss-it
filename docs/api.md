@@ -1,6 +1,6 @@
 # Playback API
 
-The Fire TV app reports what's playing so Rewind can answer questions about it. Rewind only ever uses what has already been on screen.
+The Fire TV app reports what's playing so Miss It? can answer questions about it. Miss It? only ever uses what has already been on screen.
 
 ## `POST /v1/playback`
 
@@ -63,12 +63,12 @@ Responses
 
 - Send an update every 5 seconds while playing, and right away on play, pause, seek and end.
 - Only send cues that were actually shown. Cues skipped by a forward seek are never sent.
-- After a backward seek, cues may be sent again as they replay. Rewind dedupes on `startSec` + `text`.
-- Rewind never uses a cue that starts after `positionSec`, so answers can't run ahead of the viewer.
+- After a backward seek, cues may be sent again as they replay. The server dedupes on `startSec` + `text`.
+- The server never uses a cue that starts after `positionSec`, so answers can't run ahead of the viewer.
 
 ## `GET /v1/playback/{householdId}/answer`
 
-The last answer Rewind gave Alexa, so the TV can show it as a card. It takes the same `Authorization` header as `POST /v1/playback`.
+The last answer Miss It? gave Alexa, so the TV can show it as a card. It takes the same `Authorization` header as `POST /v1/playback`.
 
 Response `200`
 

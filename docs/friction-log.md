@@ -1,6 +1,6 @@
 # Friction log
 
-What got in the way while building Rewind. Part one covers Alexa+ and AWS, part two the Fire TV app on Vega, each in the order we hit it. Severity: **High** blocks progress, **Medium** costs hours or changes the design, **Low** is an annoyance.
+The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS first, then the Fire TV app on Vega, each in the order we hit them. Severity: **High** blocks progress, **Medium** costs hours or changes the design, **Low** is an annoyance.
 
 ## Alexa+ and AWS
 
@@ -8,12 +8,12 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 
 | | |
 |---|---|
-| **Task** | Decide whether Rewind, which has no user accounts, has to run an OAuth server before it can connect to Alexa+. |
+| **Task** | Decide whether Miss It?, which has no user accounts, has to run an OAuth server before it can connect to Alexa+. |
 | **Steps** | Read the MCP Toolkit QuickStart ("Authentication checklist"), then the Authentication page, then Account Linking. |
 | **Expected** | A clear line near the top of the QuickStart saying auth is optional when every user gets the same tools. |
 | **Actual** | The QuickStart lists the 401 behavior, Protected Resource Metadata and PKCE as a checklist marked "Required". The Authentication page says Tier 1 applies "if you have a private MCP Server". Only the Account Linking page says "Account linking is optional." |
 | **Severity** | Medium. We nearly planned a day of Cognito work we didn't need. |
-| **Workaround** | Read all three pages and skipped auth. Rewind's tools don't need to know who is asking. |
+| **Workaround** | Read all three pages and skipped auth. Our tools don't need to know who is asking. |
 | **Suggestion** | Open the QuickStart's auth section with a one-line decision: "No per-user data? You can skip auth." |
 
 ### 2. Installing the Alexa AI CLI
@@ -36,8 +36,8 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 | **Steps** | The QuickStart's Performance section says the server "must meet a round-trip query response latency of less than 500 ms". Functional Requirements says "Best practice: Return results within 3 seconds". |
 | **Expected** | One number, with what it measures (every `tools/call`? `initialize`? p50 or p99?) and what to do when a tool is slower. |
 | **Actual** | Two different numbers and no scope. |
-| **Severity** | Medium. It changed Rewind's architecture. |
-| **Workaround** | Rewind does its AI work while the show plays, so a tool call is a lookup. Our tools answer in single-digit milliseconds locally. |
+| **Severity** | Medium. It changed our architecture. |
+| **Workaround** | Miss It? does its AI work while the show plays, so a tool call is a lookup. Our tools answer in single-digit milliseconds locally. |
 | **Suggestion** | Define the latency metric and percentile, and say whether it applies to `tools/call`. |
 
 ### 4. Protocol version in the client lifecycle docs
@@ -49,7 +49,7 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 | **Expected** | The docs and the hackathon rules agree, or the docs say which versions the client negotiates. |
 | **Actual** | Unclear whether Alexa+ uses anything newer than 2025-03-26. |
 | **Severity** | Low. The MCP SDK negotiates down, so both work. |
-| **Workaround** | Rewind supports 2025-11-25 and accepts older clients. |
+| **Workaround** | Miss It? supports 2025-11-25 and accepts older clients. |
 | **Suggestion** | List the protocol versions the Alexa+ client supports. |
 
 ### 5. `llms.txt` is an HTML page
@@ -68,7 +68,7 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 
 | | |
 |---|---|
-| **Task** | Call Amazon Nova 2 Lite on a brand-new AWS account to write Rewind's recaps. |
+| **Task** | Call Amazon Nova 2 Lite on a brand-new AWS account to write our recaps. |
 | **Steps** | Created the account, signed in with `aws login`, called `converse` with `us.amazon.nova-2-lite-v1:0`. For the first hour the error was "Your account is currently being verified". After that, every Nova model returned `ValidationException: Operation not allowed`, in the CLI and in the console playground. Lambda, DynamoDB and Rekognition all worked from the start. |
 | **Expected** | Bedrock works once verification ends, or the error says what's missing. |
 | **Actual** | Service Quotas showed every Nova inference quota at 0, including "Model invocation max tokens per day for Amazon Nova 2 Lite", which can't be adjusted. `get-foundation-model-availability` said `NOT_AUTHORIZED`. Nothing in the error or the console pointed at quotas. The console's Model access page says models turn on by themselves the first time they're called, and the free plan marked "Use a foundation model in the Amazon Bedrock playground" as done and paid its $20 credit, though no call on the account had ever succeeded. |
@@ -80,7 +80,7 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 
 | | |
 |---|---|
-| **Task** | Get a key for Amazon's direct Nova API at nova.amazon.com/dev-apis, so Rewind could reach Nova while Bedrock was blocked. |
+| **Task** | Get a key for Amazon's direct Nova API at nova.amazon.com/dev-apis, so Miss It? could reach Nova while Bedrock was blocked. |
 | **Steps** | Signed in, clicked **Generate Key** and named the key. The full key is shown once, and our copy failed because the browser blocked clipboard access. After that the key list only shows it masked (`xxxxxxxx-****-****-****-xxxxxxxxxxxx`). Clicked **Generate Key** again, which said the key limit was reached and to deactivate a key first, then chose **Deactivate** from the key's menu. |
 | **Expected** | Deactivating frees the slot for a new key, or a lost key can be regenerated. |
 | **Actual** | Deactivate reported success, but the key stayed in the Active list and Generate Key still said the limit was reached. Same in Chrome and Brave. The page doesn't say what the limit is. |
@@ -131,7 +131,7 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 | | |
 |---|---|
 | **Task** | Read the app's logs to debug #10. |
-| **Steps** | `vda shell journalctl ...` answers "journalctl is not supported in developer mode shell. Please use loggingctl instead." `loggingctl log -v com.vhrcam.rewind` shows "Log suppression ended at level [info]. [52] logs were suppressed", and the media player logs `hasEnded` twice a second. `loggingctl config --set-rate com.vhrcam.rewind 100000` returns `"status": "failed"`. |
+| **Steps** | `vda shell journalctl ...` answers "journalctl is not supported in developer mode shell. Please use loggingctl instead." `loggingctl log -v com.vhrcam.missit` shows "Log suppression ended at level [info]. [52] logs were suppressed", and the media player logs `hasEnded` twice a second. `loggingctl config --set-rate com.vhrcam.missit 100000` returns `"status": "failed"`. |
 | **Expected** | An app's own warnings are always visible in developer mode. |
 | **Actual** | Startup logs were dropped, and our own `console.warn` calls never showed up. |
 | **Severity** | Medium. It made #10 much slower to find. |
@@ -183,5 +183,5 @@ What got in the way while building Rewind. Part one covers Alexa+ and AWS, part 
 | **Expected** | The docs say where the icon appears and how it's fitted. They name only Settings › Applications, and the virtual device's Settings has no Applications screen to check. |
 | **Actual** | "Your apps" shows the icon too, in a wide tile about 1.55:1. The square image is scaled to the tile's width, so its top and bottom are cut off, and our round logo lost its top and bottom edges. |
 | **Severity** | Low. It took two extra builds to find a size that fits. |
-| **Workaround** | Kept the logo inside the middle half of the 512 × 512 canvas. |
+| **Workaround** | Gave the icon a full square background and kept the logo inside the part of the 512 × 512 canvas that stays visible. |
 | **Suggestion** | Document every place the icon appears, with the safe area that "Your apps" keeps, or accept a separate wide image for the tile. |
