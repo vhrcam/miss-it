@@ -1,8 +1,8 @@
 {
-  "name": "rewind-alexa-sim",
+  "name": "miss-it-alexa-sim",
   "version": "0.1.0",
   "private": true,
-  "description": "A simulated Alexa+ that asks Rewind's MCP tools about what's on the TV",
+  "description": "A simulated Alexa+ that asks the Miss It? MCP tools about what's on the TV",
   "type": "module",
   "scripts": {
     "dev": "vite",

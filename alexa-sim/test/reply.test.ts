@@ -111,7 +111,7 @@ describe('replyFor ask_about_show', () => {
       ),
     );
     expect(reply.speech).toBe(
-      'I can’t answer that one right now, because Rewind’s model is unavailable.',
+      'I can’t answer that one right now, because the Miss It? model is unavailable.',
     );
     expect(reply.speech).not.toContain('use only these lines');
     expect(reply.lines).toEqual(['You’re a jerk, Thom.', 'Why don’t you just admit it?']);
@@ -148,7 +148,7 @@ describe('replyFor who_is_on_screen and whats_playing', () => {
       content: [{type: 'text', text: 'Internal error'}],
       isError: true,
     });
-    expect(reply.speech).toBe('Sorry, Rewind couldn’t answer that.');
+    expect(reply.speech).toBe('Sorry, Miss It? couldn’t answer that.');
     expect(reply.note).toBe('Internal error');
   });
 });

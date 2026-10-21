@@ -1,7 +1,7 @@
 import {chooseTool, stripWakeWord} from './chooseTool';
 import {canListen, listen} from './listen';
 import {replyFor, type Reply} from './reply';
-import {createRewind} from './rewind';
+import {createMcpClient} from './mcpClient';
 import {speak, stopSpeaking} from './speak';
 
 type State = 'ready' | 'listening' | 'thinking' | 'speaking';
@@ -9,9 +9,9 @@ type State = 'ready' | 'listening' | 'thinking' | 'speaking';
 const LAMBDA_URL =
   'https://xxdrmxupoeq6ttp22pja6mjbfe0wbwjg.lambda-url.us-east-1.on.aws';
 
-// ?api=http://localhost:8787 points the page at a local Rewind server.
+// ?api=http://localhost:8787 points the page at a local Miss It? server.
 const apiUrl = new URLSearchParams(location.search).get('api') ?? LAMBDA_URL;
-const rewind = createRewind(apiUrl);
+const mcp = createMcpClient(apiUrl);
 
 const element = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
@@ -37,7 +37,7 @@ const input = element<HTMLInputElement>('question');
 const MIC_LABELS: Record<State, string> = {
   ready: canListen ? 'Press to talk' : 'Voice needs Chrome. Type below.',
   listening: 'Listening. Press to stop.',
-  thinking: 'Asking Rewind…',
+  thinking: 'Asking Miss It?…',
   speaking: 'Alexa is answering',
 };
 
@@ -54,10 +54,10 @@ function setServer(status: 'connected' | 'offline') {
   server.dataset.status = status;
   serverLabel.textContent =
     status === 'offline'
-      ? 'Can’t reach Rewind'
+      ? 'Can’t reach Miss It?'
       : apiUrl === LAMBDA_URL
-        ? 'Rewind server on AWS'
-        : `Rewind server at ${new URL(apiUrl).host}`;
+        ? 'Miss It? server on AWS'
+        : `Miss It? server at ${new URL(apiUrl).host}`;
 }
 
 function show(reply: Reply) {
@@ -111,19 +111,19 @@ async function ask(said: string) {
   const started = performance.now();
   let reply: Reply;
   try {
-    reply = replyFor(call.name, await rewind.call(call));
+    reply = replyFor(call.name, await mcp.call(call));
     if (id !== latest) {
       return;
     }
     const seconds = (performance.now() - started) / 1000;
-    timing.textContent = `Rewind answered in ${seconds.toFixed(1)} s`;
+    timing.textContent = `Miss It? answered in ${seconds.toFixed(1)} s`;
     setServer('connected');
   } catch (error) {
     if (id !== latest) {
       return;
     }
     setServer('offline');
-    const sorry = 'Sorry, I can’t reach Rewind right now.';
+    const sorry = 'Sorry, I can’t reach Miss It? right now.';
     reply = {speech: sorry, headline: sorry, lines: [], note: String(error)};
   }
 
@@ -189,7 +189,7 @@ mic.addEventListener('click', () => {
   });
 });
 
-rewind.connect().then(
+mcp.connect().then(
   () => setServer('connected'),
   () => setServer('offline'),
 );

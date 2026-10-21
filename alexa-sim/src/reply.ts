@@ -33,9 +33,9 @@ const listNames = (names: string[]) =>
     ? names.join(' and ')
     : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
 
-// Turns a Rewind tool result into what a person would hear from Alexa. Some
+// Turns a Miss It? tool result into what a person would hear from Alexa. Some
 // results are written for a model to read, like ask_about_show's lines when
-// Rewind's own model is down, so those are shown but never read out.
+// the model behind Miss It? is down, so those are shown but never read out.
 export function replyFor(tool: ToolName, result: ToolResult): Reply {
   const full = (result.content ?? [])
     .map((part) => part.text ?? '')
@@ -52,7 +52,7 @@ export function replyFor(tool: ToolName, result: ToolResult): Reply {
   });
 
   if (result.isError) {
-    return {...reply('Sorry, Rewind couldn’t answer that.'), note: text};
+    return {...reply('Sorry, Miss It? couldn’t answer that.'), note: text};
   }
 
   if (tool === 'recap_recent') {
@@ -93,7 +93,7 @@ export function replyFor(tool: ToolName, result: ToolResult): Reply {
       .slice(-CONTEXT_LINES);
     if (lines.length) {
       return reply(
-        'I can’t answer that one right now, because Rewind’s model is unavailable.',
+        'I can’t answer that one right now, because the Miss It? model is unavailable.',
         lines,
       );
     }

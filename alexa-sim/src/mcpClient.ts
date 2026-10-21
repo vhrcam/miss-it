@@ -5,13 +5,13 @@ import type {ToolResult} from './reply';
 
 const CALL_TIMEOUT_MS = 15000;
 
-// Talks to Rewind's MCP server the way Alexa+ does: one MCP client over
+// Talks to the Miss It? MCP server the way Alexa+ does: one MCP client over
 // Streamable HTTP, connected on first use and again after a failure.
-export function createRewind(apiUrl: string) {
+export function createMcpClient(apiUrl: string) {
   let connection: Promise<Client> | undefined;
 
   const open = async () => {
-    const client = new Client({name: 'rewind-alexa-sim', version: '0.1.0'});
+    const client = new Client({name: 'miss-it-alexa-sim', version: '0.1.0'});
     await client.connect(new StreamableHTTPClientTransport(new URL('/mcp', apiUrl)));
     return client;
   };
