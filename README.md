@@ -7,7 +7,7 @@
 <p align="center"><em>Ask what happened.</em></p>
 
 <p align="center">
-  <a href="https://github.com/vhrcam/rewind/actions/workflows/ci.yml"><img src="https://github.com/vhrcam/rewind/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/vhrcam/miss-it/actions/workflows/ci.yml"><img src="https://github.com/vhrcam/miss-it/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
 **"Alexa, what did I miss?"**
