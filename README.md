@@ -1,10 +1,18 @@
-# Rewind
+<p align="center">
+  <img src="docs/brand/miss-it-icon.svg" alt="The Miss It? logo: an eye with a play button for a pupil" width="128">
+</p>
 
-[![CI](https://github.com/vhrcam/rewind/actions/workflows/ci.yml/badge.svg)](https://github.com/vhrcam/rewind/actions/workflows/ci.yml)
+<h1 align="center">Miss It?</h1>
+
+<p align="center"><em>Ask what happened.</em></p>
+
+<p align="center">
+  <a href="https://github.com/vhrcam/rewind/actions/workflows/ci.yml"><img src="https://github.com/vhrcam/rewind/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
 
 **"Alexa, what did I miss?"**
 
-Rewind gives Alexa+ a memory of what's playing on your TV. Step away from the couch, come back, and just ask: Alexa catches you up on the scene you missed in a sentence or two, without spoilers. No remote, no pausing, no menus.
+Miss It? gives Alexa+ a memory of what's playing on your TV. Step away from the couch, come back, and just ask: Alexa catches you up on the scene you missed in a sentence or two, without spoilers. No remote, no pausing, no menus.
 
 It's X-Ray, but you just talk to the room.
 
@@ -15,12 +23,12 @@ It's X-Ray, but you just talk to the room.
 </p>
 
 <p align="center">
-  <img src="firetv/screenshots/home.jpg" alt="Rewind's Home screen on Fire TV, with the Rewind connected badge and things to ask Alexa" width="60%">
+  <img src="firetv/screenshots/home.jpg" alt="The Miss It? Home screen on Fire TV, with the eye tag and things to ask Alexa" width="60%">
 </p>
 
 ## What you can ask
 
-| Ask Alexa | Rewind answers with |
+| Ask Alexa | Miss It? answers with |
 |---|---|
 | "What did I miss?" | A short recap of the last minute, written before you even ask |
 | "Who's that?" | The character on screen, the actor, and one line on who they are *so far* |
@@ -30,7 +38,7 @@ It's X-Ray, but you just talk to the room.
 
 ## Spoiler-free by design
 
-Rewind can't spoil what it doesn't know.
+Miss It? can't spoil what it doesn't know.
 
 1. The Fire TV app only reports captions that have **actually been on screen**. Lines skipped by fast-forwarding are never sent.
 2. Every read from the watch log stops at the viewer's current position, even after a rewind. This lives in its own open-source library, [`spoiler-safe-context`](https://github.com/vhrcam/spoiler-safe-context).
@@ -42,7 +50,7 @@ Rewind can't spoil what it doesn't know.
 
 ```mermaid
 flowchart LR
-    TV["Fire TV app<br/>Vega OS"] -- "captions on screen + position<br/>every 5 seconds" --> Server["Rewind server<br/>AWS Lambda"]
+    TV["Fire TV app<br/>Vega OS"] -- "captions on screen + position<br/>every 5 seconds" --> Server["Miss It? server<br/>AWS Lambda"]
     Server <--> Log[("Watch log<br/>Amazon DynamoDB<br/>expires after 24 h")]
     Server -- "recap written ahead of time" --> Nova["Amazon Nova 2 Lite<br/>Amazon Bedrock"]
     Faces["Face index per title<br/>Amazon Rekognition"] -. "who's on screen, second by second" .-> Server
@@ -51,11 +59,11 @@ flowchart LR
 ```
 
 1. **The TV reports.** The [Fire TV app](firetv) plays the show and sends the captions it just displayed, plus the playback position, every few seconds.
-2. **Rewind remembers.** The server keeps a rolling watch log per household in DynamoDB. Entries expire a day after the last update.
-3. **Answers are ready before you ask.** Alexa+ expects a reply in under 500 ms, and a model call takes longer than that. So whenever new dialogue arrives, Rewind has Amazon Nova rewrite the "last minute" recap in the background. "What did I miss?" becomes a lookup. While something is playing, the TV's regular updates also keep the Lambda function warm.
-4. **"Who's that?" is precomputed too.** Rewind indexes each title once: it grabs a frame every second from its own copy of the video, indexes every face with Amazon Rekognition, and matches them against one reference photo per character. Asking is then a lookup by timestamp.
-5. **Alexa+ asks.** Rewind is a self-hosted MCP server (Streamable HTTP, spec 2025-11-25). Alexa+ routes the question to the right tool by itself, so there's no skill name to remember.
-6. **The TV shows the answer too.** Rewind keeps Alexa's last answer, and the TV app checks for it every two seconds while the player is open. The answer pops up on a card for ten seconds, so everyone on the couch sees it, not just the person who asked.
+2. **Miss It? remembers.** The server keeps a rolling watch log per household in DynamoDB. Entries expire a day after the last update.
+3. **Answers are ready before you ask.** Alexa+ expects a reply in under 500 ms, and a model call takes longer than that. So whenever new dialogue arrives, Miss It? has Amazon Nova rewrite the "last minute" recap in the background. "What did I miss?" becomes a lookup. While something is playing, the TV's regular updates also keep the Lambda function warm.
+4. **"Who's that?" is precomputed too.** Miss It? indexes each title once: it grabs a frame every second from its own copy of the video, indexes every face with Amazon Rekognition, and matches them against one reference photo per character. Asking is then a lookup by timestamp.
+5. **Alexa+ asks.** Miss It? is a self-hosted MCP server (Streamable HTTP, spec 2025-11-25). Alexa+ routes the question to the right tool by itself, so there's no skill name to remember.
+6. **The TV shows the answer too.** Miss It? keeps Alexa's last answer, and the TV app checks for it every two seconds while the player is open. The answer pops up on a card for ten seconds, so everyone on the couch sees it, not just the person who asked.
 
 ## MCP tools
 
@@ -70,7 +78,7 @@ Every tool is read-only and returns spoken text plus `structuredContent`, so scr
 
 ## AWS services
 
-| Service | What Rewind uses it for | Code |
+| Service | What Miss It? uses it for | Code |
 |---|---|---|
 | AWS Lambda | Runs the server behind a function URL: public HTTPS for the TV app and Alexa+, with no API Gateway | [`server/src/lambda.ts`](server/src/lambda.ts) |
 | Amazon DynamoDB | One partition per household for the watch log, the ready recap and Alexa's last answer, all expiring a day after the last update | [`server/src/memory/dynamo-store.ts`](server/src/memory/dynamo-store.ts) |
@@ -84,11 +92,12 @@ Every tool is read-only and returns spoken text plus `structuredContent`, so scr
 |---|---|
 | [`server/`](server) | The memory service and MCP server (TypeScript, Hono, MCP SDK, AWS SDK) |
 | [`firetv/`](firetv) | The Fire TV app for Vega OS (React Native) |
-| [`alexa-sim/`](alexa-sim) | A simulated Alexa+ web page that asks Rewind's MCP tools out loud, for the demo (Alexa+ add-ons are partner-only for now) |
+| [`alexa-sim/`](alexa-sim) | A simulated Alexa+ web page that asks the Miss It? MCP tools out loud, for the demo (Alexa+ add-ons are partner-only for now) |
 | [`packages/spoiler-safe-context/`](packages/spoiler-safe-context) | The open-source library behind the spoiler guarantee, also published on its own at [vhrcam/spoiler-safe-context](https://github.com/vhrcam/spoiler-safe-context) |
 | [`infra/`](infra) | CloudFormation template and deploy script |
-| [`docs/`](docs) | The [playback API](docs/api.md), the [friction log](docs/friction-log.md) and [product feedback](docs/product-feedback.md) |
+| [`docs/`](docs) | The [playback API](docs/api.md), the [friction log](docs/friction-log.md), [product feedback](docs/product-feedback.md) and the [logo](docs/brand) |
 | [`media/`](media) | Fetch script and captions for the demo film |
+| [`scripts/`](scripts) | The one-command demo launcher and the script that draws the logo |
 
 ## Run it locally
 
@@ -118,13 +127,13 @@ Or ask out loud, the way the demo does, with the [simulated Alexa+ page](alexa-s
 cd alexa-sim && npm install && npm run dev
 ```
 
-Then open `http://localhost:5173`. The page talks to Rewind on AWS. Add `?api=http://localhost:8787` to use your local server instead.
+Then open `http://localhost:5173`. The page talks to the Miss It? server on AWS. Add `?api=http://localhost:8787` to use your local server instead.
 
 Recaps and answers use Amazon Nova on Bedrock when AWS credentials are available (`aws login`). If your account's Bedrock quotas are still 0, as they can be on a new account, get a key at [nova.amazon.com/dev-apis](https://nova.amazon.com/dev-apis) and set `NOVA_API_KEY` to run the same model through Amazon's direct Nova API. Set `MISS_IT_AI=off` to run with the dialogue fallback only.
 
 ## Run the demo
 
-The whole demo runs on one Mac: the Fire TV app on the Vega Virtual Device and the simulated Alexa+ page in Chrome, both talking to Rewind on AWS.
+The whole demo runs on one Mac: the Fire TV app on the Vega Virtual Device and the simulated Alexa+ page in Chrome, both talking to the Miss It? server on AWS.
 
 ```sh
 scripts/demo.sh start   # boots the virtual Fire TV, opens the app, and opens the Alexa+ page in Chrome
