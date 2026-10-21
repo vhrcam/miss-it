@@ -5,7 +5,7 @@ import {fetchAnswer} from './fetchAnswer';
 
 const CHECK_MS = 10000;
 
-// Checks that the server is up and accepts this TV's key, for the badge on Home.
+// Checks that the server is up and accepts this TV's key, for the eye tag on Home.
 // Asking for the last answer is the lightest call that needs the key.
 export function useLinkStatus() {
   const [status, setStatus] = useState<LinkStatus>('connecting');

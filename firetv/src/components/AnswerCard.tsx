@@ -3,7 +3,7 @@ import {Animated, StyleSheet, Text} from 'react-native';
 import type {Card} from '../api/answerCard';
 import {colors} from '../theme';
 
-// The answer Alexa just gave, under the Rewind badge. It fades in, so it
+// The answer Alexa just gave, under the eye tag. It fades in, so it
 // doesn't flash onto the film.
 export function AnswerCard({card}: {card: Card}) {
   const opacity = useRef(new Animated.Value(0)).current;

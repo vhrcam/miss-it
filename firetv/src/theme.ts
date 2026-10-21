@@ -3,7 +3,6 @@ export const colors = {
   night: '#0B0D12',
   white: '#F5F7FA',
   accent: '#3DD6F5',
-  accentHalo: 'rgba(61, 214, 245, 0.24)',
   amber: '#F5B544',
   gray: '#8A919C',
   label: '#B4BAC5',

@@ -31,7 +31,7 @@ export function useAnswerCard() {
           hideTimer = setTimeout(() => setCard(null), SHOW_MS);
         }
       } catch {
-        // The badge already says when the server can't be reached.
+        // The eye tag already shows when the server can't be reached.
       } finally {
         busy = false;
       }

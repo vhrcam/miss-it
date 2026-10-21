@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Logo} from '../components/Logo';
-import {RewindBadge} from '../components/RewindBadge';
+import {EyeTag} from '../components/EyeTag';
 import {Triangle} from '../components/Triangle';
 import {useLinkStatus} from '../api/useLinkStatus';
 import {film} from '../config';
@@ -24,7 +24,7 @@ export function HomeScreen({captionsOn, onPlay, onToggleCaptions}: Props) {
 
       <View style={styles.header}>
         <Logo />
-        <RewindBadge status={linkStatus} />
+        <EyeTag status={linkStatus} />
       </View>
 
       <View style={styles.hero}>
