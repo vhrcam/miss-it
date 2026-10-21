@@ -5,7 +5,6 @@
   --accent: #3dd6f5;
   --accent-halo: rgba(61, 214, 245, 0.24);
   --amber: #f5b544;
-  --gray: #8a919c;
   --label: #b4bac5;
   --meta: #d5dae1;
   --muted: #9aa1ac;
@@ -93,21 +92,36 @@ h1 {
   font-size: 15px;
 }
 
-.server .dot {
-  width: 10px;
-  height: 10px;
-  border: 2px solid var(--gray);
-  border-radius: 5px;
+/* The eye from the Miss It? logo: dimmed until the server answers, with an
+   amber dot when it can't be reached. */
+.server .mark {
+  position: relative;
+  display: flex;
 }
 
-.server[data-status='connected'] .dot {
-  border: 0;
-  background: var(--accent);
+.server .eye {
+  width: 24px;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+
+.server[data-status='connected'] .eye {
+  opacity: 1;
+}
+
+.server .dot {
+  display: none;
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--amber);
 }
 
 .server[data-status='offline'] .dot {
-  border: 0;
-  background: var(--amber);
+  display: block;
 }
 
 /* What was asked and what Alexa said */
@@ -381,7 +395,7 @@ input:focus-visible {
 }
 
 /* The light bar: dim when idle, glowing while listening, and a moving
-   shimmer while Rewind thinks and Alexa speaks. */
+   shimmer while Miss It? thinks and Alexa speaks. */
 
 .light-bar {
   position: fixed;

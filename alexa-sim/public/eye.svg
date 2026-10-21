@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="106 265 812 518">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#15263F"/>
+      <stop offset="0.55" stop-color="#0E1828"/>
+      <stop offset="1" stop-color="#0B131F"/>
+    </linearGradient>
+    <linearGradient id="iris" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0F1825"/>
+      <stop offset="1" stop-color="#142336"/>
+    </linearGradient>
+    <linearGradient id="play" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#18B0FF"/>
+      <stop offset="1" stop-color="#1690F7"/>
+    </linearGradient>
+  </defs>
+  <path d="M124 517 C268 205 756 205 900 517 C756 848 268 848 124 517 Z" fill="#F4F6F9" stroke="#F4F6F9" stroke-width="28" stroke-linejoin="round"/>
+  <ellipse cx="512" cy="526" rx="216" ry="190" fill="url(#iris)"/>
+  <path d="M451.6 416.4 L615.4 514.6 Q636 527 615.4 539.4 L451.6 637.6 Q431 650 431 626 L431 428 Q431 404 451.6 416.4 Z" fill="url(#play)"/>
+</svg>

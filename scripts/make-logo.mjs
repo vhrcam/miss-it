@@ -1,6 +1,7 @@
 // Draws the Miss It? logo, an eye with a play button for a pupil, and writes
 // every file that uses it: the SVGs in docs/brand, a PNG of the icon for
-// uploads, the Fire TV app icon, and the eye the TV app shows on screen.
+// uploads, the Fire TV app icon, the eye the TV app shows on screen, and the
+// icon and eye on the simulated Alexa+ page.
 // Run it with `npm run logo` after changing the shapes or colors below.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -72,3 +73,5 @@ write("docs/brand/miss-it-eye.svg", eye);
 write("docs/brand/miss-it-icon.png", png(icon, 1024));
 write("firetv/assets/image/miss-it-icon.png", png(tvIcon, 512));
 write("firetv/src/assets/eye.png", png(eye, 256));
+write("alexa-sim/public/icon.svg", icon);
+write("alexa-sim/public/eye.svg", eye);
