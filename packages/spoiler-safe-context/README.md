@@ -11,7 +11,7 @@ An assistant that answers questions about what someone is watching needs context
 - **Small and portable.** No dependencies. Runs in Node, browsers, React Native and serverless functions.
 - **Storable.** A watch log serializes to plain JSON, so it fits in DynamoDB, Redis or a file.
 
-Built for [Miss It?](https://github.com/vhrcam/rewind), which lets you ask Alexa "what did I miss?" while the TV keeps playing.
+Built for [Miss It?](https://github.com/vhrcam/miss-it), which lets you ask Alexa "what did I miss?" while the TV keeps playing.
 
 ## Install
 
