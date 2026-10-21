@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Downloads Tears of Steel and its English subtitles from Blender's mirrors,
-# then converts them to what Rewind plays: MP4 (H.264 + AAC) and WebVTT.
+# then converts them to what Miss It? plays: MP4 (H.264 + AAC) and WebVTT.
 set -euo pipefail
 
 cd "$(dirname "$0")"
