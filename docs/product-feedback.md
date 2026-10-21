@@ -9,7 +9,7 @@ What we used to build Miss It?, what worked, what got in the way, and whether we
 | Alexa+ (MCP) | The way Alexa reaches Miss It?: four read-only tools over Streamable HTTP | Yes, once the tools are open to everyone |
 | Vega SDK | The Fire TV app: playback, captions, reporting what's on screen | Yes |
 | Amazon Bedrock (Nova 2 Lite) | Writing recaps and answering follow-up questions | Yes, but new accounts need a clearer path |
-| Amazon Nova API | A backup way to reach Nova while Bedrock was blocked | Maybe, if key management gets fixed |
+| Amazon Nova API | How the live server reaches Nova, since Bedrock is still blocked on our account | Yes, once key management is fixed |
 | Amazon Rekognition | "Who's that?": indexing every face in the film ahead of time | Yes |
 | AWS Lambda | Hosting the server behind a public HTTPS URL | Yes |
 | Amazon DynamoDB | The watch log, with a one-day expiry | Yes |
@@ -61,17 +61,17 @@ What we used to build Miss It?, what worked, what got in the way, and whether we
 
 **What worked.** The Converse API docs were clear, and one request shape covers text and images, so the scene descriptions needed little extra code. We could only test that code against a stand-in model, though, for the reason below.
 
-**What needs work.** On our brand-new account, every Nova call returned `ValidationException: Operation not allowed`, in the CLI and in the console playground. Service Quotas showed every Nova quota at 0, and the tokens-per-day quota can't be adjusted. Nothing in the error pointed to quotas, the Model access page says models turn on by themselves, and the free plan still paid out its "use a foundation model in the Bedrock playground" credit (friction log #6). As of this writing, the support case is still open.
+**What needs work.** On our brand-new account, every Nova call returned `ValidationException: Operation not allowed`, in the CLI and in the console playground. Service Quotas showed every Nova quota at 0, and the tokens-per-day quota can't be adjusted. Nothing in the error pointed to quotas, the Model access page says models turn on by themselves, and the free plan still paid out its "use a foundation model in the Bedrock playground" credit (friction log #6). Service Quotas won't take a request either, since the applied value of 0 is below the default. As of this writing, the support case is still open, so the live server reaches Nova through the Nova API below.
 
 **Getting started.** Everything else on the account worked on day one: Lambda, DynamoDB, Rekognition, CloudFormation. Bedrock was the one service a new account couldn't use, and the account was the only way to get at it.
 
 ## Amazon Nova API
 
-**What we used it for.** A backup path to the same model through `api.nova.amazon.com`. Miss It? switches to it whenever `NOVA_API_KEY` is set.
+**What we used it for.** The same model through `api.nova.amazon.com`, with a plain API key. Miss It? switches to it whenever `NOVA_API_KEY` is set, and the deployed server runs on it: it writes the recaps, answers follow-up questions, and wrote the scene descriptions from frames of the film.
 
-**What worked.** The API mirrors the familiar chat-completions shape, so the client took a few minutes to write.
+**What worked.** The API mirrors the familiar chat-completions shape, so the client took a few minutes to write. Once we had a working key, nearly every call worked, images included, and the free rate limit (about 20 requests a minute) was enough to describe the whole 12-minute film in about 8 minutes.
 
-**What needs work.** A key is shown once. When our first copy failed, the only way forward was a new key, but the page said we'd hit the key limit. Deactivating the old key reported success, yet the key stayed active and the limit didn't change (friction log #7).
+**What needs work.** A key is shown once. When our first copy failed, the only way forward was a new key, but the page said we'd hit the key limit. Deactivating the old key reported success, yet the key stayed active and the limit didn't change (friction log #7). A day later we did get a new key. Two smaller things after that: one image request came back as a 500 with an HTML "Login Provider Error" page instead of a JSON error, and with two frames in one request the model sometimes described each frame under its own Markdown heading, though the system prompt asked for one plain sentence.
 
 ## Amazon Rekognition
 
