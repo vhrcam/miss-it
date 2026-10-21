@@ -34,6 +34,20 @@ describe("the Nova API narrator", () => {
     expect(body.messages[1].content[0].text).toContain("You're a jerk, Thom.");
   });
 
+  it("tries once more after a server error", async () => {
+    const calls: number[] = [];
+    const fetch = (async () => {
+      calls.push(calls.length);
+      return calls.length === 1
+        ? new Response("<html>Login Provider Error.</html>", { status: 500 })
+        : new Response(JSON.stringify({ choices: [{ message: { content: "Thom got called a jerk." } }] }));
+    }) as typeof globalThis.fetch;
+    const narrator = new NovaApiNarrator({ apiKey: "nova-key", modelId: "nova-2-lite-v1", fetch });
+
+    expect(await narrator.recap(recap)).toBe("Thom got called a jerk.");
+    expect(calls).toHaveLength(2);
+  });
+
   it("passes on the API's error", async () => {
     const { fetch } = fakeFetch(429, { error: { message: "Too many requests" } });
     const narrator = new NovaApiNarrator({ apiKey: "nova-key", modelId: "nova-2-lite-v1", fetch });

@@ -36,20 +36,27 @@ export class NovaApiNarrator implements Narrator {
   }
 
   async #complete(prompt: string, maxTokens: number, signal?: AbortSignal): Promise<string> {
-    const response = await this.#fetch(`${this.#baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${this.#apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: this.#modelId,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: [{ type: "text", text: prompt }] },
-        ],
-        max_completion_tokens: maxTokens,
-        temperature: 0.2,
-      }),
-      signal,
+    const body = JSON.stringify({
+      model: this.#modelId,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: [{ type: "text", text: prompt }] },
+      ],
+      max_completion_tokens: maxTokens,
+      temperature: 0.2,
     });
+    const post = () =>
+      this.#fetch(`${this.#baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${this.#apiKey}`, "Content-Type": "application/json" },
+        body,
+        signal,
+      });
+
+    // Now and then the API answers a good request with a 500 and an HTML
+    // error page. Trying once more usually gets through.
+    let response = await post();
+    if (response.status >= 500) response = await post();
     if (!response.ok) throw new Error(`Nova API returned ${response.status}: ${await response.text()}`);
 
     const choice = ((await response.json()) as ChatCompletion).choices?.[0];
