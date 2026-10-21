@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: Rewind, spoiler-free recaps of what's on your TV for Alexa+
+Description: "Miss It?, spoiler-free recaps of what's on your TV for Alexa+"
 
 Parameters:
   DeviceKey:
@@ -37,7 +37,7 @@ Resources:
         AttributeName: expiresAt
         Enabled: true
 
-  RewindFunction:
+  MissItFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../server/dist/lambda
@@ -66,9 +66,9 @@ Resources:
         AuthType: NONE
 
 Outputs:
-  RewindUrl:
+  MissItUrl:
     Description: Base URL for the Fire TV app; the MCP endpoint is this URL plus /mcp
-    Value: !GetAtt RewindFunctionUrl.FunctionUrl
+    Value: !GetAtt MissItFunctionUrl.FunctionUrl
   MemoryTableName:
     Description: DynamoDB table that holds each household's watch log
     Value: !Ref MemoryTable
