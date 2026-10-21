@@ -107,7 +107,7 @@ async function askNovaApi(images: Buffer[], prompt: string): Promise<string> {
         temperature: 0.2,
       }),
     });
-    if (response.status === 429 && attempt < 6) {
+    if ((response.status === 429 || response.status >= 500) && attempt < 6) {
       await sleep(10_000 * attempt);
       continue;
     }
