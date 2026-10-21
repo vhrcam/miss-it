@@ -1,5 +1,5 @@
 {
-  "name": "rewind-firetv",
+  "name": "miss-it-firetv",
   "version": "0.0.1",
   "private": true,
   "files": [
@@ -54,7 +54,7 @@
   },
   "kepler": {
     "projectType": "application",
-    "appName": "rewind",
+    "appName": "missit",
     "targets": [
       "tv"
     ]

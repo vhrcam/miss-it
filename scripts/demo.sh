@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sets up Rewind's demo on a Mac: the Fire TV app in the Vega Virtual Device,
+# Sets up the Miss It? demo on a Mac: the Fire TV app in the Vega Virtual Device,
 # next to the simulated Alexa+ page in Chrome, both talking to the live server.
 #
 #   scripts/demo.sh start   start the virtual Fire TV, build and open the app,
@@ -9,11 +9,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-STATE="${TMPDIR:-/tmp}/rewind-demo"
+STATE="${TMPDIR:-/tmp}/miss-it-demo"
 PAGE_URL=http://localhost:5173
-APP_ID=com.vhrcam.rewind.main
+APP_ID=com.vhrcam.missit.main
 ARCH=$([[ "$(uname -m)" == arm64 ]] && echo aarch64 || echo x86_64)
-VPKG="$ROOT/firetv/build/$ARCH-release/rewind-firetv_$ARCH.vpkg"
+VPKG="$ROOT/firetv/build/$ARCH-release/miss-it-firetv_$ARCH.vpkg"
 
 say() { printf '%s\n' "$*"; }
 fail() {
@@ -36,7 +36,7 @@ check() {
   [[ -d "$ROOT/firetv/node_modules" ]] || fail "Run npm install in firetv/ first."
   [[ -d "$ROOT/alexa-sim/node_modules" ]] || fail "Run npm install in alexa-sim/ first."
   grep -qE '^MISS_IT_DEVICE_KEY=.+' "$ROOT/.env" 2>/dev/null ||
-    fail "Set MISS_IT_DEVICE_KEY in .env to the key the Rewind server expects. See the main README."
+    fail "Set MISS_IT_DEVICE_KEY in .env to the key the Miss It? server expects. See the main README."
 }
 
 start() {

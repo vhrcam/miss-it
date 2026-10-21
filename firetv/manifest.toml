@@ -1,10 +1,10 @@
 schema-version = 1
 
 [package]
-title = "Rewind"
+title = "Miss It?"
 version = "0.1.0"
-id = "com.vhrcam.rewind"
-icon = "@image/rewind-icon.png"
+id = "com.vhrcam.missit"
+icon = "@image/miss-it-icon.png"
 
 [os.version]
 min = "1.2"
@@ -28,7 +28,7 @@ id = "/com.amazon.kepler.w3cmedia_2@IW3cmedia_3"
 
 [components]
 [[components.interactive]]
-id = "com.vhrcam.rewind.main"
+id = "com.vhrcam.missit.main"
 runtime-module = "/com.amazon.kepler.keplerscript.runtime.loader_2@IKeplerScript_2_0"
 launch-type = "singleton"
 categories = ["com.amazon.category.main"]

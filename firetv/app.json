@@ -1,5 +1,5 @@
 {
   "//": "The declared app name must follow this pattern to be KRL-compatible",
-  "name": "com.vhrcam.rewind.main",
-  "displayName": "Rewind"
+  "name": "com.vhrcam.missit.main",
+  "displayName": "Miss It?"
 }

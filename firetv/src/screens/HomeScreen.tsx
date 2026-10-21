@@ -71,7 +71,7 @@ export function HomeScreen({captionsOn, onPlay, onToggleCaptions}: Props) {
             ))}
           </View>
           <Text style={styles.promise}>
-            Rewind only remembers what has already played, so it can’t spoil
+            Miss It? only remembers what has already played, so it can’t spoil
             what’s next.
           </Text>
         </View>

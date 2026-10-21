@@ -1,28 +1,14 @@
 #!/usr/bin/env bash
-# Makes the app's images: the icon, the fades behind the player controls, and
-# the Home backdrop, a still from Tears of Steel. Needs ffmpeg, plus the local
-# film from media/fetch.sh for the backdrop.
+# Makes the app's images: the fades behind the player controls and the Home
+# backdrop, a still from Tears of Steel. Needs ffmpeg, plus the local film from
+# media/fetch.sh for the backdrop. The icon and the eye come from the logo
+# script instead (`npm run logo` in the repo root).
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 FILM=../media/tears-of-steel.mp4
 OUT=src/assets
-mkdir -p "$OUT" assets/image
-
-# The app icon: Rewind's mark from the Home screen, a ring around two rewind
-# arrows, in white and cyan on a clear background. "Your apps" shows the
-# square icon in a wide tile and crops its top and bottom, so the mark stays
-# inside the middle half. It's drawn at 2048 px and scaled to the 512 px the
-# manifest asks for, so the edges come out smooth. Clear pixels are white, so
-# scaling doesn't darken the edges.
-U='(X/W*100-24)'
-V='(Y/H*100-24)'
-RING="between(hypot($U-26,$V-26),21.5,24.5)"
-BACK="lte($U,25)*gte($U-13,12/8.5*abs($V-26))"
-FRONT="lte($U,38)*gte($U-26,12/8.5*abs($V-26))"
-ffmpeg -v error -y -f lavfi -i color=c=white:s=2048x2048:d=1 \
-  -vf "format=rgba,geq=r='245-184*$BACK':g='247-33*$BACK':b='250-5*$BACK':a='255*min(1,$RING+$BACK+$FRONT)',scale=512:512:flags=lanczos" \
-  -frames:v 1 -pix_fmt rgba assets/image/rewind-icon.png
+mkdir -p "$OUT"
 
 # The fades that darken the video behind the player controls.
 ffmpeg -v error -y -f lavfi -i color=c=black:s=1920x280:d=1 \
@@ -41,4 +27,4 @@ ffmpeg -v error -y -ss 330 -i "$FILM" -f lavfi -i color=c=0x0B0D12:s=1920x1080:d
    [1:v]format=rgba,geq=r=11:g=13:b=18:a='255*(1-(1-($LEFT))*(1-($BOTTOM)))'[shade];
    [still][shade]overlay" -frames:v 1 -q:v 3 "$OUT/home.jpg"
 
-echo "Wrote assets/image/rewind-icon.png, $OUT/fade-top.png, $OUT/fade-bottom.png and $OUT/home.jpg"
+echo "Wrote $OUT/fade-top.png, $OUT/fade-bottom.png and $OUT/home.jpg"
