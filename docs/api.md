@@ -32,6 +32,7 @@ Body
 | `startSec` | number | When the cue appeared. |
 | `endSec` | number | When the cue disappeared. |
 | `text` | string | Caption text. Line breaks are fine. |
+| `speaker` | string, optional | Who is talking, from a WebVTT voice tag like `<v Celia>`. Send it when the captions have it, since captions alone rarely say who said a line. |
 
 Example
 
