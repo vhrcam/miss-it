@@ -17,11 +17,12 @@ import { parseCaptions, type Cue } from "spoiler-safe-context";
 import { CastGuide } from "../../src/cast/guide.js";
 
 const SYSTEM_PROMPT = `You write the descriptions track for a film, for someone who looked away from the screen.
-- Describe only what is visible in these frames: who is there, what they do, where they are.
-- One sentence, present tense, under 15 words.
+- The two images are a few seconds apart in the same stretch. Write one sentence that covers both.
+- Describe only what is visible: who is there, what they do, where they are.
+- One sentence, present tense, under 15 words, in plain text with no headings, labels or lists.
 - Use a person's name only if it's in the list of people on screen. Otherwise describe them, like "a soldier".
 - Don't explain what it means for the story, don't guess what happens next, and don't mention frames, shots or the camera.
-- For credits or a title card, just say so, like "The end credits roll."`;
+- For credits or a title card, just say so, like "The title appears." or "The end credits roll."`;
 
 const novaKey = process.env.NOVA_API_KEY;
 const novaUrl = process.env.NOVA_API_URL ?? "https://api.nova.amazon.com/v1";
@@ -128,13 +129,26 @@ async function describe(start: number): Promise<Cue> {
   const text = await ask(
     [await frame(start + every * 0.2), await frame(start + every * 0.8)],
     [
-      `${args.title}, ${start} to ${end} seconds in.`,
+      `${args.title}, ${start} to ${end} seconds into a ${Math.round(duration)}-second film.`,
       `People on screen: ${people.size ? [...people].join(", ") : "not known"}.`,
       `Dialogue in this stretch: ${lines.length ? lines.join(" ") : "none"}.`,
       "Describe what happens on screen.",
     ].join("\n"),
   );
-  return { startSec: start, endSec: end, text };
+  return { startSec: start, endSec: end, text: plain(text) };
+}
+
+// Nova sometimes answers per image anyway, with headings and bold labels like
+// "**Frame 1:**". Keep only the prose, and only its first sentence.
+function plain(text: string): string {
+  const prose = text
+    .split("\n")
+    .filter((line) => !line.trim().startsWith("#"))
+    .map((line) => line.replace(/\*\*[^*]*\*\*:?/g, "").replace(/^\s*(frame|picture|image)\s*\d+[^:]*:\s*/i, ""))
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return prose.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? prose;
 }
 
 const starts = Array.from({ length: Math.ceil(duration / every) }, (_, i) => i * every);
