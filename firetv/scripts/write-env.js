@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CLOUD_API_URL = 'https://xxdrmxupoeq6ttp22pja6mjbfe0wbwjg.lambda-url.us-east-1.on.aws';
+const CLOUD_API_URL = 'https://2u2bgqgqomx6gewmpgctctbvp40izqpe.lambda-url.us-east-1.on.aws';
 
 function readDotEnv(file) {
   if (!fs.existsSync(file)) {
