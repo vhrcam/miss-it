@@ -7,7 +7,7 @@ import {speak, stopSpeaking} from './speak';
 type State = 'ready' | 'listening' | 'thinking' | 'speaking';
 
 const LAMBDA_URL =
-  'https://xxdrmxupoeq6ttp22pja6mjbfe0wbwjg.lambda-url.us-east-1.on.aws';
+  'https://2u2bgqgqomx6gewmpgctctbvp40izqpe.lambda-url.us-east-1.on.aws';
 
 // ?api=http://localhost:8787 points the page at a local Miss It? server.
 const apiUrl = new URLSearchParams(location.search).get('api') ?? LAMBDA_URL;
