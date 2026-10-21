@@ -2,7 +2,11 @@ export type Cue = {
   startSec: number;
   endSec: number;
   text: string;
+  speaker?: string;
 };
+
+// A WebVTT voice tag, <v Celia> or <v.loud Celia>, names who is talking.
+const VOICE = /<v(?:\.[^\s>]+)?\s+([^>]+)>/;
 
 const TIMING =
   /^((?:\d+:)?\d{1,2}:\d{2}\.\d{3})\s+-->\s+((?:\d+:)?\d{1,2}:\d{2}\.\d{3})/;
@@ -46,12 +50,15 @@ export function parseWebVTT(source: string): Cue[] {
     if (!timing) {
       continue;
     }
-    const text = cleanText(lines.slice(timingLine + 1));
+    const body = lines.slice(timingLine + 1);
+    const text = cleanText(body);
+    const speaker = VOICE.exec(body.join('\n'))?.[1].trim();
     if (text) {
       cues.push({
         startSec: parseTimestamp(timing[1]),
         endSec: parseTimestamp(timing[2]),
         text,
+        ...(speaker ? {speaker} : {}),
       });
     }
   }

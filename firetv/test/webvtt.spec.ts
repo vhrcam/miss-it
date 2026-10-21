@@ -39,6 +39,15 @@ describe('parseWebVTT', () => {
     ]);
   });
 
+  it('keeps who is talking from a voice tag', () => {
+    const vtt =
+      'WEBVTT\n\n00:01.000 --> 00:02.000\n<v Celia>You broke\nmy heart.\n\n00:03.000 --> 00:04.000\n<v.loud Thom>I know.</v>';
+    expect(parseWebVTT(vtt)).toEqual([
+      {startSec: 1, endSec: 2, text: 'You broke\nmy heart.', speaker: 'Celia'},
+      {startSec: 3, endSec: 4, text: 'I know.', speaker: 'Thom'},
+    ]);
+  });
+
   it('reads the bundled Tears of Steel captions', () => {
     const cues = parseWebVTT(tearsOfSteel);
     expect(cues).toHaveLength(76);
@@ -46,6 +55,7 @@ describe('parseWebVTT', () => {
       startSec: 23,
       endSec: 24.5,
       text: "You're a jerk, Thom.",
+      speaker: 'Celia',
     });
   });
 });

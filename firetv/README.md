@@ -16,7 +16,7 @@ Screenshots from the Vega Virtual Device. The card shows a recap Amazon Nova wro
 
 - Opens on a Home screen with the film, a Play button, a captions switch, and the questions you can ask Alexa.
 - Plays *Tears of Steel* with English captions. The film streams over HTTPS from Blender's mirrors, and if one fails, the next takes over. The captions are bundled into the app.
-- Every 5 seconds while playing, and right away on play, pause, seek and end, it sends the server the playback position and the captions that appeared since the last update. The format is in the [playback API](../docs/api.md).
+- Every 5 seconds while playing, and right away on play, pause, seek and end, it sends the server the playback position and the captions that appeared since the last update, with the speaker's name when the captions have a voice tag. The format is in the [playback API](../docs/api.md).
 - When someone asks Alexa about the film, the answer shows on a card for about 10 seconds: "What you missed", "Who’s that", or the question itself. The player checks the server for new answers every 2 seconds.
 - The eye from the logo sits in the top-right corner as a tag, so viewers can see Miss It? is following along. It breathes softly while the TV is connected, stays dim while it connects, and gets an amber dot when the server can’t be reached. It's always on the Home screen. In the player it only comes up with the controls or an answer card, so it stays out of the way while you watch.
 
