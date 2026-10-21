@@ -8,7 +8,7 @@ Headers
 
 ```
 Content-Type: application/json
-Authorization: Bearer <REWIND_DEVICE_KEY>
+Authorization: Bearer <MISS_IT_DEVICE_KEY>
 ```
 
 Body

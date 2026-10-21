@@ -48,9 +48,9 @@ Resources:
       Timeout: 20
       Environment:
         Variables:
-          REWIND_TABLE: !Ref MemoryTable
-          REWIND_DEVICE_KEY: !Ref DeviceKey
-          REWIND_MODEL_ID: !Ref ModelId
+          MISS_IT_TABLE: !Ref MemoryTable
+          MISS_IT_DEVICE_KEY: !Ref DeviceKey
+          MISS_IT_MODEL_ID: !Ref ModelId
           NOVA_API_KEY: !Ref NovaApiKey
           NODE_OPTIONS: --enable-source-maps
       Policies:

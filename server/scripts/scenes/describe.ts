@@ -34,7 +34,7 @@ const { values: args } = parseArgs({
     captions: { type: "string" },
     every: { type: "string", default: "5" },
     to: { type: "string" },
-    model: { type: "string", default: novaKey ? "nova-2-lite-v1" : (process.env.REWIND_MODEL_ID ?? "us.amazon.nova-2-lite-v1:0") },
+    model: { type: "string", default: novaKey ? "nova-2-lite-v1" : (process.env.MISS_IT_MODEL_ID ?? "us.amazon.nova-2-lite-v1:0") },
     region: { type: "string", default: process.env.AWS_REGION ?? "us-east-1" },
     concurrency: { type: "string", default: novaKey ? "1" : "3" },
     rpm: { type: "string", default: novaKey ? "18" : "0" },

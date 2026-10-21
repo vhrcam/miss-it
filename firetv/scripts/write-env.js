@@ -22,10 +22,10 @@ const fromFile = readDotEnv(path.resolve(__dirname, '../../.env'));
 const read = key => process.env[key] || fromFile[key];
 const quote = value => `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
-const apiUrl = read('REWIND_API_URL') || CLOUD_API_URL;
-const deviceKey = read('REWIND_DEVICE_KEY') || 'dev-device-key';
-if (!read('REWIND_DEVICE_KEY')) {
-  console.warn('REWIND_DEVICE_KEY is not set, so the app uses dev-device-key (local server only).');
+const apiUrl = read('MISS_IT_API_URL') || CLOUD_API_URL;
+const deviceKey = read('MISS_IT_DEVICE_KEY') || 'dev-device-key';
+if (!read('MISS_IT_DEVICE_KEY')) {
+  console.warn('MISS_IT_DEVICE_KEY is not set, so the app uses dev-device-key (local server only).');
 }
 
 fs.writeFileSync(

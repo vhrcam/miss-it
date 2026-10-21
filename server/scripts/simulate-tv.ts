@@ -11,8 +11,8 @@ import { formatTimestamp, parseCaptions, type Cue } from "spoiler-safe-context";
 const { values: args } = parseArgs({
   options: {
     file: { type: "string", default: new URL("../../media/tears-of-steel.en.vtt", import.meta.url).pathname },
-    url: { type: "string", default: process.env.REWIND_API_URL ?? "http://localhost:8787" },
-    key: { type: "string", default: process.env.REWIND_DEVICE_KEY ?? "dev-device-key" },
+    url: { type: "string", default: process.env.MISS_IT_API_URL ?? "http://localhost:8787" },
+    key: { type: "string", default: process.env.MISS_IT_DEVICE_KEY ?? "dev-device-key" },
     household: { type: "string", default: "demo" },
     content: { type: "string", default: "tears-of-steel" },
     title: { type: "string", default: "Tears of Steel" },

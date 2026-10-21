@@ -120,7 +120,7 @@ cd alexa-sim && npm install && npm run dev
 
 Then open `http://localhost:5173`. The page talks to Rewind on AWS. Add `?api=http://localhost:8787` to use your local server instead.
 
-Recaps and answers use Amazon Nova on Bedrock when AWS credentials are available (`aws login`). If your account's Bedrock quotas are still 0, as they can be on a new account, get a key at [nova.amazon.com/dev-apis](https://nova.amazon.com/dev-apis) and set `NOVA_API_KEY` to run the same model through Amazon's direct Nova API. Set `REWIND_AI=off` to run with the dialogue fallback only.
+Recaps and answers use Amazon Nova on Bedrock when AWS credentials are available (`aws login`). If your account's Bedrock quotas are still 0, as they can be on a new account, get a key at [nova.amazon.com/dev-apis](https://nova.amazon.com/dev-apis) and set `NOVA_API_KEY` to run the same model through Amazon's direct Nova API. Set `MISS_IT_AI=off` to run with the dialogue fallback only.
 
 ## Run the demo
 
@@ -132,13 +132,13 @@ scripts/demo.sh play    # presses Play on the TV
 scripts/demo.sh stop    # shuts everything down
 ```
 
-It needs the Vega SDK, `npm install` in `firetv/` and `alexa-sim/`, and `REWIND_DEVICE_KEY` in `.env`. If anything is missing, it says what to do. Put the TV on the left and Chrome on the right, then ask "What did I miss?", "Who's that?" or "How does it end?"
+It needs the Vega SDK, `npm install` in `firetv/` and `alexa-sim/`, and `MISS_IT_DEVICE_KEY` in `.env`. If anything is missing, it says what to do. Put the TV on the left and Chrome on the right, then ask "What did I miss?", "Who's that?" or "How does it end?"
 
 ## Deploy to AWS
 
 ```sh
 aws login
-echo "REWIND_DEVICE_KEY=$(openssl rand -hex 24)" > .env
+echo "MISS_IT_DEVICE_KEY=$(openssl rand -hex 24)" > .env
 infra/deploy.sh
 ```
 

@@ -2,16 +2,16 @@
 # Builds the server and deploys Rewind to AWS: a Lambda function with a public
 # URL, a DynamoDB table, and access to Amazon Bedrock.
 #
-#   REWIND_DEVICE_KEY=<secret> infra/deploy.sh    (or put it in .env)
+#   MISS_IT_DEVICE_KEY=<secret> infra/deploy.sh    (or put it in .env)
 #
 # Set NOVA_API_KEY too to write recaps with Amazon's direct Nova API instead.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 if [[ -f .env ]]; then set -a; source .env; set +a; fi
-STACK="${REWIND_STACK:-rewind}"
+STACK="${MISS_IT_STACK:-rewind}"
 REGION="${AWS_REGION:-us-east-1}"
-: "${REWIND_DEVICE_KEY:?Set REWIND_DEVICE_KEY to the key the Fire TV app sends}"
+: "${MISS_IT_DEVICE_KEY:?Set MISS_IT_DEVICE_KEY to the key the Fire TV app sends}"
 
 ACCOUNT="$(aws sts get-caller-identity --query Account --output text --region "$REGION")"
 BUCKET="rewind-artifacts-$ACCOUNT-$REGION"
@@ -29,7 +29,7 @@ aws cloudformation deploy \
   --template-file infra/packaged.yaml \
   --stack-name "$STACK" \
   --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
-  --parameter-overrides "DeviceKey=$REWIND_DEVICE_KEY" "NovaApiKey=${NOVA_API_KEY:-}" \
+  --parameter-overrides "DeviceKey=$MISS_IT_DEVICE_KEY" "NovaApiKey=${NOVA_API_KEY:-}" \
   --region "$REGION"
 aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
   --query "Stacks[0].Outputs" --output table

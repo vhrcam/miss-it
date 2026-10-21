@@ -7,8 +7,8 @@ import { DynamoStore } from "./memory/dynamo-store.js";
 import { Memory } from "./memory/memory.js";
 import { Descriptions } from "./scenes/descriptions.js";
 
-const table = process.env.REWIND_TABLE;
-if (!table) throw new Error("REWIND_TABLE is not set");
+const table = process.env.MISS_IT_TABLE;
+if (!table) throw new Error("MISS_IT_TABLE is not set");
 
 const config = loadConfig();
 const app = createApp({

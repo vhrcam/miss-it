@@ -63,6 +63,6 @@ describe("picking a narrator", () => {
   });
 
   it("uses neither when AI is off", () => {
-    expect(createNarrator(loadConfig({ NOVA_API_KEY: "nova-key", REWIND_AI: "off" }))).toBeUndefined();
+    expect(createNarrator(loadConfig({ NOVA_API_KEY: "nova-key", MISS_IT_AI: "off" }))).toBeUndefined();
   });
 });

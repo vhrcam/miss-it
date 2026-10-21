@@ -35,8 +35,8 @@ check() {
   load_vega
   [[ -d "$ROOT/firetv/node_modules" ]] || fail "Run npm install in firetv/ first."
   [[ -d "$ROOT/alexa-sim/node_modules" ]] || fail "Run npm install in alexa-sim/ first."
-  grep -qE '^REWIND_DEVICE_KEY=.+' "$ROOT/.env" 2>/dev/null ||
-    fail "Set REWIND_DEVICE_KEY in .env to the key the Rewind server expects. See the main README."
+  grep -qE '^MISS_IT_DEVICE_KEY=.+' "$ROOT/.env" 2>/dev/null ||
+    fail "Set MISS_IT_DEVICE_KEY in .env to the key the Rewind server expects. See the main README."
 }
 
 start() {

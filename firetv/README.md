@@ -78,8 +78,8 @@ The app reads two settings from the `.env` file in the repo root, the same file 
 
 | Variable | Default | What it's for |
 |---|---|---|
-| `REWIND_API_URL` | The Rewind server on AWS Lambda | Where the app sends playback updates |
-| `REWIND_DEVICE_KEY` | `dev-device-key`, which only a local server accepts | The key the server checks on every request |
+| `MISS_IT_API_URL` | The Rewind server on AWS Lambda | Where the app sends playback updates |
+| `MISS_IT_DEVICE_KEY` | `dev-device-key`, which only a local server accepts | The key the server checks on every request |
 
 Before each build, `scripts/write-env.js` writes them into `src/env.ts`. Git ignores that file, so the key never lands in the repo. Environment variables override `.env`. After changing either setting, build again.
 
@@ -126,7 +126,7 @@ vega virtual-device stop
 Once the badge in the player says "Rewind connected", ask the server what it remembers. Fill in your server URL and device key:
 
 ```sh
-curl -s <REWIND_API_URL>/v1/playback/demo -H "Authorization: Bearer <REWIND_DEVICE_KEY>"
+curl -s <MISS_IT_API_URL>/v1/playback/demo -H "Authorization: Bearer <MISS_IT_DEVICE_KEY>"
 ```
 
 The reply has the title, the position, how many captions Rewind has seen, the last minute of dialogue, and the recap that's ready for "what did I miss?".
@@ -141,10 +141,10 @@ Start the server from the repo root (see the [main README](../README.md#run-it-l
 npm run dev
 ```
 
-Then, from `firetv/`, build the app against it and run it again. The virtual device reaches your Mac at `10.0.2.2`, and the local server accepts `dev-device-key` unless you set `REWIND_DEVICE_KEY` for it.
+Then, from `firetv/`, build the app against it and run it again. The virtual device reaches your Mac at `10.0.2.2`, and the local server accepts `dev-device-key` unless you set `MISS_IT_DEVICE_KEY` for it.
 
 ```sh
-REWIND_API_URL=http://10.0.2.2:8787 REWIND_DEVICE_KEY=dev-device-key npm run build:release
+MISS_IT_API_URL=http://10.0.2.2:8787 MISS_IT_DEVICE_KEY=dev-device-key npm run build:release
 vega run-app build/aarch64-release/rewind-firetv_aarch64.vpkg com.vhrcam.rewind.main --deviceId VirtualDevice
 ```
 
@@ -183,7 +183,7 @@ npm run images
 | What you see | What to do |
 |---|---|
 | "Media error 4" on screen | Use an HTTPS video URL. The Vega media player rejects `http://` sources with this code, which looks like a file format error but isn't. |
-| "Rewind can’t connect" | Check `REWIND_API_URL`, and that the device key matches the server's. A wrong key gets a 401. Then build and run the app again. |
+| "Rewind can’t connect" | Check `MISS_IT_API_URL`, and that the device key matches the server's. A wrong key gets a 401. Then build and run the app again. |
 | No answer card after asking Alexa | The card only shows answers from the last 30 seconds, and only while the player is open. “What are we watching?” never gets one, since the controls already show it. |
 | `vega virtual-device start` keeps waiting after the device window closed | Stop it with Ctrl+C and run it again. |
 
