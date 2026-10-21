@@ -43,7 +43,7 @@ export function EyeTag({status}: {status: LinkStatus}) {
     <View style={styles.tag} accessible accessibilityLabel={LABELS[status]}>
       <Animated.View
         style={status === 'connected' ? {opacity: breath} : styles.dim}>
-        <Eye width={44} />
+        <Eye width={52} />
       </Animated.View>
       {status === 'offline' && <View style={styles.alert} />}
     </View>
@@ -52,20 +52,15 @@ export function EyeTag({status}: {status: LinkStatus}) {
 
 const styles = StyleSheet.create({
   tag: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(245, 247, 250, 0.14)',
-    borderRadius: 40,
-    backgroundColor: 'rgba(11, 13, 18, 0.62)',
+    paddingVertical: 12,
   },
   dim: {
     opacity: 0.4,
   },
   alert: {
     position: 'absolute',
-    top: 8,
-    right: 12,
+    top: 6,
+    right: -8,
     width: 14,
     height: 14,
     borderRadius: 7,
