@@ -10,7 +10,7 @@ It's a Vega OS app built with React Native 0.72 and Amazon's W3C media player (`
 |---|---|
 | ![The player with its controls showing](screenshots/player.jpg) | ![An answer card over the film](screenshots/answer-card.jpg) |
 
-Screenshots from the Vega Virtual Device. The card shows the recap Miss It? falls back to when the model is unavailable: the last lines of dialogue.
+Screenshots from the Vega Virtual Device. The card shows a recap Amazon Nova wrote while the film played.
 
 ## What it does
 
