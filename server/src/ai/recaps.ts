@@ -16,7 +16,7 @@ const EARLIER_CHARS = 2000;
 const MAX_DRIFT_SEC = 20;
 
 // Alexa+ wants answers in under 500 ms, and a model call takes longer than
-// that. So Rewind writes the "last minute" recap while the show plays, and
+// that. So Miss It? writes the "last minute" recap while the show plays, and
 // "what did I miss?" becomes a lookup.
 export class Recaps {
   readonly windowSec: number;

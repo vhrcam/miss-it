@@ -6,7 +6,7 @@ import type { StoredAnswer, StoredRecap, Viewing } from "./viewing.js";
 
 type Kind = "viewing" | "recap" | "answer";
 
-// Watch logs expire a day after the last update, so Rewind never keeps a
+// Watch logs expire a day after the last update, so Miss It? never keeps a
 // household's viewing history around.
 const TTL_SEC = 24 * 60 * 60;
 

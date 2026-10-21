@@ -18,7 +18,7 @@ export interface AnswerRequest {
   question: string;
 }
 
-// Turns transcripts into something Alexa can say. Rewind ships Amazon Bedrock,
+// Turns transcripts into something Alexa can say. Miss It? ships Amazon Bedrock,
 // plus Amazon's direct Nova API when NOVA_API_KEY is set; tests use a fake.
 export interface Narrator {
   recap(request: RecapRequest, signal?: AbortSignal): Promise<string>;

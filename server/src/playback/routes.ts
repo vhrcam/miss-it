@@ -37,7 +37,7 @@ export function playbackRoutes({ memory, deviceKey, recaps, now = Date.now, log 
     return c.body(null, 204);
   });
 
-  // A peek at what Rewind remembers, for checking the TV app's updates.
+  // A peek at what Miss It? remembers, for checking the TV app's updates.
   app.get("/:householdId", async (c) => {
     const viewing = await memory.get(c.req.param("householdId"));
     if (!viewing) return c.json({ error: "nothing_playing" }, 404);

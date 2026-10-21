@@ -24,7 +24,7 @@ export function createApp({ config, memory, cast, narrator, now = Date.now, log 
 
   app.get("/", (c) =>
     c.json({
-      name: "Rewind",
+      name: "Miss It?",
       description: "Ask Alexa what you missed on TV and get a spoiler-free recap",
       mcp: "/mcp",
       playback: "/v1/playback",

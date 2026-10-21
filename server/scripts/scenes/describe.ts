@@ -1,5 +1,5 @@
 // Writes a WebVTT descriptions track for a title: Amazon Nova looks at frames
-// from Rewind's copy of the video and describes every few seconds in a line.
+// from our copy of the video and describes every few seconds in a line.
 // The server adds each line to a household's watch log only after that
 // stretch has played.
 //

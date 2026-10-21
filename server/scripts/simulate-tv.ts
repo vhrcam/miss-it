@@ -1,4 +1,4 @@
-// Plays a caption file into Rewind the way the Fire TV app does, so the MCP
+// Plays a caption file into Miss It? the way the Fire TV app does, so the MCP
 // tools can be tried without a TV.
 //
 //   npm run simulate -w server                     play Tears of Steel from the start
@@ -44,7 +44,7 @@ async function send(positionSec: number, state: "playing" | "paused" | "ended", 
       cues: shown,
     }),
   });
-  if (!response.ok) throw new Error(`Rewind answered ${response.status}: ${await response.text()}`);
+  if (!response.ok) throw new Error(`The server answered ${response.status}: ${await response.text()}`);
 
   const latest = shown.at(-1)?.text.replace(/\s*\n\s*/g, " ") ?? "";
   console.log(`${state === "playing" ? "▶" : "⏸"} ${formatTimestamp(positionSec).padStart(5)}  ${latest}`);

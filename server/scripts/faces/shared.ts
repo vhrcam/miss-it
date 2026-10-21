@@ -7,7 +7,7 @@ export interface IndexedFace {
   confidence: number;
 }
 
-export const collectionFor = (contentId: string) => `rewind-${contentId}`;
+export const collectionFor = (contentId: string) => `miss-it-${contentId}`;
 
 // Face IDs only mean something to one Rekognition collection, so the index
 // stays out of git.

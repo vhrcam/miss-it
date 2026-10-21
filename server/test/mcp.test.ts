@@ -14,7 +14,7 @@ describe("MCP server", () => {
     });
 
     expect(body.result.protocolVersion).toBe("2025-11-25");
-    expect(body.result.serverInfo.name).toBe("rewind");
+    expect(body.result.serverInfo.name).toBe("miss-it");
     expect(body.result.instructions).toContain("spoiler-free");
   });
 

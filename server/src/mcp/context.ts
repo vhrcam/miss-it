@@ -39,7 +39,7 @@ export function staleNote(viewing: Viewing, ctx: ToolContext): string {
     : "";
 }
 
-// Keeps what Rewind told Alexa so the TV can show it as a card. The card is an
+// Keeps what Miss It? told Alexa so the TV can show it as a card. The card is an
 // extra, so a failed write never costs the user their answer.
 export async function showOnTv(ctx: ToolContext, card: Pick<StoredAnswer, "tool" | "text" | "question">): Promise<void> {
   try {

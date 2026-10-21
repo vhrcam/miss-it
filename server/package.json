@@ -1,8 +1,8 @@
 {
-  "name": "@rewind/server",
+  "name": "@miss-it/server",
   "version": "0.1.0",
   "private": true,
-  "description": "Rewind's memory service and MCP server",
+  "description": "The Miss It? memory service and MCP server",
   "license": "MIT",
   "type": "module",
   "scripts": {

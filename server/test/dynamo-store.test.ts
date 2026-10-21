@@ -39,7 +39,7 @@ function viewing(log: WatchLog): Viewing {
 describe("DynamoStore", () => {
   it("round-trips a viewing with its watch log", async () => {
     const table = new FakeTable();
-    const store = new DynamoStore("rewind", table);
+    const store = new DynamoStore("miss-it", table);
     const log = new WatchLog();
     log.add([{ startSec: 23, endSec: 24.5, text: "You're a jerk, Thom." }]);
     log.seek(42);
@@ -54,7 +54,7 @@ describe("DynamoStore", () => {
 
   it("keeps the recap in its own item with an expiry", async () => {
     const table = new FakeTable();
-    const store = new DynamoStore("rewind", table);
+    const store = new DynamoStore("miss-it", table);
     const recap = { contentId: "tears-of-steel", windowSec: 60, fromSec: 0, toSec: 42, text: "Celia dumps Thom.", generatedAt: 5 };
 
     await store.put(viewing(new WatchLog()));
@@ -67,7 +67,7 @@ describe("DynamoStore", () => {
 
   it("keeps the last answer in its own item", async () => {
     const table = new FakeTable();
-    const store = new DynamoStore("rewind", table);
+    const store = new DynamoStore("miss-it", table);
     const answer = { id: "a1", tool: "who_is_on_screen" as const, text: "Celia, played by Denise Rebergen.", answeredAt: 5 };
 
     await store.put(viewing(new WatchLog()));
@@ -78,7 +78,7 @@ describe("DynamoStore", () => {
   });
 
   it("returns nothing for an unknown household", async () => {
-    const store = new DynamoStore("rewind", new FakeTable());
+    const store = new DynamoStore("miss-it", new FakeTable());
     expect(await store.get("nobody")).toBeUndefined();
     expect(await store.getRecap("nobody")).toBeUndefined();
     expect(await store.getAnswer("nobody")).toBeUndefined();

@@ -17,7 +17,7 @@ const ai = config.novaApi
   : `${config.ai.modelId} on Amazon Bedrock (${config.ai.region})`;
 
 serve({ fetch: app.fetch, port: config.port }, ({ port }) => {
-  console.log(`Rewind is listening on http://localhost:${port}`);
+  console.log(`Miss It? is listening on http://localhost:${port}`);
   console.log(`  MCP endpoint   http://localhost:${port}/mcp`);
   console.log(`  TV updates     http://localhost:${port}/v1/playback`);
   console.log(`  AI             ${narrator ? ai : "off"}`);

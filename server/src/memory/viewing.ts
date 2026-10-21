@@ -27,7 +27,7 @@ export interface StoredRecap {
 
 export type AnswerTool = "recap_recent" | "who_is_on_screen" | "ask_about_show" | "whats_playing";
 
-// The last thing Rewind told Alexa, kept so the TV can show it as a card.
+// The last thing Miss It? told Alexa, kept so the TV can show it as a card.
 export interface StoredAnswer {
   id: string;
   tool: AnswerTool;

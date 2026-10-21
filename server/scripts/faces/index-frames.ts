@@ -1,4 +1,4 @@
-// Step 1 of "who's that?": grab one frame per second from Rewind's copy of a
+// Step 1 of "who's that?": grab one frame per second from our copy of a
 // title and index every face in it into an Amazon Rekognition collection.
 //
 //   npm run faces:index -w server -- --content tears-of-steel --video ../media/tears-of-steel.mp4
@@ -32,7 +32,7 @@ await rekognition.send(new CreateCollectionCommand({ CollectionId: collection })
   if (!(error instanceof ResourceAlreadyExistsException)) throw error;
 });
 
-const frames = await mkdtemp(join(tmpdir(), "rewind-frames-"));
+const frames = await mkdtemp(join(tmpdir(), "miss-it-frames-"));
 console.log(`Grabbing one frame per second from ${args.video}`);
 await promisify(execFile)("ffmpeg", ["-v", "error", "-i", args.video, "-vf", "fps=1", "-q:v", "3", join(frames, "%05d.jpg")]);
 const files = (await readdir(frames)).filter((file) => file.endsWith(".jpg")).sort();

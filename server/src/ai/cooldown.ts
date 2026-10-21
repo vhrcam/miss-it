@@ -1,6 +1,6 @@
 import type { AnswerRequest, Narrator, RecapRequest } from "./narrator.js";
 
-// After the model fails, Rewind answers from the transcript for a minute
+// After the model fails, Miss It? answers from the transcript for a minute
 // instead of asking again on every question. A blocked or throttled model can
 // take a few hundred milliseconds to say no, and Alexa+ wants answers fast.
 export class CooldownNarrator implements Narrator {

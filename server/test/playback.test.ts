@@ -43,7 +43,7 @@ describe("POST /v1/playback", () => {
 });
 
 describe("GET /v1/playback/:householdId", () => {
-  it("shows what Rewind remembers", async () => {
+  it("shows what Miss It? remembers", async () => {
     const { app } = setup();
     await post(app, update({ positionSec: 75, state: "paused", cues: [{ startSec: 70, endSec: 72, text: "Stay." }] }));
 
