@@ -8,7 +8,7 @@ import {
   PlaybackState,
   Snapshot,
 } from '../playback/PlaybackReporter';
-import {film, rewind} from '../config';
+import {film, api} from '../config';
 
 const POLL_MS = 500;
 const TICK_MS = 5000;
@@ -30,7 +30,7 @@ function showCaptions(player: VideoPlayer, cues: Cue[]) {
 }
 
 // Owns the video player for one viewing of the film: playback, captions,
-// and the updates that keep Rewind's memory in step with the screen.
+// and the updates that keep the server's memory in step with the screen.
 export function usePlayback() {
   const playerRef = useRef<VideoPlayer | null>(null);
   const surfaceRef = useRef<string | null>(null);
@@ -53,7 +53,7 @@ export function usePlayback() {
 
   if (!reporterRef.current) {
     reporterRef.current = new PlaybackReporter({
-      ...rewind,
+      ...api,
       contentId: film.contentId,
       title: film.title,
       snapshot: () => snapshotRef.current,

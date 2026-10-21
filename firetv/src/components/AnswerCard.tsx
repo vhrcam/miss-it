@@ -1,6 +1,6 @@
 import {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text} from 'react-native';
-import type {Card} from '../rewind/answerCard';
+import type {Card} from '../api/answerCard';
 import {colors} from '../theme';
 
 // The answer Alexa just gave, under the Rewind badge. It fades in, so it

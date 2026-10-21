@@ -1,5 +1,5 @@
-import {cardFor} from '../src/rewind/answerCard';
-import type {Answer} from '../src/rewind/fetchAnswer';
+import {cardFor} from '../src/api/answerCard';
+import type {Answer} from '../src/api/fetchAnswer';
 
 const answer = (overrides: Partial<Answer> = {}): Answer => ({
   id: 'a1',

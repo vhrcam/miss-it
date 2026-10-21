@@ -1,4 +1,4 @@
-// Writes src/env.ts from the repo's .env before each build, so the Rewind
+// Writes src/env.ts from the repo's .env before each build, so the
 // device key reaches the app without ever being committed.
 const fs = require('fs');
 const path = require('path');

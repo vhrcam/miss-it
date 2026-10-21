@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Logo} from '../components/Logo';
 import {RewindBadge} from '../components/RewindBadge';
 import {Triangle} from '../components/Triangle';
-import {useRewindStatus} from '../rewind/useRewindStatus';
+import {useLinkStatus} from '../api/useLinkStatus';
 import {film} from '../config';
 import {colors} from '../theme';
 
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export function HomeScreen({captionsOn, onPlay, onToggleCaptions}: Props) {
-  const rewindStatus = useRewindStatus();
+  const linkStatus = useLinkStatus();
 
   return (
     <View style={styles.screen}>
@@ -24,7 +24,7 @@ export function HomeScreen({captionsOn, onPlay, onToggleCaptions}: Props) {
 
       <View style={styles.header}>
         <Logo />
-        <RewindBadge status={rewindStatus} />
+        <RewindBadge status={linkStatus} />
       </View>
 
       <View style={styles.hero}>

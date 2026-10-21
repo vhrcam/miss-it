@@ -13,7 +13,7 @@ function setup(
   const statuses: string[] = [];
   let cues = [{startSec: 10, endSec: 12, text: 'Hello'}];
   const reporter = new PlaybackReporter({
-    apiUrl: 'http://rewind.test',
+    apiUrl: 'http://miss-it.test',
     deviceKey: 'key',
     householdId: 'demo',
     contentId: 'tears-of-steel',
@@ -46,7 +46,7 @@ describe('PlaybackReporter', () => {
     await flush();
 
     const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe('http://rewind.test/v1/playback');
+    expect(url).toBe('http://miss-it.test/v1/playback');
     expect(init.headers.Authorization).toBe('Bearer key');
     expect(JSON.parse(init.body)).toEqual({
       householdId: 'demo',

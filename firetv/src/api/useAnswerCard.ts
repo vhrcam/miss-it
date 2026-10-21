@@ -1,12 +1,12 @@
 import {useEffect, useRef, useState} from 'react';
-import {rewind} from '../config';
+import {api} from '../config';
 import {Card, cardFor} from './answerCard';
 import {fetchAnswer} from './fetchAnswer';
 
 const POLL_MS = 2000;
 const SHOW_MS = 10000;
 
-// Checks with Rewind every 2 seconds while the player is open, and shows
+// Checks with the server every 2 seconds while the player is open, and shows
 // each new answer Alexa gives for about 10 seconds.
 export function useAnswerCard() {
   const [card, setCard] = useState<Card | null>(null);
@@ -23,7 +23,7 @@ export function useAnswerCard() {
       }
       busy = true;
       try {
-        const next = cardFor(await fetchAnswer(rewind), shownIdRef.current);
+        const next = cardFor(await fetchAnswer(api), shownIdRef.current);
         if (active && next) {
           shownIdRef.current = next.id;
           setCard(next);
@@ -31,7 +31,7 @@ export function useAnswerCard() {
           hideTimer = setTimeout(() => setCard(null), SHOW_MS);
         }
       } catch {
-        // The badge already says when Rewind can't be reached.
+        // The badge already says when the server can't be reached.
       } finally {
         busy = false;
       }

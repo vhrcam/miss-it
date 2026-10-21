@@ -18,7 +18,7 @@ type Server = {
 
 const REQUEST_TIMEOUT_MS = 4000;
 
-// Asks Rewind for the last answer Alexa gave in this household. Throws when
+// Asks the server for the last answer Alexa gave in this household. Throws when
 // the server can't be reached or turns down the device key.
 export async function fetchAnswer({
   apiUrl,
@@ -36,7 +36,7 @@ export async function fetchAnswer({
       },
     );
     if (!response.ok) {
-      throw new Error(`Rewind answered ${response.status}`);
+      throw new Error(`The server answered ${response.status}`);
     }
     const body: {answer: Answer | null} = await response.json();
     return body.answer;

@@ -2,7 +2,7 @@ import tearsOfSteelCaptions from './captions/tearsOfSteel';
 import {env} from './env';
 
 // Written by scripts/write-env.js before each build. See firetv/README.md.
-export const rewind = {
+export const api = {
   ...env,
   householdId: 'demo',
 };

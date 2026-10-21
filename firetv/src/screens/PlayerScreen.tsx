@@ -16,7 +16,7 @@ import {AnswerCard} from '../components/AnswerCard';
 import {RewindBadge} from '../components/RewindBadge';
 import {Triangle} from '../components/Triangle';
 import {usePlayback} from '../player/usePlayback';
-import {useAnswerCard} from '../rewind/useAnswerCard';
+import {useAnswerCard} from '../api/useAnswerCard';
 import {film} from '../config';
 import {colors} from '../theme';
 

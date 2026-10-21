@@ -26,7 +26,7 @@ const MAX_UNSENT_CUES = 200;
 
 const round = (sec: number) => Math.round(sec * 10) / 10;
 
-// Sends playback updates one at a time and in order, so Rewind never gets an
+// Sends playback updates one at a time and in order, so the server never gets an
 // older update after a newer one. Cues from a failed send go out with the next.
 export class PlaybackReporter {
   private queue: PlaybackEvent[] = [];
