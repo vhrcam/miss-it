@@ -71,10 +71,10 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Task** | Call Amazon Nova 2 Lite on a brand-new AWS account to write our recaps. |
 | **Steps** | Created the account, signed in with `aws login`, called `converse` with `us.amazon.nova-2-lite-v1:0`. For the first hour the error was "Your account is currently being verified". After that, every Nova model returned `ValidationException: Operation not allowed`, in the CLI and in the console playground. Lambda, DynamoDB and Rekognition all worked from the start. |
 | **Expected** | Bedrock works once verification ends, or the error says what's missing. |
-| **Actual** | Service Quotas showed every Nova inference quota at 0, including "Model invocation max tokens per day for Amazon Nova 2 Lite", which can't be adjusted. `get-foundation-model-availability` said `NOT_AUTHORIZED`. Nothing in the error or the console pointed at quotas. The console's Model access page says models turn on by themselves the first time they're called, and the free plan marked "Use a foundation model in the Amazon Bedrock playground" as done and paid its $20 credit, though no call on the account had ever succeeded. |
+| **Actual** | Service Quotas showed every Nova inference quota at 0, including "Model invocation max tokens per day for Amazon Nova 2 Lite", which can't be adjusted. `get-foundation-model-availability` said `NOT_AUTHORIZED`. Nothing in the error or the console pointed at quotas. The console's Model access page says models turn on by themselves the first time they're called, and the free plan marked "Use a foundation model in the Amazon Bedrock playground" as done and paid its $20 credit, though no call on the account had ever succeeded. Asking for more in Service Quotas doesn't work either: a request for 200,000 tokens a minute is refused with "You must provide a quota value greater than the default quota value of 8000000.0", because the account's value is 0 but the default is 8 million. That leaves a support case as the only way out. |
 | **Severity** | High. It blocked every AI feature on day one of a four-day hackathon. |
 | **Workaround** | Built and tested against a fake model, shipped a fallback that reads out the real dialogue, and opened a support case to raise the quotas. |
-| **Suggestion** | Make the error say "your account's quota for this model is 0", link to how to raise it, and warn hackathon builders on new accounts on the Resources page. |
+| **Suggestion** | Make the error say "your account's quota for this model is 0", link to how to raise it, let Service Quotas accept a request up to the default when an account's value is below it, and warn hackathon builders on new accounts on the Resources page. |
 
 ### 7. A lost Nova API key can't be replaced
 
@@ -85,7 +85,7 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Expected** | Deactivating frees the slot for a new key, or a lost key can be regenerated. |
 | **Actual** | Deactivate reported success, but the key stayed in the Active list and Generate Key still said the limit was reached. Same in Chrome and Brave. The page doesn't say what the limit is. |
 | **Severity** | High. With Bedrock blocked too, this closed the last way to reach Nova. |
-| **Workaround** | Kept the dialogue fallback running and followed up on the AWS support case. |
+| **Workaround** | Kept the dialogue fallback running and followed up on the AWS support case. A day later we got a new key, and Miss It? now reaches Nova through it. |
 | **Suggestion** | Make Deactivate free the slot right away, show the key limit on the page, and add a Regenerate action for a key whose secret was lost. |
 
 ## Fire TV (Vega SDK)
