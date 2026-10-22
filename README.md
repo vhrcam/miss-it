@@ -14,6 +14,8 @@
 
 Miss It? gives Alexa+ a memory of what's playing on your TV. Step away from the couch, come back, and just ask: Alexa catches you up on the scene you missed in a sentence or two, without spoilers. No remote, no pausing, no menus.
 
+**[Watch the 2-minute demo on YouTube](https://www.youtube.com/watch?v=QRBRnJvv_d0)**
+
 It's X-Ray, but you just talk to the room.
 
 <p align="center">
