@@ -14,6 +14,7 @@ import {
 } from '@amazon-devices/react-native-w3cmedia';
 import {AnswerCard} from '../components/AnswerCard';
 import {EyeTag} from '../components/EyeTag';
+import {FadeIn} from '../components/FadeIn';
 import {Triangle} from '../components/Triangle';
 import {usePlayback} from '../player/usePlayback';
 import {useAnswerCard} from '../api/useAnswerCard';
@@ -141,10 +142,10 @@ export function PlayerScreen({captionsOn, onExit}: Props) {
       )}
 
       {(controlsVisible || card) && (
-        <View style={styles.corner}>
+        <FadeIn style={styles.corner}>
           <EyeTag status={playback.link} />
           {card && <AnswerCard card={card} />}
-        </View>
+        </FadeIn>
       )}
 
       {playback.buffering && !playback.failure && (
