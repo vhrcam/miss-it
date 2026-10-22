@@ -187,7 +187,7 @@ npm run images
 | No answer card after asking Alexa | The card only shows answers from the last 30 seconds, and only while the player is open. “What are we watching?” never gets one, since the controls already show it. |
 | `vega virtual-device start` keeps waiting after the device window closed | Stop it with Ctrl+C and run it again. |
 
-What else tripped us up building for Vega, with workarounds, is in the [friction log](../docs/friction-log.md#fire-tv-vega-sdk).
+What else tripped me up building for Vega, with workarounds, is in the [friction log](../docs/friction-log.md#fire-tv-vega-sdk).
 
 ## Project layout
 

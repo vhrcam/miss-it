@@ -60,7 +60,7 @@ flowchart LR
     Server -. "Alexa's last answer,<br/>shown as a card" .-> TV
 ```
 
-1. **The TV reports.** The [Fire TV app](firetv) plays the show and sends the captions it just displayed, plus the playback position, every few seconds. When the captions name who is talking (a WebVTT voice tag like `<v Celia>`), the name comes along, so recaps don't have to guess who said what. Most caption files don't have them, so for the demo we tagged the lines in [Tears of Steel](media/CREDITS.md) where the scene makes the speaker clear.
+1. **The TV reports.** The [Fire TV app](firetv) plays the show and sends the captions it just displayed, plus the playback position, every few seconds. When the captions name who is talking (a WebVTT voice tag like `<v Celia>`), the name comes along, so recaps don't have to guess who said what. Most caption files don't have them, so for the demo I tagged the lines in [Tears of Steel](media/CREDITS.md) where the scene makes the speaker clear.
 2. **Miss It? remembers.** The server keeps a rolling watch log per household in DynamoDB. Entries expire a day after the last update.
 3. **Answers are ready before you ask.** Alexa+ expects a reply in under 500 ms, and a model call takes longer than that. So whenever new dialogue arrives, Miss It? has Amazon Nova rewrite the "last minute" recap in the background. "What did I miss?" becomes a lookup. While something is playing, the TV's regular updates also keep the Lambda function warm.
 4. **"Who's that?" is precomputed too.** Miss It? indexes each title once: it grabs a frame every second from its own copy of the video, indexes every face with Amazon Rekognition, and matches them against one reference photo per character. Asking is then a lookup by timestamp.
@@ -85,7 +85,7 @@ Every tool is read-only and returns spoken text plus `structuredContent`, so scr
 | AWS Lambda | Runs the server behind a function URL: public HTTPS for the TV app and Alexa+, with no API Gateway | [`server/src/lambda.ts`](server/src/lambda.ts) |
 | Amazon DynamoDB | One partition per household for the watch log, the ready recap and Alexa's last answer, all expiring a day after the last update | [`server/src/memory/dynamo-store.ts`](server/src/memory/dynamo-store.ts) |
 | Amazon Bedrock | Amazon Nova 2 Lite writes recaps and answers follow-ups through the Converse API, and describes silent scenes from frames of the film | [`server/src/ai/bedrock.ts`](server/src/ai/bedrock.ts), [`server/scripts/scenes/describe.ts`](server/scripts/scenes/describe.ts) |
-| Amazon Nova API | The same Nova 2 Lite with a plain API key. The live server runs on it while our new account's Bedrock quotas are still 0 ([friction log #6](docs/friction-log.md#6-bedrock-says-operation-not-allowed-on-a-new-account)) | [`server/src/ai/nova-api.ts`](server/src/ai/nova-api.ts) |
+| Amazon Nova API | The same Nova 2 Lite with a plain API key. The live server runs on it while my new account's Bedrock quotas are still 0 ([friction log #6](docs/friction-log.md#6-bedrock-says-operation-not-allowed-on-a-new-account)) | [`server/src/ai/nova-api.ts`](server/src/ai/nova-api.ts) |
 | Amazon Rekognition | Indexes every face in a title once and matches them to the cast, so "who's that?" is a lookup | [`server/scripts/faces/`](server/scripts/faces) |
 | AWS CloudFormation and Amazon S3 | One command packages and deploys the whole stack | [`infra/template.yaml`](infra/template.yaml), [`infra/deploy.sh`](infra/deploy.sh) |
 

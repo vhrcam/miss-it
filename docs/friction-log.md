@@ -1,6 +1,6 @@
 # Friction log
 
-The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS first, then the Fire TV app on Vega, each in the order we hit them. Severity: **High** blocks progress, **Medium** costs hours or changes the design, **Low** is an annoyance.
+The problems I ran into while building Miss It?, in two parts: Alexa+ and AWS first, then the Fire TV app on Vega, each in the order I hit them. Severity: **High** blocks progress, **Medium** costs hours or changes the design, **Low** is an annoyance.
 
 ## Alexa+ and AWS
 
@@ -12,8 +12,8 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Steps** | Read the MCP Toolkit QuickStart ("Authentication checklist"), then the Authentication page, then Account Linking. |
 | **Expected** | A clear line near the top of the QuickStart saying auth is optional when every user gets the same tools. |
 | **Actual** | The QuickStart lists the 401 behavior, Protected Resource Metadata and PKCE as a checklist marked "Required". The Authentication page says Tier 1 applies "if you have a private MCP Server". Only the Account Linking page says "Account linking is optional." |
-| **Severity** | Medium. We nearly planned a day of Cognito work we didn't need. |
-| **Workaround** | Read all three pages and skipped auth. Our tools don't need to know who is asking. |
+| **Severity** | Medium. I nearly planned a day of Cognito work I didn't need. |
+| **Workaround** | Read all three pages and skipped auth. My tools don't need to know who is asking. |
 | **Suggestion** | Open the QuickStart's auth section with a one-line decision: "No per-user data? You can skip auth." |
 
 ### 2. Installing the Alexa AI CLI
@@ -25,7 +25,7 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Expected** | A public npm package (like `ask-cli`), or a self-serve way in for hackathon builders. |
 | **Actual** | The install path looks gated to Preview partners who work with a Solutions Architect. The hackathon Resources page doesn't mention the CLI at all. |
 | **Severity** | High for hackathon builders. Without the CLI there's no add-on deployment and no web simulator. |
-| **Workaround** | We built and tested the MCP server first, since it's needed either way. |
+| **Workaround** | I built and tested the MCP server first, since it's needed either way. |
 | **Suggestion** | Publish the CLI to npm or allowlist hackathon participants, and say on the Resources page which path builders should take. |
 
 ### 3. The 500 ms latency rule
@@ -36,8 +36,8 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Steps** | The QuickStart's Performance section says the server "must meet a round-trip query response latency of less than 500 ms". Functional Requirements says "Best practice: Return results within 3 seconds". |
 | **Expected** | One number, with what it measures (every `tools/call`? `initialize`? p50 or p99?) and what to do when a tool is slower. |
 | **Actual** | Two different numbers and no scope. |
-| **Severity** | Medium. It changed our architecture. |
-| **Workaround** | Miss It? does its AI work while the show plays, so a tool call is a lookup. Our tools answer in single-digit milliseconds locally. |
+| **Severity** | Medium. It changed my architecture. |
+| **Workaround** | Miss It? does its AI work while the show plays, so a tool call is a lookup. My tools answer in single-digit milliseconds locally. |
 | **Suggestion** | Define the latency metric and percentile, and say whether it applies to `tools/call`. |
 
 ### 4. Protocol version in the client lifecycle docs
@@ -68,11 +68,11 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 
 | | |
 |---|---|
-| **Task** | Call Amazon Nova 2 Lite on a brand-new AWS account to write our recaps. |
+| **Task** | Call Amazon Nova 2 Lite on a brand-new AWS account to write my recaps. |
 | **Steps** | Created the account, signed in with `aws login`, called `converse` with `us.amazon.nova-2-lite-v1:0`. For the first hour the error was "Your account is currently being verified". After that, every Nova model returned `ValidationException: Operation not allowed`, in the CLI and in the console playground. Lambda, DynamoDB and Rekognition all worked from the start. |
 | **Expected** | Bedrock works once verification ends, or the error says what's missing. |
 | **Actual** | Service Quotas showed every Nova inference quota at 0, including "Model invocation max tokens per day for Amazon Nova 2 Lite", which can't be adjusted. `get-foundation-model-availability` said `NOT_AUTHORIZED`. Nothing in the error or the console pointed at quotas. The console's Model access page says models turn on by themselves the first time they're called, and the free plan marked "Use a foundation model in the Amazon Bedrock playground" as done and paid its $20 credit, though no call on the account had ever succeeded. Asking for more in Service Quotas doesn't work either: a request for 200,000 tokens a minute is refused with "You must provide a quota value greater than the default quota value of 8000000.0", because the account's value is 0 but the default is 8 million. That leaves a support case as the only way out. |
-| **Severity** | High. It blocked every AI feature on day one of a four-day hackathon. |
+| **Severity** | High. It blocked every AI feature from the start of the build. |
 | **Workaround** | Built and tested against a fake model, shipped a fallback that reads out the real dialogue, and opened a support case to raise the quotas. |
 | **Suggestion** | Make the error say "your account's quota for this model is 0", link to how to raise it, let Service Quotas accept a request up to the default when an account's value is below it, and warn hackathon builders on new accounts on the Resources page. |
 
@@ -81,11 +81,11 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | | |
 |---|---|
 | **Task** | Get a key for Amazon's direct Nova API at nova.amazon.com/dev-apis, so Miss It? could reach Nova while Bedrock was blocked. |
-| **Steps** | Signed in, clicked **Generate Key** and named the key. The full key is shown once, and our copy failed because the browser blocked clipboard access. After that the key list only shows it masked (`xxxxxxxx-****-****-****-xxxxxxxxxxxx`). Clicked **Generate Key** again, which said the key limit was reached and to deactivate a key first, then chose **Deactivate** from the key's menu. |
+| **Steps** | Signed in, clicked **Generate Key** and named the key. The full key is shown once, and my copy failed because the browser blocked clipboard access. After that the key list only shows it masked (`xxxxxxxx-****-****-****-xxxxxxxxxxxx`). Clicked **Generate Key** again, which said the key limit was reached and to deactivate a key first, then chose **Deactivate** from the key's menu. |
 | **Expected** | Deactivating frees the slot for a new key, or a lost key can be regenerated. |
 | **Actual** | Deactivate reported success, but the key stayed in the Active list and Generate Key still said the limit was reached. Same in Chrome and Brave. The page doesn't say what the limit is. |
 | **Severity** | High. With Bedrock blocked too, this closed the last way to reach Nova. |
-| **Workaround** | Kept the dialogue fallback running and followed up on the AWS support case. A day later we got a new key, and Miss It? now reaches Nova through it. |
+| **Workaround** | Kept the dialogue fallback running and followed up on the AWS support case. Later I got a new key, and Miss It? now reaches Nova through it. |
 | **Suggestion** | Make Deactivate free the slot right away, show the key limit on the page, and add a Regenerate action for a key whose secret was lost. |
 
 ## Fire TV (Vega SDK)
@@ -98,7 +98,7 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Steps** | `vega project list-templates` shows `helloWorld` (React Native 0.83) first and `helloWorld-rn72` second. `npm view @amazon-devices/react-native-w3cmedia dist-tags` shows `latest: 2.3.2` and `rn83-alpha: 2.3.4-rn-83`. |
 | **Expected** | The default template works with the stable media package. |
 | **Actual** | The React Native 0.83 build of the media package is only published under an alpha tag. Nothing in the template list says so. |
-| **Severity** | Low. We caught it before writing code. |
+| **Severity** | Low. I caught it before writing code. |
 | **Workaround** | Generated the project from `helloWorld-rn72` and used `react-native-w3cmedia` 2.3.2. |
 | **Suggestion** | Note in `list-templates` (or the media player docs) which template the stable media packages support. |
 
@@ -133,7 +133,7 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Task** | Read the app's logs to debug #10. |
 | **Steps** | `vda shell journalctl ...` answers "journalctl is not supported in developer mode shell. Please use loggingctl instead." `loggingctl log -v com.vhrcam.missit` shows "Log suppression ended at level [info]. [52] logs were suppressed", and the media player logs `hasEnded` twice a second. `loggingctl config --set-rate com.vhrcam.missit 100000` returns `"status": "failed"`. |
 | **Expected** | An app's own warnings are always visible in developer mode. |
-| **Actual** | Startup logs were dropped, and our own `console.warn` calls never showed up. |
+| **Actual** | Startup logs were dropped, and my own `console.warn` calls never showed up. |
 | **Severity** | Medium. It made #10 much slower to find. |
 | **Workaround** | Showed the media error code on screen, and took screenshots. |
 | **Suggestion** | Don't rate-limit warnings and errors from the app being debugged, make `--set-rate` work for developer apps, and quiet the media player's `hasEnded` logging. |
@@ -181,7 +181,7 @@ The problems we ran into while building Miss It?, in two parts: Alexa+ and AWS f
 | **Task** | Give the app an icon. |
 | **Steps** | Added a 512 × 512 PNG as `[package] icon` in `manifest.toml`, as the manifest docs ask, then opened "Your apps" on the virtual device. |
 | **Expected** | The docs say where the icon appears and how it's fitted. They name only Settings › Applications, and the virtual device's Settings has no Applications screen to check. |
-| **Actual** | "Your apps" shows the icon too, in a wide tile about 1.55:1. The square image is scaled to the tile's width, so its top and bottom are cut off, and our round logo lost its top and bottom edges. |
+| **Actual** | "Your apps" shows the icon too, in a wide tile about 1.55:1. The square image is scaled to the tile's width, so its top and bottom are cut off, and my round logo lost its top and bottom edges. |
 | **Severity** | Low. It took two extra builds to find a size that fits. |
 | **Workaround** | Gave the icon a full square background and kept the logo inside the part of the 512 × 512 canvas that stays visible. |
 | **Suggestion** | Document every place the icon appears, with the safe area that "Your apps" keeps, or accept a separate wide image for the tile. |
